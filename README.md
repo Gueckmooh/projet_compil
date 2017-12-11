@@ -1,14 +1,14 @@
 # projet_compil
 
-A Clojure library designed to ... well, that part is up to you.
+A completer...
 
 ## Usage
 
-FIXME
+S'il vous plait laisser le main dans un fichier main.c ou main.cpp
+N'utiliser que les extensions .c, .cpp et .h
+Les .o se trouvent dans le répertoire .obj
+Les tests devons être dans le dossier test et devrons contennir chacun leur
+main. (A négocier si vous voulez)
 
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Ne pas modifier le mon joli Makefile, il a pour vocation de fonctionner de
+manière générique. Il pourra être amélioré par la suite :)

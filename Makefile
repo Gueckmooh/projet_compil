@@ -40,6 +40,9 @@ OBJTESTS = $(addsuffix .o, $(BASETESTS))
 TESTFILES = $(addprefix $(TESTBINDIR)/, $(BASETESTS))
 LOGTESTS = $(addsuffix .log, $(BASETESTS))
 
+SRCINCFILES = $(wildcard $(SRCDIR)/*.h)
+INCFILES = $(notdir $(wildcard $(INCLUDEDIR)/*.h))
+
 ############################################################
 ##########       CONFIGURATION OF THE FLAGS       ##########
 #####                                                  #####
@@ -102,8 +105,8 @@ testdirectories: $(LOGDIR) $(TESTBINDIR) directories
 directories: $(OBJDIR) $(DEPDIR)
 
 inc: $(INCLUDEDIR)
-	$(RM) $(INCLUDEDIR)/*
-	$(QUIET)cp $(SRCDIR)/*.h $(INCLUDEDIR)/.
+	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
+	$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 
 %.o: $(OBJDIR)
 %.deps: $(DEPDIR)

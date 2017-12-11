@@ -53,10 +53,20 @@ INCLUDEFLAGS = $(addprefix -I, $(INCLUDE))
 FLAGS = -Wall
 FLAGS += -Werror
 
-CFLAGS = $(FLAGS)
+DEBUG =
+
+DEBUGFLAGS =
+ifneq ("$(DEBUG)", "")
+DEBUGFLAGS += -O0
+DEBUGFLAGS += -gdwarf-2
+else
+DEBUGFLAGS = -O2
+endif
+
+CFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CFLAGS += -std=c99
 
-CXXFLAGS = $(FLAGS)
+CXXFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CXXFLAGS += -std=c++11
 
 LDFLAGS = -lpthread

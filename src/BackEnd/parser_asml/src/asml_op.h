@@ -22,6 +22,6 @@ protected:
   int type_id;
   string name;
   int val;
-}
+};
 
 #endif //__ASML_OP_H__

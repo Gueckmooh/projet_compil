@@ -12,11 +12,23 @@ void asml_var<T>::set_name (string name) {
 }
 
 template <class T>
-void asml_var<T>::set_init_val (T val) {
+void asml_var<T>::set_val (T val) {
   this->val = val;
 }
 
 template <class T>
-T asml_var<T>::get_init_val (void) const {
+string asml_var<T>::get_name (void) const {
+  return  name;
+}
+
+template <class T>
+T asml_var<T>::get_val (void) const {
   return this->val;
+}
+
+template <class T>
+string asml_var<T>::to_string (void) {
+  string s = name + " ";
+  s+=val;
+  return s;
 }

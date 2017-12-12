@@ -4,7 +4,7 @@ asml_op::asml_op(int type) {
   type_id = type;
 }
 
-asml_op::set_name (string name) {
+void asml_op::set_name (string name) {
   this->name = name;
 }
 
@@ -16,7 +16,7 @@ string asml_op::get_name (void) {
   return this->name;
 }
 
-int asml_op::get_val (void); {
+int asml_op::get_val (void) {
   return this->val;
 }
 
@@ -30,10 +30,12 @@ string asml_op::to_string (void) {
     return name;
     break;
   case VAR:
-    return val;
+    return std::to_string(get_val());
     break;
   case DIRECT:
     return name;
     break;
+  default:
+    return "";
   }
 }

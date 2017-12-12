@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <list>
 
@@ -13,10 +14,10 @@ class asml_function {
 public:
   asml_function (string);
   ~asml_function (void);
-  void add_param (asml_var*);
-  void add_var (asml_var*);
-  asml_var* get_param (string);
-  asml_var* get_var (string);
+  void add_param (asml_var<int>*);
+  void add_var (asml_var<int>*);
+  asml_var<int>* get_param (string);
+  asml_var<int>* get_var (string);
   void print (void);
 protected:
   string name;

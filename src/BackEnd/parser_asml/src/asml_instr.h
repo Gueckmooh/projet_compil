@@ -1,4 +1,5 @@
 #include <string>
+#include <list>
 #include <iostream>
 
 #include "asml_op.h"
@@ -6,7 +7,7 @@
 #ifndef __ASML_INSTR_H__
 #define __ASML_INSTR_H__
 
-using namsepace std;
+using namespace std;
 
 class asml_instr {
 public:
@@ -21,7 +22,7 @@ public:
 protected:
   int type_id;
   list<asml_op*>* args;
-}
+};
 
 
 #endif //__ASML_INSTR_H__

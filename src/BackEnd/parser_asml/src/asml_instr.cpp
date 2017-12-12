@@ -1,4 +1,4 @@
-#include "asml_instr"
+#include "asml_instr.h"
 
 asml_instr::asml_instr (int type_id) {
   this->type_id = type_id;
@@ -27,12 +27,12 @@ void asml_instr::print (void) {
   list<asml_op*>::iterator it = args->begin();
   switch (type_id) {
   case AFFECT:
-    cout << *it->to_string() << " <- " << *(++it)->to_string() << endl;
+    cout << (*it)->to_string() << " <- " << (*(++it))->to_string() << endl;
     break;
   case CALL:
-    cout << it->to_string() << " ( ";
+    cout << (*it)->to_string() << " ( ";
     while (it != args->end())
-      cout << *(it++)->to_string() << " ";
+      cout << (*(it++))->to_string() << " ";
     cout << ")" << endl;
   }
 }

@@ -1,3 +1,6 @@
 all:
-	bison -o asml_parser.cpp --defines=asml_parser.h asml_parser.yy
-	flex -o asml_lexer.cpp asml_lexer.ll
+	bison -o asml_parser.c --defines=asml_parser.h asml_parser.y
+	flex -o asml_lexer.c asml_lexer.l
+
+clean:
+	rm asml_parser.c asml_parser.h asml_lexer.c

@@ -1,19 +1,15 @@
 %{
-#include <iostream>
-#include <string>
-#include <list>
-#include "asml.h"
-using namespace std;
+#include <stdio.h>
+#include <string.h>
 int yyparse();
 int yylex();
-int yyerror(string s);
-string name;
-extern list<asml_function>* asml_list;
-asml_function* current;
+int yyerror(const char* s);
 %}
 
 %union {
-  int tok_id;
+    char* token_str;
+    int token_int;
+    float token_float;
 }
 
 
@@ -50,19 +46,17 @@ asml_function* current;
 %token NOP
 %token APPCLO
 %token UNDERSC
-%token LABEL
-%token IDENT
+%token <token_str> LABEL
+%token <token_str> IDENT
 %token FLOAT
 
 
 %%
 
-fundef:		LET UNDERSC EQUAL asmt {
-		    current = asml_list->front();
-		    current->set_name("main"); }
+fundef:		LET UNDERSC EQUAL asmt 
 	;
 
-asmt:		LET IDENT EQUAL exp IN asmt { 
+asmt:		LET IDENT EQUAL exp IN asmt { printf ("%s\n", $2); }
 	|	exp
 	;
 
@@ -76,7 +70,6 @@ param:		IDENT param
 
 %%
 
-int yyerror (string s) {
-    cerr << s << endl;
+int yyerror (const char* s) {
     return 0;
     }

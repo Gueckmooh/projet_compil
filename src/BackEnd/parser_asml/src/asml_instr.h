@@ -11,8 +11,8 @@ using namespace std;
 
 class asml_instr {
 public:
-  static const int AFFECT = 1;
-  static const int CALL = 2;
+  static const int CALL = 1;
+  static const int AFFECT = 2;
 
   asml_instr (int);
   ~asml_instr (void);

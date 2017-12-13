@@ -16,8 +16,10 @@ public:
   ~asml_function (void);
   void add_param (asml_var*);
   void add_var (asml_var*);
+  void add_instr (asml_instr*);
   asml_var* get_param (string);
   asml_var* get_var (string);
+  //asml_instr* get_instr (int);
   void print (void);
 protected:
   string name;

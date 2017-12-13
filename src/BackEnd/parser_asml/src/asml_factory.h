@@ -1,3 +1,10 @@
+#include "asml.h"
+
+#ifdef __cplusplus
+#include <string>
+using namespace std;
+#endif //__cplusplus
+
 #ifndef __ASML_FACTORY_H__
 #define __ASML_FACTORY_H__
 
@@ -16,5 +23,9 @@ typedef struct {
   int current_instr;
   int current_op;
 } asml_factory;
+
+#ifdef __cplusplus
+asml_function* create_function (asml_factory* af);
+#endif //__cplusplus
 
 #endif

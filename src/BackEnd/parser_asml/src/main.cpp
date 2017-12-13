@@ -13,6 +13,7 @@ using namespace std;
 asml_factory factory;
 
 int main (void) {
+  asml_function* fun;
   factory.current_instr = 0;
   factory.current_var = 0;
   factory.current_instr = 0;
@@ -35,5 +36,8 @@ int main (void) {
       }
     }
   }
+  fun = create_function (&factory);
+  fun->print();
+  delete fun;
   return 0;
 }

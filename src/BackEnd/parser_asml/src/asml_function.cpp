@@ -38,6 +38,10 @@ void asml_function::add_var (asml_var* var) {
   vars->push_back(var);
 }
 
+void asml_function::add_instr (asml_instr* instr) {
+  instructions->push_back(instr);
+}
+
 asml_var* asml_function::get_param (string name) {
   for (list<asml_var*>::iterator it = params->begin(); it != params->end(); it++) {
     if (!(((*it)->get_name()).compare(name))) {

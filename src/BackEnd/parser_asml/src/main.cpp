@@ -6,6 +6,7 @@ extern "C" {
 }
 #include "asml_function.h"
 #include "asml_factory.h"
+#include "arm_generator.h"
 
 using namespace std;
 
@@ -38,6 +39,8 @@ int main (void) {
   }
   fun = create_function (&factory);
   fun->print();
+  arm::arm_generator arm(fun);
+  arm.generate();
   delete fun;
   return 0;
 }

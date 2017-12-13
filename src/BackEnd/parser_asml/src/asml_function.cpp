@@ -2,13 +2,13 @@
 
 asml_function::asml_function (string name) {
   this->name = name;
-  vars = new list<asml_var<int>*> ();
-  params = new list<asml_var<int>*> ();
+  vars = new list<asml_var*> ();
+  params = new list<asml_var*> ();
   instructions = new list<asml_instr*> ();
 }
 
 asml_function::~asml_function (void) {
-  asml_var<int>* var;
+  asml_var* var;
   asml_instr* instr;
   while (!vars->empty()) {
     var = vars->back();
@@ -30,24 +30,26 @@ asml_function::~asml_function (void) {
   delete instructions;
 }
 
-void asml_function::add_param (asml_var<int>* param) {
+void asml_function::add_param (asml_var* param) {
   params->push_back(param);
 }
 
-void asml_function::add_var (asml_var<int>* var) {
+void asml_function::add_var (asml_var* var) {
   vars->push_back(var);
 }
 
-asml_var<int>* asml_function::get_param (string name) {
-  for (list<asml_var<int>*>::iterator it = params->begin(); it != params->end(); it++) {
-    if (!((*it)->get_name().compare(name)))
+asml_var* asml_function::get_param (string name) {
+  for (list<asml_var*>::iterator it = params->begin(); it != params->end(); it++) {
+    if (!(((*it)->get_name()).compare(name))) {
+      (*it)->get_val();
       return *it;
+    }
   }
   return NULL;
 }
 
-asml_var<int>* asml_function::get_var (string) {
-  for (list<asml_var<int>*>::iterator it = vars->begin(); it != vars->end(); it++) {
+asml_var* asml_function::get_var (string) {
+  for (list<asml_var*>::iterator it = vars->begin(); it != vars->end(); it++) {
     if (!((*it)->get_name().compare(name)))
       return *it;
   }
@@ -55,11 +57,11 @@ asml_var<int>* asml_function::get_var (string) {
 }
 void asml_function::print (void) {
   cout << "function " << name << " ";
-  for (list<asml_var<int>*>::iterator it = params->begin(); it != params->end(); it++)
+  for (list<asml_var*>::iterator it = params->begin(); it != params->end(); it++)
     cout << (*it)->to_string() << " ";
   cout << endl;
   cout << "Variables : ";
-  for (list<asml_var<int>*>::iterator it = vars->begin(); it != vars->end(); it++)
+  for (list<asml_var*>::iterator it = vars->begin(); it != vars->end(); it++)
     cout << (*it)->to_string() << " ";
   cout << endl;
   for (list<asml_instr*>::iterator it = instructions->begin(); it != instructions->end(); it++)

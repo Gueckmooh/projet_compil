@@ -1,21 +1,20 @@
 #include <string>
 
+using namespace std;
+
 #ifndef __ASML_VAR_H__
 #define __ASML_VAR_H__
 
-using namespace std;
-
-template <class T>
 class asml_var {
 public:
-  asml_var (T, string);
+  asml_var (int, string);
   void set_name (string);
-  void set_val (T);
+  void set_val (int);
   string get_name (void) const;
-  T get_val (void) const;
+  int get_val (void) const;
   string to_string (void);
 protected:
-  T val;
+  int val;
   string name;
 };
 

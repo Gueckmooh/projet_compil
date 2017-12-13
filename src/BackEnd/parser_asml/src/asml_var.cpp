@@ -1,33 +1,27 @@
 #include "asml_var.h"
 
-template <class T>
-asml_var<T>::asml_var(T val, string name) {
+asml_var::asml_var(int val, string name) {
   this->val = val;
   this->name = name;
 }
 
-template <class T>
-void asml_var<T>::set_name (string name) {
+void asml_var::set_name (string name) {
   this->name = name;
 }
 
-template <class T>
-void asml_var<T>::set_val (T val) {
+void asml_var::set_val (int val) {
   this->val = val;
 }
 
-template <class T>
-string asml_var<T>::get_name (void) const {
+string asml_var::get_name (void) const {
   return  name;
 }
 
-template <class T>
-T asml_var<T>::get_val (void) const {
+int asml_var::get_val (void) const {
   return this->val;
 }
 
-template <class T>
-string asml_var<T>::to_string (void) {
+string asml_var::to_string (void) {
   string s = name + " ";
   s+=val;
   return s;

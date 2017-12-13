@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "asml_parser.h"
+#include "asml_util.h"
 %}
 
 %option noyywrap nounput noinput
@@ -40,11 +41,15 @@ NEW     "new"
 NOP     "nop"
 APPCLO  "apply_closure"
 NIL     "nil"
+CARRAY  "_min_caml_create_array"
 UNDERSC "_"
 
 %%
 {NIL}     { printf("NIL\n"); return NIL; }
-{DIGIT}+  { printf("INT\n"); return INT; }
+{DIGIT}+  { printf("INT\n");
+            yylval.token_int = atoi (yytext);
+            return INT;
+                }
 {LPAREN}  { printf("LPAREN\n"); return LPAREN; }
 {RPAREN}  { printf("RPAREN\n"); return RPAREN; }
 {PLUS}    { printf("PLUS\n"); return PLUS; }
@@ -73,17 +78,18 @@ UNDERSC "_"
 {NEW}     { printf("NEW\n"); return NEW; }
 {NOP}     { printf("NOP\n"); return NOP; }
 {APPCLO}  { printf("APPCLO\n"); return APPCLO; }
+{CARRAY}  { printf("CARRAY\n"); return CARRAY; }
 {UNDERSC} { printf("UNDERSC\n"); return UNDERSC; }
 {UNDERSC}({DIGIT}|{LOWER}|{UPPER}|{UNDERSC})*   {
-    char* new_token = malloc (sizeof (yytext));
-    strcpy(new_token, yytext);
-    yylval.token_str = yytext;
+    char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
+    strncpy(new_token, yytext, strlen(yytext)+1);
+    yylval.token_str = new_token;
     printf("LABEL\n");
     return LABEL; }
 {LOWER}({DIGIT}|{LOWER}|{UPPER}|{UNDERSC})*   {
-    char* new_token = malloc (sizeof (yytext));
-    strcpy(new_token, yytext);
-    yylval.token_str = yytext;
+    char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
+    strncpy(new_token, yytext, strlen(yytext)+1);
+    yylval.token_str = new_token;
     printf("IDENT\n");
     return IDENT; }
 

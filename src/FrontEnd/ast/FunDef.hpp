@@ -2,6 +2,8 @@
 #include <list>
 #include "AstNode.hpp"
 #include "Type.hpp"
+#include "AstVisitor.hpp"
+
 #ifndef FUN_DEF_H
 #define FUN_DEF_H
 
@@ -16,6 +18,7 @@ public:
     FunDef(std::string var_name, std::list<std::string> args_list, AstNode *body);
     ~FunDef();
 
+    void traversal(AstVisitor *vis);
 };
 
 #endif

@@ -15,3 +15,7 @@ bool AstNodeTuple::infer_types(){
 
 void AstNodeTuple::print(){
 }
+
+void AstNodeTuple::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+}

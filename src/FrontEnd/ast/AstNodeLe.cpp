@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeLe.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeLe::AstNodeLe(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeLe::infer_types(){
 }
 
 void AstNodeLe::print(){
+}
+
+void AstNodeLe::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

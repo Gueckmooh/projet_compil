@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodeApp.hpp"
-
+#include "AstVisitor.hpp"
 
 AstNodeApp::AstNodeApp(std::list<std::string> args_list, AstNode *t1){
     this->args_list = args_list;
@@ -15,4 +15,9 @@ bool AstNodeApp::infer_types(){
 }
 
 void AstNodeApp::print(){
+}
+
+void AstNodeApp::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeFdiv.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeFdiv::AstNodeFdiv(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeFdiv::infer_types(){
 }
 
 void AstNodeFdiv::print(){
+}
+
+void AstNodeFdiv::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

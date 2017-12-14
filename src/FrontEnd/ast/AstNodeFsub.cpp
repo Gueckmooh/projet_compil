@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeFsub.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeFsub::AstNodeFsub(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeFsub::infer_types(){
 }
 
 void AstNodeFsub::print(){
+}
+
+void AstNodeFsub::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

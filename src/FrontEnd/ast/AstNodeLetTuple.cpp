@@ -19,3 +19,9 @@ bool AstNodeLetTuple::infer_types(){
 
 void AstNodeLetTuple::print(){
 }
+
+void AstNodeLetTuple::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
+}

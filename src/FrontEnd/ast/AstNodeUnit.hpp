@@ -11,6 +11,7 @@ public:
 
     bool infer_types();
     void print();
+    void traversal(AstVisitor *vis);
 };
 
 #endif

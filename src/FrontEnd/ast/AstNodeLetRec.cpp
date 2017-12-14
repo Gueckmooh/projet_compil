@@ -16,3 +16,9 @@ bool AstNodeLetRec::infer_types(){
 
 void AstNodeLetRec::print(){
 }
+
+void AstNodeLetRec::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->fun_def->traversal(vis);
+    this->t1->traversal(vis);
+}

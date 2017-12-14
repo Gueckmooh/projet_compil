@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeInt.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeInt::AstNodeInt(int i){
@@ -13,4 +14,8 @@ bool AstNodeInt::infer_types(){
 }
 
 void AstNodeInt::print(){
+}
+
+void AstNodeInt::traversal(AstVisitor *vis){
+    vis->visit_node(this);
 }

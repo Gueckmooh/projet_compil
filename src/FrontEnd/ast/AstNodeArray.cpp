@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodeArray.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeArray::AstNodeArray(AstNode *t1, AstNode *t2){
@@ -15,4 +16,10 @@ bool AstNodeArray::infer_types(){
 }
 
 void AstNodeArray::print(){
+}
+
+void AstNodeArray::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

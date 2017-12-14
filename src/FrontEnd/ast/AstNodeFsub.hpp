@@ -3,6 +3,7 @@
 #define AST_FSUB_NODE_H
 
 #include "AstNode.hpp"
+#include "AstVisitor.hpp"
 
 class AstNodeFsub : public AstNode {
 protected:
@@ -14,6 +15,7 @@ public:
 
     bool infer_types();
     void print();
+    void traversal(AstVisitor *vis);
 };
 
 #endif

@@ -17,3 +17,10 @@ bool AstNodePut::infer_types(){
 
 void AstNodePut::print(){
 }
+
+void AstNodePut::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
+    this->t3->traversal(vis);
+}

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeFloat.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeFloat::AstNodeFloat(float b){
@@ -13,4 +14,8 @@ bool AstNodeFloat::infer_types(){
 }
 
 void AstNodeFloat::print(){
+}
+
+void AstNodeFloat::traversal(AstVisitor *vis){
+    vis->visit_node(this);
 }

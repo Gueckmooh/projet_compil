@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeFmul.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeFmul::AstNodeFmul(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeFmul::infer_types(){
 }
 
 void AstNodeFmul::print(){
+}
+
+void AstNodeFmul::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

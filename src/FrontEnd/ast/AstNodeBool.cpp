@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeBool.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeBool::AstNodeBool(bool b){
@@ -13,4 +14,8 @@ bool AstNodeBool::infer_types(){
 }
 
 void AstNodeBool::print(){
+}
+
+void AstNodeBool::traversal(AstVisitor *vis){
+    vis->visit_node(this);
 }

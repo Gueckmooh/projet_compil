@@ -1,4 +1,5 @@
 #include "AstNode.hpp"
+#include "AstVisitor.hpp"
 
 #ifndef AST_FMUL_NODE_H
 #define AST_FMUL_NODE_H
@@ -14,6 +15,7 @@ public:
 
     bool infer_types();
     void print();
+    void traversal(AstVisitor *vis);
 };
 
 #endif

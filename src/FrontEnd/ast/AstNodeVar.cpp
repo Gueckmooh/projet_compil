@@ -15,3 +15,7 @@ bool AstNodeVar::infer_types(){
 
 void AstNodeVar::print(){
 }
+
+void AstNodeVar::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+}

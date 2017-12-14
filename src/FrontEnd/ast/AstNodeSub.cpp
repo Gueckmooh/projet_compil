@@ -15,3 +15,9 @@ bool AstNodeSub::infer_types(){
 
 void AstNodeSub::print(){
 }
+
+void AstNodeSub::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
+}

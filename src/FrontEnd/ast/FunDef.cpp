@@ -15,3 +15,8 @@ FunDef::FunDef(
 }
 
 FunDef::~FunDef(){}
+
+void FunDef::traversal(AstVisitor *vis){
+    vis->visit_fun_def(this);
+    this->body->traversal(vis);
+}

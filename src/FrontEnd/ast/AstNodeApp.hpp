@@ -1,4 +1,6 @@
 #include "AstNode.hpp"
+#include "AstVisitor.hpp"
+
 #include <string>
 #include <list>
 
@@ -16,6 +18,7 @@ public:
 
     bool infer_types();
     void print();
+    void traversal(AstVisitor *vis);
 };
 
 #endif

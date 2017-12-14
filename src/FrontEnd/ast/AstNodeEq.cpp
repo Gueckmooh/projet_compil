@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeEq.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeEq::AstNodeEq(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeEq::infer_types(){
 }
 
 void AstNodeEq::print(){
+}
+
+void AstNodeEq::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

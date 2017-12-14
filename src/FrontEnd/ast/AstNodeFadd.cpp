@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeFadd.hpp"
+#include "AstVisitor.hpp"
 
 
 AstNodeFadd::AstNodeFadd(AstNode *t1, AstNode *t2){
@@ -14,4 +15,10 @@ bool AstNodeFadd::infer_types(){
 }
 
 void AstNodeFadd::print(){
+}
+
+void AstNodeFadd::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
 }

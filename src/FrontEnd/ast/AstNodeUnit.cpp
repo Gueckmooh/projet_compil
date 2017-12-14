@@ -11,3 +11,7 @@ bool AstNodeUnit::infer_types(){
 }
 
 void AstNodeUnit::print(){}
+
+void AstNodeUnit::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+}

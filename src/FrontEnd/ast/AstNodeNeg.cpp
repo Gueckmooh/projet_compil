@@ -14,3 +14,8 @@ bool AstNodeNeg::infer_types(){
 
 void AstNodeNeg::print(){
 }
+
+void AstNodeNeg::traversal(AstVisitor *vis){
+    vis->visit_node(this);
+    this->t1->traversal(vis);
+}

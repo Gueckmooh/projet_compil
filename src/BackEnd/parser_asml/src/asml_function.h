@@ -1,31 +1,46 @@
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
 
-#include "asml_var.h"
-#include "asml_instr.h"
+#include "asml_variable.h"
+#include "asml_instruction.h"
+
+#ifndef __ASML_FUNCTON_H__
+#define __ASML_FUNCTON_H__
 
 using namespace std;
 
-#ifndef __ASML_FUNCTONS_H__
-#define __ASML_FUNCTONS_H__
+namespace asml {
 
-class asml_function {
-public:
-  asml_function (string);
-  ~asml_function (void);
-  void add_param (asml_var*);
-  void add_var (asml_var*);
-  void add_instr (asml_instr*);
-  asml_var* get_param (string);
-  asml_var* get_var (string);
-  //asml_instr* get_instr (int);
-  void print (void);
-protected:
-  string name;
-  list<asml_var*>* vars;
-  list<asml_var*>* params;
-  list<asml_instr*>* instructions;
-};
+  class asml_function {
+    friend class asml_factory;
+  public:
+    asml_function (string);
+    ~asml_function (void);
 
-#endif //__ASML_FUNCTONS_H__
+    virtual void set_name (string);
+    virtual void add_param (asml_variable*);
+    virtual void add_variable (asml_variable*);
+    virtual void add_instruction (asml_instruction*);
+
+    virtual string get_name (void);
+    virtual vector<asml_variable*>::iterator variable_begin (void);
+    virtual vector<asml_variable*>::iterator variable_end (void);
+    virtual vector<asml_variable*>::iterator param_begin (void);
+    virtual vector<asml_variable*>::iterator param_end (void);
+    virtual vector<asml_instruction*>::iterator instruction_begin (void);
+    virtual vector<asml_instruction*>::iterator instruction_end (void);
+    //asml_variable* get_param (string);
+    //asml_variable* get_var (string);
+    //asml_instr* get_instr (int);
+    //void print (void);
+  protected:
+    string name;
+    vector<asml_variable*> variables;
+    vector<asml_variable*> params;
+    vector<asml_instruction*> instructions;
+  };
+
+}
+
+#endif //__ASML_FUNCTON_H__

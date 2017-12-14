@@ -16,44 +16,45 @@ extern asml_factory factory;
 }
 
 
-%token LOWER
-%token UPPER
-%token <token_int> INT
-%token LPAREN
-%token RPAREN
-%token PLUS
-%token EQUAL
-%token FEQUAL
-%token NIL
-%token LE
-%token FLE
-%token GE
-%token IF
-%token THEN
-%token ELSE
-%token LET
-%token IN
-%token DOT
-%token NEG
-%token FNEG
-%token MEM
-%token FMUL
-%token FDIV
-%token FSUB
-%token FADD
-%token ASSIGN
-%token ADD
-%token SUB
-%token CALL
-%token NEW
-%token NOP
-%token APPCLO
-%token CARRAY
-%token UNDERSC
-%token <token_str> LABEL
-%token <token_str> IDENT
-%token FLOAT
-
+%token			LOWER
+%token			UPPER
+%token	<token_int>	INT
+%token			LPAREN
+%token			RPAREN
+%token			PLUS
+%token			EQUAL
+%token			FEQUAL
+%token			NIL
+%token			LE
+%token			FLE
+%token			GE
+%token			IF
+%token			THEN
+%token			ELSE
+%token			LET
+%token			IN
+%token			DOT
+%token			NEG
+%token			FNEG
+%token			MEM
+%token			FMUL
+%token			FDIV
+%token			FSUB
+%token			FADD
+%token			ASSIGN
+%token			ADD
+%token			SUB
+%token			CALL
+%token			NEW
+%token			NOP
+%token			APPCLO
+%token			CARRAY
+%token			UNDERSC
+%token	<token_str>	LABEL
+%token	<token_str>	IDENT
+%token			FLOAT
+%type	<token_int>	call
+%type	<token_int>	exp
 
 %%
 
@@ -80,11 +81,7 @@ asmt:		LET IDENT EQUAL exp IN asmt  {
 	|	exp { }
 	;
 
-exp:	 	INT                    {
-		    int* val = (int*) malloc (sizeof(int));
-		    *val = $1;
-		    factory.vals[factory.current_var] = val;
-		    }
+exp:	 	INT                    { $$ = $1 }
 	;
 
 call:		CALL LABEL param {
@@ -92,6 +89,7 @@ call:		CALL LABEL param {
 		    strcpy(op, $2);
 		    factory.op[factory.current_instr][0] = op;
 		    factory.instr[factory.current_instr] = ACALL;
+		    $$ = factory.current_instr;
 		    factory.current_instr++;
 		    }
 	;

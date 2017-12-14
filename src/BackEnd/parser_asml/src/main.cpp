@@ -22,6 +22,7 @@ int main (void) {
   //asml_list->push_back (new asml_function ("test"));
   yyparse ();
   printf ("%s\n", factory.name);
+  /*
   for (int i = 0; i < factory.current_var; i++) {
     printf ("Name = %s\n"
 	    "Val = %d\n",
@@ -37,6 +38,7 @@ int main (void) {
       }
     }
   }
+  */
   fun = create_function (&factory);
   fun->print();
   arm::arm_generator arm(fun);

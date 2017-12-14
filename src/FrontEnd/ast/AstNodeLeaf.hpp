@@ -2,6 +2,7 @@
 #define AST_NODE_LEAF_H
 
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNodeLeaf : public AstNode{
 public:

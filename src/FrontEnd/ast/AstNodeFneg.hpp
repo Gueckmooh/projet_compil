@@ -4,6 +4,7 @@
 
 #include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 class AstNodeFneg : public AstNodeUnary {
 public:
@@ -11,7 +12,7 @@ public:
     ~AstNodeFneg();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

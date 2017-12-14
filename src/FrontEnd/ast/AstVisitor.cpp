@@ -1,6 +1,8 @@
 #include "AstVisitor.hpp"
 #include "AstNode.hpp"
+#include "config.h"
 
+#include <iostream>
 
 AstVisitor::AstVisitor(){
     this->next = NULL;
@@ -16,6 +18,7 @@ void AstVisitor::visit_node(AstNode *node){
     if(this->next){
         this->next->visit_node(node);
     }
+    std::cout << "no way" << std::endl;
     // specific visitor code
 }
 

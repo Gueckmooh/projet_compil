@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodePut.hpp"
+#include "config.h"
 
 
 AstNodePut::AstNodePut(AstNode *t1, AstNode *t2, AstNode *t3){
@@ -18,5 +19,9 @@ bool AstNodePut::infer_types(){
     return true;
 }
 
-void AstNodePut::print(){
+void AstNodePut::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "PUT\n" << std::endl;
 }

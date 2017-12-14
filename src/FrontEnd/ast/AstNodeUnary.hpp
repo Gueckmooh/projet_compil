@@ -2,6 +2,7 @@
 #define AST_NODE_UNARY_H
 
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNodeUnary : public AstNode{
 protected:

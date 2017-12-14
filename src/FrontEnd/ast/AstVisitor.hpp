@@ -2,6 +2,7 @@
 #define AST_VIS_H
 
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNode;
 class FunDef;
@@ -14,8 +15,8 @@ public:
     AstVisitor(AstVisitor *next);
     ~AstVisitor();
 
-    void visit_node(AstNode *node);
-    void visit_fun_def(FunDef *fun_def);
+    virtual void visit_node(AstNode *node);
+    virtual void visit_fun_def(FunDef *fun_def);
 };
 
 

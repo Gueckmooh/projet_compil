@@ -4,6 +4,7 @@
 
 #include <string>
 #include "AstNodeLeaf.hpp"
+#include "config.h"
 
 class AstNodeVar  :public AstNodeLeaf {
 protected:
@@ -13,7 +14,7 @@ public:
     ~AstNodeVar();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

@@ -3,6 +3,7 @@
 #define AST_SUB_NODE_H
 
 #include "AstNodeBinary.hpp"
+#include "config.h"
 
 class AstNodeSub : public AstNodeBinary {
 public:
@@ -10,7 +11,7 @@ public:
     ~AstNodeSub();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

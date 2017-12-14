@@ -1,5 +1,6 @@
 #include "AstVisitor.hpp"
 #include "AstNodeLeaf.hpp"
+#include "config.h"
 
 AstNodeLeaf::AstNodeLeaf(){}
 

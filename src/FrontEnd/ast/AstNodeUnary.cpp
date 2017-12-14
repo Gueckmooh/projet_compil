@@ -1,5 +1,6 @@
 #include "AstVisitor.hpp"
 #include "AstNodeUnary.hpp"
+#include "config.h"
 
 AstNodeUnary::AstNodeUnary(){}
 

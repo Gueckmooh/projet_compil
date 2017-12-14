@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AstNodeFneg.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeFneg::AstNodeFneg(AstNode *t1){
@@ -16,5 +17,9 @@ bool AstNodeFneg::infer_types(){
     return true;
 }
 
-void AstNodeFneg::print(){
+void AstNodeFneg::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "FNEG\n" << std::endl;
 }

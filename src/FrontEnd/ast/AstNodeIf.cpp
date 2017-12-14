@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AstNodeIf.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeIf::AstNodeIf(AstNode *t1, AstNode *t2, AstNode *t3){
@@ -18,5 +19,9 @@ bool AstNodeIf::infer_types(){
     return true;
 }
 
-void AstNodeIf::print(){
+void AstNodeIf::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "IF\n" << std::endl;
 }

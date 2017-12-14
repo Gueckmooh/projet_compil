@@ -4,6 +4,7 @@
 
 #include "AstNodeTernary.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 class AstNodeIf  :public AstNodeTernary {
 public:
@@ -11,7 +12,7 @@ public:
     ~AstNodeIf();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

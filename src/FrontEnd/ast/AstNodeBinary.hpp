@@ -2,6 +2,7 @@
 #define AST_NODE_BINARY_H
 
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNodeBinary : public AstNode{
 protected:
@@ -11,6 +12,7 @@ public:
     AstNodeBinary(AstNode *t1, AstNode *t2);
     ~AstNodeBinary();
 
+    void print(int indent);
     void traversal(AstVisitor *vis);
 };
 

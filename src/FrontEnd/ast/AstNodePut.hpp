@@ -3,6 +3,7 @@
 #define AST_PUT_NODE_H
 
 #include "AstNodeTernary.hpp"
+#include "config.h"
 
 class AstNodePut  :public AstNodeTernary {
 public:
@@ -10,7 +11,7 @@ public:
     ~AstNodePut();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

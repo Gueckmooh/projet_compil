@@ -24,7 +24,7 @@
 #include "AstNodeTuple.hpp"
 #include "AstNodeUnit.hpp"
 #include "AstNodeVar.hpp"
-
+#include "AstVisPrint.hpp"
 
 #include <assert.h>
 #include <stdio.h>
@@ -59,8 +59,8 @@ int main(int argc, char **argv) {
         printf("parse error");
         return 0;
     }
-    std::cout<<"coucou !!"<<std::endl;
     AstNode * ast_obj = build_ast(p);
-
+    AstVisitor *printer = new AstVisPrint();
+    ast_obj->traversal(printer);
     return 0;
 }

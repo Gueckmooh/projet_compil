@@ -4,6 +4,7 @@
 
 #include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 class AstNodeGet  :public AstNodeBinary {
 public:
@@ -11,7 +12,7 @@ public:
     ~AstNodeGet();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

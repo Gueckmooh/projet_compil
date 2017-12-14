@@ -2,6 +2,7 @@
 #include <string>
 #include "AstNodeArray.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeArray::AstNodeArray(AstNode *t1, AstNode *t2){
@@ -18,5 +19,9 @@ bool AstNodeArray::infer_types(){
     return true;
 }
 
-void AstNodeArray::print(){
+void AstNodeArray::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "ARRAY\n" << std::endl;
 }

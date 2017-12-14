@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AstNodeEq.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeEq::AstNodeEq(AstNode *t1, AstNode *t2){
@@ -17,5 +18,9 @@ bool AstNodeEq::infer_types(){
     return true;
 }
 
-void AstNodeEq::print(){
+void AstNodeEq::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "EQ\n" << std::endl;
 }

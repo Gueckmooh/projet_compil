@@ -34,6 +34,7 @@
 #include "assert.h"
 #include "string.h"
 #include "utils.h"
+#include "config.h"
 
 AstNode* build_ast(ptree t){
     assert(t);

@@ -5,6 +5,7 @@
 #include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNodeFsub : public AstNodeBinary {
 public:
@@ -12,7 +13,7 @@ public:
     ~AstNodeFsub();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

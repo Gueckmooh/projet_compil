@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodeLetRec.hpp"
+#include "config.h"
 
 
 AstNodeLetRec::AstNodeLetRec(FunDef *fun_def, AstNode *t1){
@@ -17,7 +18,11 @@ bool AstNodeLetRec::infer_types(){
     return true;
 }
 
-void AstNodeLetRec::print(){
+void AstNodeLetRec::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "LETREC\n" << std::endl;
 }
 
 void AstNodeLetRec::traversal(AstVisitor *vis){

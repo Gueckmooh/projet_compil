@@ -1,5 +1,6 @@
 #include <iostream>
 #include "AstNodeUnit.hpp"
+#include "config.h"
 
 
 AstNodeUnit::AstNodeUnit(){
@@ -14,4 +15,9 @@ bool AstNodeUnit::infer_types(){
     return true;
 }
 
-void AstNodeUnit::print(){}
+void AstNodeUnit::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "UNIT\n" << std::endl;
+}

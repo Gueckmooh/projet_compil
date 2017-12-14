@@ -4,6 +4,7 @@
 
 #include "AstNodeLeaf.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 class AstNodeFloat : public AstNodeLeaf {
 protected:
@@ -13,7 +14,7 @@ public:
     ~AstNodeFloat();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

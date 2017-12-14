@@ -3,6 +3,7 @@
 #define AST_UNIT_NODE_H
 
 #include "AstNodeLeaf.hpp"
+#include "config.h"
 
 class AstNodeUnit : public AstNodeLeaf {
 public:
@@ -10,7 +11,7 @@ public:
     ~AstNodeUnit();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

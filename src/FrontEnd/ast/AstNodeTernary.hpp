@@ -2,6 +2,7 @@
 #define AST_NODE_TERNARY_H
 
 #include "AstNode.hpp"
+#include "config.h"
 
 class AstNodeTernary : public AstNode{
 protected:

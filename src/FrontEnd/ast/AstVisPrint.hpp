@@ -4,8 +4,8 @@
 #include "AstVisitor.hpp"
 #include "AstNode.hpp"
 #include "FunDef.hpp"
+#include "config.h"
 
-#define INDENT "  "
 
 class AstVisPrint : public AstVisitor{
 protected:

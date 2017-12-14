@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodeLetTuple.hpp"
+#include "config.h"
 
 
 AstNodeLetTuple::AstNodeLetTuple(std::list<std::string> var_list,
@@ -20,5 +21,9 @@ bool AstNodeLetTuple::infer_types(){
     return true;
 }
 
-void AstNodeLetTuple::print(){
+void AstNodeLetTuple::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "TUPLE\n" << std::endl;
 }

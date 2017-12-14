@@ -5,6 +5,7 @@
 #include "AstNodeLeaf.hpp"
 #include <string>
 #include <list>
+#include "config.h"
 
 class AstNodeTuple : public AstNodeLeaf {
 protected:
@@ -14,7 +15,7 @@ public:
     ~AstNodeTuple();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

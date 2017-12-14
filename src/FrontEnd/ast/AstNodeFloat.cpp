@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AstNodeFloat.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeFloat::AstNodeFloat(float b){
@@ -16,5 +17,9 @@ bool AstNodeFloat::infer_types(){
     return true;
 }
 
-void AstNodeFloat::print(){
+void AstNodeFloat::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "FLOAT\n" << std::endl;
 }

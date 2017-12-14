@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "AstNodeLet.hpp"
+#include "config.h"
 
 
 AstNodeLet::AstNodeLet(AstNode *t1, AstNode *t2, std::string var_name){
@@ -18,5 +19,9 @@ bool AstNodeLet::infer_types(){
     return true;
 }
 
-void AstNodeLet::print(){
+void AstNodeLet::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "LET\n" << std::endl;
 }

@@ -1,5 +1,7 @@
 #include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
+#include <iostream>
 
 AstNodeBinary::AstNodeBinary(){}
 
@@ -10,6 +12,9 @@ AstNodeBinary::AstNodeBinary(AstNode *t1, AstNode *t2){
 
 AstNodeBinary::~AstNodeBinary(){}
 
+void AstNodeBinary::print(int indent){
+    std::cout << "print called in AstBinary" << std::endl;
+}
 
 void AstNodeBinary::traversal(AstVisitor *vis){
     vis->visit_node(this);

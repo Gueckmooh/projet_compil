@@ -1,6 +1,7 @@
 #include <string>
 #include "ast.h"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 #ifndef AST_NODE_H
 #define	AST_NODE_H
@@ -14,7 +15,7 @@ public:
     ~AstNode() {};
 
     virtual bool infer_types() = 0;
-    virtual void print() = 0;
+    virtual void print(int indent) = 0;
     virtual void traversal(AstVisitor *vis) = 0;
 };
 

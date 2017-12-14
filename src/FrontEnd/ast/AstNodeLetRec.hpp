@@ -4,6 +4,7 @@
 
 #include "AstNode.hpp"
 #include "FunDef.hpp"
+#include "config.h"
 
 class AstNodeLetRec  :public AstNode {
 protected:
@@ -14,7 +15,7 @@ public:
     ~AstNodeLetRec();
 
     bool infer_types();
-    void print();
+    void print(int indent);
     void traversal(AstVisitor *vis);
 };
 

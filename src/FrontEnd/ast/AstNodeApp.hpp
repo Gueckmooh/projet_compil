@@ -4,6 +4,7 @@
 
 #include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 #include <string>
 #include <list>
@@ -16,7 +17,7 @@ public:
     ~AstNodeApp();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

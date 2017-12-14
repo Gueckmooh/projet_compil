@@ -1,5 +1,6 @@
 #include "AstVisitor.hpp"
 #include "AstNodeTernary.hpp"
+#include "config.h"
 
 AstNodeTernary::AstNodeTernary(){}
 

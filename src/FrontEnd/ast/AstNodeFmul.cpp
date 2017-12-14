@@ -1,6 +1,7 @@
 #include <iostream>
 #include "AstNodeFmul.hpp"
 #include "AstVisitor.hpp"
+#include "config.h"
 
 
 AstNodeFmul::AstNodeFmul(AstNode *t1, AstNode *t2){
@@ -17,5 +18,9 @@ bool AstNodeFmul::infer_types(){
     return true;
 }
 
-void AstNodeFmul::print(){
+void AstNodeFmul::print(int indent){
+    for (int i = 0 ; i < indent ; i++){
+        std::cout << INDENT;
+    }
+    std::cout << "FMUL\n" << std::endl;
 }

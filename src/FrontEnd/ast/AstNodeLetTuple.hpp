@@ -5,6 +5,7 @@
 #include "AstNodeBinary.hpp"
 #include <string>
 #include <list>
+#include "config.h"
 
 class AstNodeLetTuple  :public AstNodeBinary {
 protected:
@@ -14,7 +15,7 @@ public:
     ~AstNodeLetTuple();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

@@ -3,6 +3,7 @@
 #define AST_NEG_NODE_H
 
 #include "AstNodeUnary.hpp"
+#include "config.h"
 
 class AstNodeNeg : public AstNodeUnary {
 public:
@@ -10,7 +11,7 @@ public:
     ~AstNodeNeg();
 
     bool infer_types();
-    void print();
+    void print(int indent);
 };
 
 #endif

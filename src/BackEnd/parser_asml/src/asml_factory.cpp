@@ -1,57 +1,54 @@
 #include "asml_factory.h"
 
-bool digit (string s) {
-  char c = s.front();
-  return c <= '9' && c >= '0';
-}
+namespace asml {
 
-bool car (string s) {
-  char c = s.front();
-  return (c <= 'a' && c >= 'z') || (c <= 'A' && c >= 'Z');
-}
+  void asml_factory::create_function (void) {
+    function = new asml_function ();
+  }
 
-asml_function* create_function (asml_factory* af) {
-  string name(af->name);
-  //string* str;
-  asml_instr* instr;
-  asml_op* op;
-  //int type = 0;
-  asml_function* func = new asml_function (name);
-  for (int i = 0; i < af->current_var; i++) {
-    func->add_var(new asml_var(*af->vals[i], af->vars[i]));
+  asml_function* asml_factory::get_function (void) {
+    return function;
   }
-  for (int i = 0; i < af->current_param; i++) {
-    func->add_param(new asml_var(0, af->params[i]));
+
+  void asml_factory::set_function_name (string name) {
+    function->set_name(name);
   }
-  for (int i = 0; i < af->current_instr; i++) {
-    instr = new asml_instr (af->instr[i]);
-    for (int j = 0; af->op[i][j]!=NULL; j++) {
-      if (*af->op[i][j] == '_')
-	op = new asml_op (asml_op::FUNC);
-      else if (*af->op[i][j] >= '0' && *af->op[i][j] <= '9')
-	op = new asml_op (asml_op::DIRECT);
-      else
-	op = new asml_op (asml_op::VAR);
-      op->set_name(af->op[i][j]);
-      instr->add_arg(op);
+
+  void asml_factory::add_int_param (string name) {
+    asml_variable* var = new asml_integer ();
+    var->unset_value ();
+    var->set_name (name);
+    function->add_variable (var);
+  }
+
+  void asml_factory::add_int_variable (string name, int value) {
+    asml_variable* var = new asml_integer ();
+    var->set_value (value);
+    var->set_name (name);
+    function->add_variable (var);
+  }
+
+  void asml_factory::add_affectation (string op1, string op2) {
+    asml_instruction* aff = new asml_affectation ();
+    aff->set_op1 (op1);
+    aff->set_op2 (op2);
+    function->add_instruction (aff);
+  }
+
+  void asml_factory::add_funcall (string funcname, string retname,
+				  vector<string>* paramlist) {
+    asml_instruction* func = new asml_funcall ();
+    func->get_funcname (funcname);
+    if (*(retname.head()) != '0')
+      func->set_return (retname);
+    else
+      func->unset_return ();
+    while (!paramlist->empty()) {
+      func->add_param (*(paramlist->front()));
+      paramlist->pop_front();
     }
-    func->add_instr(instr);
+    delete vector;
+    function->add_instruction (func);
   }
-  /*
-  for (int i = 0; i < factory.current_var; i++) {
-    printf ("Name = %s\n"
-	    "Val = %d\n",
-	    factory.vars[i],
-	    *factory.vals[i]);
-  }
-  for (int i = 0; i < factory.current_instr; i++) {
-    switch (factory.instr[i]) {
-    case ACALL:
-      printf ("Function : %s\n", factory.op[i][0]);
-      for (int j = 1; factory.op[i][j] != NULL; j++) {
-	printf ("Arg %d : %s\n", j, factory.op[i][j]);
-      }
-    }
-  }*/
-  return func;
+
 }

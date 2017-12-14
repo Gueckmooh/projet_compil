@@ -1,5 +1,7 @@
-#include "asml.h"
+#include "asml_function.h"
+#include "arm_instruction.h"
 #include <string>
+#include <list>
 #include <iostream>
 #include <fstream>
 
@@ -19,7 +21,10 @@ namespace arm {
   protected:
     ofstream* output;
     asml_function* asml;
+    string filename;
+
     string name;
+    list<arm_instruction*> instructions;
   };
 
 }

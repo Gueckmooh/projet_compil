@@ -8,6 +8,8 @@
 #####                                                  #####
 CC = gcc
 CXX = g++
+BISON = bison
+FLEX = flex
 LD = ld
 MKDIR_P = mkdir -p
 RM = rm -rf
@@ -27,7 +29,14 @@ TESTBINDIR = .test_bin
 LOGDIR = .log
 INCLUDEDIR = include
 
+FFILES = $(wildcard $(SRCDIR)/*.l)
+BFILES = $(wildcard $(SRCDIR)/*.y)
+
+LPFILES = $(addsuffix .c, $(basename $(FFILES)))
+LPFILES += $(addsuffix .c, $(basename $(BFILES)))
+
 CFILES = $(wildcard $(SRCDIR)/*.c)
+CFILES += $(LPFILES)
 CXXFILES = $(wildcard $(SRCDIR)/*.cpp)
 BASEFILES = $(basename $(notdir $(CFILES) $(CXXFILES)))
 OBJFILES = $(addsuffix .o, $(BASEFILES))
@@ -76,12 +85,14 @@ CXXFLAGS += -std=c++11
 LDFLAGS = -lpthread
 LDFLAGS += -lfl
 
+FLEXFLAGS =
+BISONFLAGS =
+
 .PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test
 
 all: lexpars directories inc $(EXEC)
 
-lexpars:
-	cd src && make
+lexpars: $(LPFILES)
 
 test: testdirectories inc $(TESTFILES)
 
@@ -118,6 +129,12 @@ inc: $(INCLUDEDIR)
 
 $(addprefix $(OBJDIR)/, $(OBJFILES)): $(OBJDIR)/%.o: $(DEPDIR)/%.deps
 $(addprefix $(OBJDIR)/, $(OBJTESTS)): $(OBJDIR)/%.o: $(DEPDIR)/%.deps
+
+$(SRCDIR)/%.c: $(SRCDIR)/%.l
+	$(FLEX) -o $@ $<
+
+$(SRCDIR)/%.c: $(SRCDIR)/%.y 
+	$(BISON) -o $@ --defines=$(basename $<).h $<
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(DEPDIR)/%.deps
 	$(CC) $(CFLAGS) $(INCLUDEFLAGS) -c -o $@ $<
@@ -160,6 +177,9 @@ clean_logs:
 
 clean_dirs:
 	$(QUIET)$(RM) $(OBJDIR) $(DEPDIR) $(LOGDIR) $(TESTBINDIR)
+
+clean_lex_pars:
+	$(QUIET)$(RM) 
 
 mrproper:  clean clean_deps clean_logs clean_dirs
 	$(QUIET)$(RM) $(EXEC)

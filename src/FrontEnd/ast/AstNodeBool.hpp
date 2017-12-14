@@ -1,11 +1,11 @@
-#include "AstNode.hpp"
-#include "AstVisitor.hpp"
 
 #ifndef AST_BOOL_NODE_H
 #define AST_BOOL_NODE_H
 
+#include "AstNodeLeaf.hpp"
+#include "AstVisitor.hpp"
 
-class AstNodeBool : public AstNode {
+class AstNodeBool : public AstNodeLeaf {
 protected:
     bool b;
 public:
@@ -14,7 +14,6 @@ public:
 
     bool infer_types();
     void print();
-    void traversal(AstVisitor *vis);
 };
 
 #endif

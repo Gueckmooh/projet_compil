@@ -2,16 +2,16 @@
 #include "AstNodeUnit.hpp"
 
 
-AstNodeUnit::AstNodeUnit(){}
+AstNodeUnit::AstNodeUnit(){
+    this->class_code = C_UNIT;
+}
 
-AstNodeUnit::~AstNodeUnit(){}
+AstNodeUnit::~AstNodeUnit(){
+    this->class_code = C_UNIT;
+}
 
 bool AstNodeUnit::infer_types(){
     return true;
 }
 
 void AstNodeUnit::print(){}
-
-void AstNodeUnit::traversal(AstVisitor *vis){
-    vis->visit_node(this);
-}

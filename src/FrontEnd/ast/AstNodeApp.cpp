@@ -4,20 +4,18 @@
 #include "AstVisitor.hpp"
 
 AstNodeApp::AstNodeApp(std::list<std::string> args_list, AstNode *t1){
+    this->class_code = C_APP;
     this->args_list = args_list;
     this->t1 = t1;
 }
 
-AstNodeApp::~AstNodeApp(){}
+AstNodeApp::~AstNodeApp(){
+    this->class_code = C_APP;
+}
 
 bool AstNodeApp::infer_types(){
     return true;
 }
 
 void AstNodeApp::print(){
-}
-
-void AstNodeApp::traversal(AstVisitor *vis){
-    vis->visit_node(this);
-    this->t1->traversal(vis);
 }

@@ -2,20 +2,20 @@
 #include "AstNodeInt.hpp"
 #include "AstVisitor.hpp"
 
+AstNodeInt::AstNodeInt(){}
 
 AstNodeInt::AstNodeInt(int i){
+    this->class_code = C_INT;
     this->i = i;
 }
 
-AstNodeInt::~AstNodeInt(){}
+AstNodeInt::~AstNodeInt(){
+    this->class_code = C_INT;
+}
 
 bool AstNodeInt::infer_types(){
     return true;
 }
 
 void AstNodeInt::print(){
-}
-
-void AstNodeInt::traversal(AstVisitor *vis){
-    vis->visit_node(this);
 }

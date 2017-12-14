@@ -4,18 +4,17 @@
 
 
 AstNodeVar::AstNodeVar(std::string var_name){
+    this->class_code = C_VAR;
     this->var_name = var_name;
 }
 
-AstNodeVar::~AstNodeVar(){}
+AstNodeVar::~AstNodeVar(){
+    this->class_code = C_VAR;
+}
 
 bool AstNodeVar::infer_types(){
     return true;
 }
 
 void AstNodeVar::print(){
-}
-
-void AstNodeVar::traversal(AstVisitor *vis){
-    vis->visit_node(this);
 }

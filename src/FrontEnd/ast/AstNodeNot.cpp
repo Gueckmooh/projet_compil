@@ -3,19 +3,17 @@
 
 
 AstNodeNot::AstNodeNot(AstNode *t1){
+    this->class_code = C_NOT;
     this->t1 = t1;
 }
 
-AstNodeNot::~AstNodeNot(){}
+AstNodeNot::~AstNodeNot(){
+    this->class_code = C_NOT;
+}
 
 bool AstNodeNot::infer_types(){
     return true;
 }
 
 void AstNodeNot::print(){
-}
-
-void AstNodeNot::traversal(AstVisitor *vis){
-    vis->visit_node(this);
-    this->t1->traversal(vis);
 }

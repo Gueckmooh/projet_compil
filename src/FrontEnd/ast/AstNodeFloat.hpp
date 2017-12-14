@@ -1,11 +1,11 @@
-#include "AstNode.hpp"
-#include "AstVisitor.hpp"
 
 #ifndef AST_FLOAT_NODE_H
 #define AST_FLOAT_NODE_H
 
+#include "AstNodeLeaf.hpp"
+#include "AstVisitor.hpp"
 
-class AstNodeFloat : public AstNode {
+class AstNodeFloat : public AstNodeLeaf {
 protected:
     float f;
 public:
@@ -14,7 +14,6 @@ public:
 
     bool infer_types();
     void print();
-    void traversal(AstVisitor *vis);
 };
 
 #endif

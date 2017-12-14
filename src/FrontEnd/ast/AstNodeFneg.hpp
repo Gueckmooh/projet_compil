@@ -1,20 +1,17 @@
-#include "AstNode.hpp"
-#include "AstVisitor.hpp"
 
 #ifndef AST_FNEG_NODE_H
 #define AST_FNEG_NODE_H
 
+#include "AstNodeUnary.hpp"
+#include "AstVisitor.hpp"
 
-class AstNodeFneg : public AstNode {
-protected:
-    AstNode *t1;
+class AstNodeFneg : public AstNodeUnary {
 public:
     AstNodeFneg(AstNode *t1);
     ~AstNodeFneg();
 
     bool infer_types();
     void print();
-    void traversal(AstVisitor *vis);
 };
 
 #endif

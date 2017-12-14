@@ -4,18 +4,17 @@
 
 
 AstNodeFloat::AstNodeFloat(float b){
+    this->class_code = C_FLOAT;
     this->f = f;
 }
 
-AstNodeFloat::~AstNodeFloat(){}
+AstNodeFloat::~AstNodeFloat(){
+    this->class_code = C_FLOAT;
+}
 
 bool AstNodeFloat::infer_types(){
     return true;
 }
 
 void AstNodeFloat::print(){
-}
-
-void AstNodeFloat::traversal(AstVisitor *vis){
-    vis->visit_node(this);
 }

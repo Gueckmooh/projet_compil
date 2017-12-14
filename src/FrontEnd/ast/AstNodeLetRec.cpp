@@ -4,11 +4,14 @@
 
 
 AstNodeLetRec::AstNodeLetRec(FunDef *fun_def, AstNode *t1){
+    this->class_code = C_LETREC;
     this->fun_def = fun_def;
     this->t1 = t1;
 }
 
-AstNodeLetRec::~AstNodeLetRec(){}
+AstNodeLetRec::~AstNodeLetRec(){
+    this->class_code = C_LETREC;
+}
 
 bool AstNodeLetRec::infer_types(){
     return true;

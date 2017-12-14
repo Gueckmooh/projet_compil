@@ -2,19 +2,15 @@
 #ifndef AST_SUB_NODE_H
 #define AST_SUB_NODE_H
 
-#include "AstNode.hpp"
+#include "AstNodeBinary.hpp"
 
-class AstNodeSub : public AstNode {
-protected:
-    AstNode *t1;
-    AstNode *t2;
+class AstNodeSub : public AstNodeBinary {
 public:
     AstNodeSub(AstNode *t1, AstNode *t2);
     ~AstNodeSub();
 
     bool infer_types();
     void print();
-    void traversal(AstVisitor *vis);
 };
 
 #endif

@@ -5,12 +5,12 @@
 #include <vector>
 #include <list>
 
-#ifndef __ARM_AFFECTATION_H__
-#define __ARM_AFFECTATION_H__
+#ifndef __ARM_FUNCALL_H__
+#define __ARM_FUNCALL_H__
 
 namespace arm {
 
-  class arm_affectation : public arm_instruction {
+  class arm_funcall : public arm_instruction {
   public:
     virtual string get_instruction (void);
   protected:
@@ -18,4 +18,4 @@ namespace arm {
 
 }
 
-#endif //__ARM_AFFECTATION_H__
+#endif //__ARM_FUNCALL_H__

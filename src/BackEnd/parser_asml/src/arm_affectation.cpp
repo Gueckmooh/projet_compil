@@ -5,7 +5,7 @@ namespace arm {
   string arm_affectation::get_instruction (void) {
     string instruction;
     string var1, var2;
-    list<string>::iterator it = params.begin();
+    vector<string>::iterator it = params.begin();
     var1 = *it++;
     var2 = *it;
     switch (arm_util::type_of(var2)) {

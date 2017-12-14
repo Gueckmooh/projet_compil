@@ -88,7 +88,7 @@ LDFLAGS += -lfl
 FLEXFLAGS =
 BISONFLAGS =
 
-.PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test
+.PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test clean_lex_pars
 
 all: lexpars directories inc $(EXEC)
 
@@ -179,9 +179,9 @@ clean_dirs:
 	$(QUIET)$(RM) $(OBJDIR) $(DEPDIR) $(LOGDIR) $(TESTBINDIR)
 
 clean_lex_pars:
-	$(QUIET)$(RM) 
+	$(QUIET)$(RM) $(LPFILES) $(addsuffix .h, $(basename $(LPFILES)))
 
-mrproper:  clean clean_deps clean_logs clean_dirs
+mrproper:  clean clean_deps clean_logs clean_dirs clean_lex_pars
 	$(QUIET)$(RM) $(EXEC)
 	$(QUIET)$(RM) $(TESTFILES)
 

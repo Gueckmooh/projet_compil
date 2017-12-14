@@ -50,6 +50,7 @@ TESTFILES = $(addprefix $(TESTBINDIR)/, $(BASETESTS))
 LOGTESTS = $(addsuffix .log, $(BASETESTS))
 
 SRCINCFILES = $(wildcard $(SRCDIR)/*.h)
+TESTINCFILES = $(wildcard $(TESTDIR)/*.h)
 INCFILES = $(notdir $(wildcard $(INCLUDEDIR)/*.h))
 
 ############################################################
@@ -94,7 +95,7 @@ all: lexpars directories inc $(EXEC)
 
 lexpars: $(LPFILES)
 
-test: testdirectories inc $(TESTFILES)
+test: lexpars testdirectories inc_test $(TESTFILES)
 
 run: all
 	./$(EXEC)
@@ -122,6 +123,11 @@ directories: $(OBJDIR) $(DEPDIR)
 
 inc: $(INCLUDEDIR)
 	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
+	$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
+
+inc_test: $(INCLUDEDIR)
+	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
+	$(QUIET)for file in $(TESTDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 	$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 
 %.o: $(OBJDIR)
@@ -180,6 +186,9 @@ clean_dirs:
 
 clean_lex_pars:
 	$(QUIET)$(RM) $(LPFILES) $(addsuffix .h, $(basename $(LPFILES)))
+
+clean_inc:
+	$(QUIET)$(RM) $(INCLUDEDIR)
 
 mrproper:  clean clean_deps clean_logs clean_dirs clean_lex_pars
 	$(QUIET)$(RM) $(EXEC)

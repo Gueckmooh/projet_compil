@@ -1,67 +1,71 @@
 #include "asml_function.h"
 
-asml_function::asml_function (string name) {
-  this->name = name;
-  vars = new list<asml_var<int>*> ();
-  params = new list<asml_var<int>*> ();
-  instructions = new list<asml_instr*> ();
-}
+namespace asml {
 
-asml_function::~asml_function (void) {
-  asml_var<int>* var;
-  asml_instr* instr;
-  while (!vars->empty()) {
-    var = vars->back();
-    delete var;
-    vars->pop_back();
+  asml_function::asml_function (string name) {
+    this->name = name;
   }
-  while (!params->empty()) {
-    var = params->back();
-    delete var;
-    params->pop_back();
+  asml_function::~asml_function (void) {
+    asml_variable* var;
+    asml_instruction* instr;
+    while (!variables.empty()) {
+      var = variables.front();
+      variables.pop_front();
+      delete var;
+    }
+    while (!params.empty()) {
+      var = params.front();
+      params.pop_front();
+      delete var;
+    }
+    while (!instructions.empty()) {
+      instr = instructions.front();
+      instructions.pop_front();
+      delete instr;
+    }
   }
-  while (!params->empty()) {
-    instr = instructions->back();
-    delete instr;
-    instructions->pop_back();
-  }
-  delete vars;
-  delete params;
-  delete instructions;
-}
 
-void asml_function::add_param (asml_var<int>* param) {
-  params->push_back(param);
-}
-
-void asml_function::add_var (asml_var<int>* var) {
-  vars->push_back(var);
-}
-
-asml_var<int>* asml_function::get_param (string name) {
-  for (list<asml_var<int>*>::iterator it = params->begin(); it != params->end(); it++) {
-    if (!((*it)->get_name().compare(name)))
-      return *it;
+  void asml_function::set_name (string name) {
+    this->name = name;
   }
-  return NULL;
-}
 
-asml_var<int>* asml_function::get_var (string) {
-  for (list<asml_var<int>*>::iterator it = vars->begin(); it != vars->end(); it++) {
-    if (!((*it)->get_name().compare(name)))
-      return *it;
+  void asml_function::add_param (asml_variable* param) {
+    params.push_back(param);
   }
-  return NULL;
-}
-void asml_function::print (void) {
-  cout << "function " << name << " ";
-  for (list<asml_var<int>*>::iterator it = params->begin(); it != params->end(); it++)
-    cout << (*it)->to_string() << " ";
-  cout << endl;
-  cout << "Variables : ";
-  for (list<asml_var<int>*>::iterator it = vars->begin(); it != vars->end(); it++)
-    cout << (*it)->to_string() << " ";
-  cout << endl;
-  for (list<asml_instr*>::iterator it = instructions->begin(); it != instructions->end(); it++)
-    (*it)->print();
+
+  void asml_function::add_variable (asml_variable* var) {
+    variables.push_back(var);
+  }
+
+  void asml_function::add_instruction (asml_instruction* instr) {
+    instructions.push_back(instr);
+  }
+
+  string asml_function::get_name (void) {
+    return name;
+  }
+
+  vector<asml_variable*>::iterator asml_function::variable_begin (void) {
+    return variables.begin();
+  }
+
+  vector<asml_variable*>::iterator asml_function::variable_end (void) {
+    return  variables.end();
+  }
+
+  vector<asml_variable*>::iterator asml_function::param_begin (void) {
+    return params.begin();
+  }
+
+  vector<asml_variable*>::iterator asml_function::param_end (void) {
+    return params.end();
+  }
+
+  vector<asml_instruction*>::iterator asml_function::instruction_begin (void) {
+    return instructions.begin();
+  }
+  
+  vector<asml_instruction*>::iterator asml_function::instruction_end (void) {
+    return instructions.end();
+  }
 }

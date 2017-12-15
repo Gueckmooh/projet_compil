@@ -1,14 +1,15 @@
 %{
 #include "asml_factory_stub.h"
 #include "asml_parser.h"
+#include "asml_util.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 int yyparse();
 int yylex();
 int yyerror(const char* s);
-char* params;
-char* current;
+//char* params;
+//char* current;
 %}
 
 %code requires {
@@ -16,14 +17,20 @@ char* current;
 	int type;
 	char* op1;
 	char* op2;
-    } asml_operation;
+    } asml_parser_operation;
+
+    typedef struct {
+        char* name;
+	char* params;
+    } asml_parser_funcall;
 }
 
 %union {
     char* token_str;
     int token_int;
     float token_float;
-    asml_operation token_op;
+    asml_parser_operation token_op;
+    asml_parser_funcall token_funcall;
 }
 
 
@@ -64,8 +71,9 @@ char* current;
 %token	<token_str>	LABEL
 %token	<token_str>	IDENT
 %token			FLOAT
-%type	<token_str>	call
+%type	<token_funcall>	call
 %type	<token_op>	exp
+%type	<token_str>	param
 
 %%
 
@@ -89,8 +97,8 @@ asmt:		LET IDENT EQUAL INT IN asmt   {
 	      break;
 	    }
 		}
-	|	LET IDENT EQUAL call IN asmt  { asml_add_funcall ($4, $2, params); }
-	|	call                          { asml_add_funcall ($1, "0", params); }
+	|	LET IDENT EQUAL call IN asmt  {asml_add_funcall ($4.name, $2, $4.params);}
+|	call                          { asml_add_funcall ($1.name, "0", $1.params);}
 	|	exp                           {}
 	;
 
@@ -106,22 +114,19 @@ exp:	 	ADD IDENT IDENT            {
 		    }
 	;
 
-call:		CALL LABEL param { $$ = $2; }
+call:		CALL LABEL param { $$.name = $2; $$.params = $3; }
 	;
 
 param:		param IDENT {
-            strcpy(current, $2);
-	    current+=strlen(current);
-	    strcpy(current, " ");
-	    current+=strlen(current);
+	    strcpy(strend($1), $2);
+	    strcpy(strend($1), " ");
+	    $$ = $1;
                 }
 	|	IDENT       {
-	    params = (char*) malloc(sizeof (char));
-	    current = params;
-	    strcpy(current, $1);
-	    current+=strlen(current);
-	    strcpy(current, " ");
-	    current+=strlen(current);
+	    char* ret = (char*) malloc(sizeof (char)*256);
+	    strcpy(ret, $1);
+	    strcpy(strend(ret), " ");
+	    $$ = ret;
 		}
 	;
 

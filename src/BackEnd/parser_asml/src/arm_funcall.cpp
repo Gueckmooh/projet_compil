@@ -14,6 +14,7 @@ namespace arm {
   string arm_funcall::get_instruction (void) {
     string instruction;
     int nb = params.size();
+    int size = params.size();
     string var1, varn;
     vector<string>::reverse_iterator it = params.rbegin();
     var1 = *it;
@@ -23,13 +24,14 @@ namespace arm {
 	  instruction += "\tmov r0, #" + (*it) + "\n";
 	else
 	  instruction += "\tldr r0, [fp, #" + offset->find(*it)->second + "]\n";
-	instruction += "\tstr r0, [sp, #" + to_string(-8-(params.size()-nb)*4) + "]\n";
+	instruction += "\tstr r0, [sp, #" + to_string(-8-(size-nb)*4) + "]\n";
 	nb--;
       } else {
 	if (immediate (*it))
 	  instruction += "\tmov r" + to_string(nb-1) + ", #" + (*it) + "\n";
 	else
 	  instruction += "\tldr r" + to_string(nb-1) + ", [fp, #" + offset->find(*it)->second + "]\n";
+	nb--;
       }
       it++;
     }

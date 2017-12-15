@@ -15,7 +15,7 @@ namespace arm {
     default:
       break;
     }
-    instruction += "\tadd r0, r0, r1\n";
+    instruction += "\tsub r0, r0, r1\n";
     instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
     return instruction;
   }

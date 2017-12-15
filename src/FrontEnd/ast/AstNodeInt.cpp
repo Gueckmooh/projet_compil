@@ -23,5 +23,5 @@ void AstNodeInt::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "INT\n" << std::endl;
+    std::cout << "INT value = "<< this->i << std::endl;
 }

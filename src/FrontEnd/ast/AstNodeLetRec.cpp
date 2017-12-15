@@ -28,7 +28,6 @@ void AstNodeLetRec::print(int indent){
 void AstNodeLetRec::traversal(AstVisitor *vis){
     vis->visit_node_start(this);
     this->fun_def->traversal(vis);
-    vis->visit_binary_node1(this);
     this->t1->traversal(vis);
     vis->visit_node_end(this);
 }

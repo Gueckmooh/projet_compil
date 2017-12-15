@@ -1,10 +1,11 @@
+#include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
 #include "config.h"
 
 #include <iostream>
 #include <string>
 
-AstNodeTuple::AstNodeTuple(std::list<std::string> var_list){
+AstNodeTuple::AstNodeTuple(std::list<AstNode *> var_list){
     this->class_code = C_TUPLE;
     this->var_list = var_list;
 }

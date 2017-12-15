@@ -144,9 +144,9 @@ public:
 //Tuple
 class AstNodeLetTuple  :public AstNodeBinary {
 protected:
-    std::list<std::string> var_list;
+    std::list<AstNode *> var_list;
 public:
-    AstNodeLetTuple(std::list<std::string> var_list, AstNode *t1, AstNode *t2);
+    AstNodeLetTuple(std::list<AstNode *> var_list, AstNode *t1, AstNode *t2);
     ~AstNodeLetTuple();
 
     bool infer_types();

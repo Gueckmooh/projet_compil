@@ -18,7 +18,7 @@ public:
     AstNodeUnary(AstNode *t1);
     ~AstNodeUnary();
 
-    void traversal(AstVisitor *vis);
+    virtual void traversal(AstVisitor *vis);
 };
 
 /*
@@ -28,13 +28,14 @@ public:
 //App
 class AstNodeApp : public AstNodeUnary {
 protected:
-    std::list<std::string> args_list;
+    std::list<AstNode *> args_list;
 public:
-    AstNodeApp(std::list<std::string> args_list, AstNode *t1);
+    AstNodeApp(std::list<AstNode *> args_list, AstNode *t1);
     ~AstNodeApp();
 
     bool infer_types();
     void print(int indent);
+    void traversal(AstVisitor *vis);
 };
 
 //Fneg

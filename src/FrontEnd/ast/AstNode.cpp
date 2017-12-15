@@ -100,20 +100,20 @@ AstNode* build_ast(ptree t){
             break;
         case T_LETREC :
             result = new AstNodeLetRec(new FunDef(to_cpp_string(t->params.tletrec.fd->var),
-                                        to_cpp_str_list(t->params.tletrec.fd->args),
+                                        to_cpp_str_list(t->params.tletrec.fd->args),    /// TODO <- ici
                                         build_ast(t->params.tletrec.fd->body)
                                        ),
                                  build_ast(t->params.tletrec.t));
             break;
         case T_APP :
-            result = new AstNodeApp(to_cpp_str_list(t->params.tapp.l),
+            result = new AstNodeApp(to_cpp_ast_list(t->params.tapp.l),                  /// TODO <- ici
                               build_ast(t->params.tapp.t));
             break;
         case T_TUPLE :
-            result = new AstNodeTuple(to_cpp_str_list(t->params.ttuple.l));
+            result = new AstNodeTuple(to_cpp_ast_list(t->params.ttuple.l));             /// TODO <- ici
             break;
         case T_LETTUPLE :
-            result = new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),
+            result = new AstNodeLetTuple(to_cpp_ast_list(t->params.lettuple.l),         /// TODO <- ici
                                    build_ast(t->params.lettuple.t1),
                                    build_ast(t->params.lettuple.t2));
             break;

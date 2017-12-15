@@ -62,9 +62,9 @@ public:
 //Tuple
 class AstNodeTuple : public AstNodeLeaf {
 protected:
-    std::list<std::string> var_list;
+    std::list<AstNode *> var_list;
 public:
-    AstNodeTuple(std::list<std::string> var_list);
+    AstNodeTuple(std::list<AstNode *> var_list);
     ~AstNodeTuple();
 
     bool infer_types();

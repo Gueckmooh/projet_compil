@@ -7,12 +7,12 @@
 
 AstVisPrint::AstVisPrint(){
     this->next = NULL;
-    this->indent = 0;
+    this->indent = -1;
 }
 
 AstVisPrint::AstVisPrint(AstVisitor *next){
     this->next = next;
-    this->indent = 0;
+    this->indent = -1;
 }
 
 AstVisPrint::~AstVisPrint(){}
@@ -33,27 +33,17 @@ void AstVisPrint::visit_node_end(AstNode *node){
     this->indent --;
 }
 
-void AstVisPrint::visit_binary_node1(AstNode *node){
+void AstVisPrint::visit_fun_def_start(FunDef * fun_def){
     if(this->next != NULL){
-        this->next->visit_binary_node1(node);
+        this->next->visit_fun_def_start(fun_def);
     }
+    this->indent ++;
+    fun_def->print(indent);
 }
 
-void AstVisPrint::visit_ternary_node1(AstNode *node){
+void AstVisPrint::visit_fun_def_end(FunDef * fun_def){
     if(this->next != NULL){
-        this->next->visit_ternary_node1(node);
+        this->next->visit_fun_def_end(fun_def);
     }
-}
-
-void AstVisPrint::visit_ternary_node2(AstNode *node){
-    if(this->next != NULL){
-        this->next->visit_ternary_node2(node);
-    }
-}
-
-void AstVisPrint::visit_fun_def(FunDef * fun_def){
-    for (int i = 0 ; i < indent ; i++){
-        std::cout << INDENT;
-    }
-    std::cout <<"FUNDEF" << std::endl;
+    this->indent --;
 }

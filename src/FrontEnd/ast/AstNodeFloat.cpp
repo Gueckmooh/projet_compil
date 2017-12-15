@@ -21,5 +21,5 @@ void AstNodeFloat::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FLOAT\n" << std::endl;
+    std::cout << "FLOAT value = "<< this->f << std::endl;
 }

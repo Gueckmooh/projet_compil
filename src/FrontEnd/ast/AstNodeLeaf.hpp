@@ -69,6 +69,7 @@ public:
 
     bool infer_types();
     void print(int indent);
+    void traversal(AstVisitor *vis);
 };
 
 //Unit

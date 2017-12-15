@@ -23,5 +23,5 @@ void AstNodeIf::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "IF\n" << std::endl;
+    std::cout << "IF" << std::endl;
 }

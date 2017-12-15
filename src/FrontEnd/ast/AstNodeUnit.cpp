@@ -19,5 +19,5 @@ void AstNodeUnit::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "UNIT\n" << std::endl;
+    std::cout << "UNIT" << std::endl;
 }

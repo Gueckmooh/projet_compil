@@ -26,5 +26,15 @@ void AstNodeLetTuple::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "TUPLE\n" << std::endl;
+    std::cout << "LET TUPLE" << std::endl;
+}
+
+void AstNodeLetTuple::traversal(AstVisitor *vis){
+    vis->visit_node_start(this);
+    for(std::list<AstNode *>::iterator i=this->var_list.begin() ; i != this->var_list.end() ; ++i){
+        (*i)->traversal(vis);
+    }
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
+    vis->visit_node_end(this);
 }

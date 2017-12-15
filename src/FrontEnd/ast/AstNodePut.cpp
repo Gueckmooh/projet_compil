@@ -23,5 +23,5 @@ void AstNodePut::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "PUT\n" << std::endl;
+    std::cout << "PUT" << std::endl;
 }

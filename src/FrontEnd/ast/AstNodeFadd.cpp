@@ -22,5 +22,5 @@ void AstNodeFadd::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FADD\n" << std::endl;
+    std::cout << "FADD" << std::endl;
 }

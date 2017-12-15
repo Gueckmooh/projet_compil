@@ -22,5 +22,5 @@ void AstNodeFsub::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FSUB\n" << std::endl;
+    std::cout << "FSUB" << std::endl;
 }

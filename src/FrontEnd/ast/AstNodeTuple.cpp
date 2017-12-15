@@ -24,3 +24,12 @@ void AstNodeTuple::print(int indent){
     }
     std::cout << "TUPLE\n" << std::endl;
 }
+
+
+void AstNodeTuple::traversal(AstVisitor *vis){
+    vis->visit_node_start(this);
+    for(std::list<AstNode *>::iterator i=this->var_list.begin() ; i != this->var_list.end() ; ++i){
+        (*i)->traversal(vis);
+    }
+    vis->visit_node_end(this);
+}

@@ -21,5 +21,5 @@ void AstNodeVar::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "VAR -> " << this->var_name << std::endl;
+    std::cout << "VAR " << this->var_name << std::endl;
 }

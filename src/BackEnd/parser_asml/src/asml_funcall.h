@@ -13,6 +13,7 @@ namespace asml {
   class asml_funcall : public asml_instruction {
   public:
     asml_funcall (void);
+    ~asml_funcall (void) {};
 
     virtual string get_funcname (void);
 

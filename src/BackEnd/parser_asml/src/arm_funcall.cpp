@@ -2,41 +2,38 @@
 
 namespace arm {
 
+  void arm_funcall::set_function_name (string name) {
+    function_name = name;
+  }
+
+  bool arm_funcall::immediate (string instr) {
+    char c = instr.front();
+    return c >= '0' && c <= '9';
+  }
+
   string arm_funcall::get_instruction (void) {
     string instruction;
+    int nb = params.size();
     string var1, varn;
-    vector<string>::iterator it = params.begin();
+    vector<string>::reverse_iterator it = params.rbegin();
     var1 = *it;
-    if (params.size() > 5) {
-      
-    }
-    it = params.begin();
-    for (int n = 0; it != params.end(); n++)  {
-      switch (arm_util::type_of(var1)) {
-      case arm_util::DIRECT:
-	if (n <= 3) {
-	instruction = "\tMOV R0, #";
-	instruction += var1;
-	instruction += "\n";
-	} else {
-	  break;
-	}
-	break;
-      case arm_util::VARIABLE:
-	instruction = "\tLDR R0, [FP, #";
-	instruction += offset->find(var1)->second;
-	instruction += "]";
-	instruction += "\n";
-	break;
-      default:
-	break;
-	/* do nothing */
+    while (it != params.rend()) {
+      if (nb > 4) {
+	if (immediate (*it))
+	  instruction += "\tmov r0, #" + (*it) + "\n";
+	else
+	  instruction += "\tldr r0, [fp, #" + offset->find(*it)->second + "]\n";
+	instruction += "\tstr r0, [sp, #" + to_string(-8-(params.size()-nb)*4) + "]\n";
+	nb--;
+      } else {
+	if (immediate (*it))
+	  instruction += "\tmov r" + to_string(nb-1) + ", #" + (*it) + "\n";
+	else
+	  instruction += "\tldr r" + to_string(nb-1) + ", [fp, #" + offset->find(*it)->second + "]\n";
       }
+      it++;
     }
-    instruction += "\tSTR R0, [FP, #";
-    instruction += offset->find(var1)->second;
-    instruction += "]";
-    instruction += "\n";
+    instruction += "\tbl " + function_name + "\n";
     return instruction;
   }
 

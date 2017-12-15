@@ -1,6 +1,6 @@
 #include <string>
 
-#include "asml_instruction"
+#include "asml_instruction.h"
 
 #ifndef __ASML_AFFECTATION_H__
 #define __ASML_AFFECTATION_H__
@@ -12,6 +12,7 @@ namespace asml {
   class asml_affectation : public asml_instruction {
   public:
     asml_affectation (void);
+    ~asml_affectation (void) {};
 
     virtual int get_type (void);
     virtual string get_op1 (void);

@@ -29,9 +29,9 @@ namespace asml {
     virtual vector<asml_variable*>::iterator param_end (void);
     virtual vector<asml_instruction*>::iterator instruction_begin (void);
     virtual vector<asml_instruction*>::iterator instruction_end (void);
-    virtual vector<asml_variable*> get_variables (void);
-    virtual vector<asml_variable*> get_params (void);
-    virtual vector<asml_instruction*> get_instructions (void);
+    virtual vector<asml_variable*>* get_variables (void);
+    virtual vector<asml_variable*>* get_params (void);
+    virtual vector<asml_instruction*>* get_instructions (void);
     //asml_variable* get_param (string);
     //asml_variable* get_var (string);
     //asml_instr* get_instr (int);

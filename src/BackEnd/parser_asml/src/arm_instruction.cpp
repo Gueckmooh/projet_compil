@@ -7,4 +7,8 @@ namespace arm {
     this->offset = map;
   }
 
+  void arm_instruction::add_param (string param) {
+    params.push_back(param);
+  }
+
 }

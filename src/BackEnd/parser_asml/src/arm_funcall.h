@@ -1,4 +1,3 @@
-#include "asml.h"
 #include "arm_instruction.h"
 #include <string>
 #include <map>
@@ -13,7 +12,10 @@ namespace arm {
   class arm_funcall : public arm_instruction {
   public:
     virtual string get_instruction (void);
+    virtual void set_function_name (string);
+    static bool immediate (string);
   protected:
+    string function_name;
   };
 
 }

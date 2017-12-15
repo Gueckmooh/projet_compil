@@ -1,16 +1,21 @@
-#include "asml_function.h"
-#include "arm_instruction.h"
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <map>
 
-using namespace std;
-using namespace asml;
 
 #ifndef __ARM_GENERATOR_H__
 #define __ARM_GENERATOR_H__
+
+#include "asml_function.h"
+#include "arm_instruction.h"
+#include "asml_integer.h"
+#include "asml_funcall.h"
+#include "arm_funcall.h"
+
+using namespace std;
+using namespace asml;
 
 namespace arm {
 
@@ -21,6 +26,7 @@ namespace arm {
     void set_name (string);
     void generate (void);
   protected:
+    void generate_function (void);
     void pre_process_params (void);
     void process_params (void);
     void pre_process_variables (void);
@@ -41,6 +47,7 @@ namespace arm {
     string epilogue;
     string processed_params;
     string processed_variables;
+    string to_save;
 
     string name;
     vector<arm_instruction*> instructions;

@@ -1,6 +1,9 @@
 #include <iostream>
 
 #include "asml_function.h"
+#include "asml_integer.h"
+#include "asml_affectation.h"
+#include "asml_funcall.h"
 
 #ifndef __ASML_FACTORY_H__
 #define __ASML_FACTORY_H__
@@ -11,13 +14,13 @@ namespace asml {
 
   class asml_factory {
   public:
-    virtual static void create_function (void);
-    virtual static asml_function* get_function (void);
-    virtual static void set_function_name (string);
-    virtual static void add_int_param (string);
-    virtual static void add_int_variable (string, int);
-    virtual static void add_affectation (string, string);
-    virtual static void add_funcall (string, string, vector<string>*);
+    static void create_function (void);
+    static asml_function* get_function (void);
+    static void set_function_name (string);
+    static void add_int_param (string);
+    static void add_int_variable (string, int);
+    static void add_affectation (string, string);
+    static void add_funcall (string, string, vector<string>*);
   protected:
     static asml_function* function;
   };

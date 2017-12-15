@@ -4,20 +4,20 @@ namespace asml {
 
   asml_integer::asml_integer (void) {
     type_id = asml_variable::INTEGER;
-    has_value = false;
+    has = false;
   }
 
   void asml_integer::set_value (int value) {
     this->value = value;
-    has_value = true;
+    has = true;
   }
 
   void asml_integer::unset_value (void) {
-    has_value = false;
+    has = false;
   }
 
   bool asml_integer::has_value (void) {
-    return has_value;
+    return has;
   }
 
   int asml_integer::get_value (void) {

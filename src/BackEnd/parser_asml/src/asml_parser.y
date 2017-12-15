@@ -54,7 +54,7 @@ char* current;
 %token	<token_str>	LABEL
 %token	<token_str>	IDENT
 %token			FLOAT
-%type	<token_int>	call
+%type	<token_str>	call
 %type	<token_int>	exp
 
 %%

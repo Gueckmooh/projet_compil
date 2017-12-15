@@ -22,7 +22,7 @@ void AstNodeTuple::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "TUPLE\n" << std::endl;
+    std::cout << "TUPLE" << std::endl;
 }
 
 

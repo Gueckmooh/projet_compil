@@ -113,7 +113,7 @@ AstNode* build_ast(ptree t){
             result = new AstNodeTuple(to_cpp_ast_list(t->params.ttuple.l));             /// TODO <- ici
             break;
         case T_LETTUPLE :
-            result = new AstNodeLetTuple(to_cpp_ast_list(t->params.lettuple.l),         /// TODO <- ici
+            result = new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),         /// TODO <- ici
                                    build_ast(t->params.lettuple.t1),
                                    build_ast(t->params.lettuple.t2));
             break;

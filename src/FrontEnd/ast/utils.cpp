@@ -38,6 +38,6 @@ std::list<AstNode *> to_cpp_ast_list(plist c_list){
 void print_str_list(std::list<std::string> str_list){
     for (std::list<std::string>::iterator i = str_list.begin() ;
          i != str_list.end() ; ++i) {
-        std::cout << *i <<" ;";
+        std::cout << *i <<" ; ";
     }
 }

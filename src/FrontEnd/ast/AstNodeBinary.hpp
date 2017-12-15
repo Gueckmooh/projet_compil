@@ -141,12 +141,12 @@ public:
     void print(int indent);
 };
 
-//Tuple
+//LetTuple
 class AstNodeLetTuple  :public AstNodeBinary {
 protected:
-    std::list<AstNode *> var_list;
+    std::list<std::string> var_list;
 public:
-    AstNodeLetTuple(std::list<AstNode *> var_list, AstNode *t1, AstNode *t2);
+    AstNodeLetTuple(std::list<std::string> var_list, AstNode *t1, AstNode *t2);
     ~AstNodeLetTuple();
 
     bool infer_types();

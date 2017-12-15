@@ -30,9 +30,9 @@ void AstNodeApp::print(int indent){
 
 void AstNodeApp::traversal(AstVisitor *vis){
     vis->visit_node_start(this);
+    this->t1->traversal(vis);
     for(std::list<AstNode *>::iterator i=this->args_list.begin() ; i != this->args_list.end() ; ++i){
         (*i)->traversal(vis);
     }
-    this->t1->traversal(vis);
     vis->visit_node_end(this);
 }

@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-AstNodeFloat::AstNodeFloat(float b){
+AstNodeFloat::AstNodeFloat(float f){
     this->class_code = C_FLOAT;
     this->f = f;
 }

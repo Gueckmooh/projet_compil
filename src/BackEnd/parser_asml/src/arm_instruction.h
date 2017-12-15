@@ -1,4 +1,3 @@
-#include "arm_util.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -6,6 +5,8 @@
 
 #ifndef __ARM_INSTRUCION_H__
 #define __ARM_INSTRUCION_H__
+
+#include "arm_util.h"
 
 namespace arm {
 

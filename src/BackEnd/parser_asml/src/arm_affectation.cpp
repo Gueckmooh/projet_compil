@@ -4,31 +4,34 @@ namespace arm {
 
   string arm_affectation::get_instruction (void) {
     string instruction;
-    string var1, var2;
-    vector<string>::iterator it = params.begin();
-    var1 = *it++;
-    var2 = *it;
-    switch (arm_util::type_of(var2)) {
+    switch (arm_util::type_of(op2)) {
     case arm_util::DIRECT:
-      instruction = "\tMOV R0, #";
-	instruction += var2;
-	instruction += "\n";
+      instruction += "\tmov r0, #" + op2 + "\n";
       break;
     case arm_util::VARIABLE:
-      instruction = "\tLDR R0, [FP, #";
-      instruction += offset->find(var2)->second;
-      instruction += "]";
-      instruction += "\n";
+      instruction += "\tldr r0, [fp, #" + offset->find(op2)->second + "]\n";
       break;
     default:
       break;
-      /* do nothing */
     }
-    instruction += "\tSTR R0, [FP, #";
-    instruction += offset->find(var1)->second;
-    instruction += "]";
-    instruction += "\n";
+    instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
     return instruction;
+  }
+
+  void arm_affectation::set_op1 (string op) {
+    op1 = op;
+  }
+
+  void arm_affectation::set_op2 (string op) {
+    op2 = op;
+  }
+
+  string arm_affectation::get_op1 (void) {
+    return op1;
+  }
+
+  string arm_affectation::get_op2 (void) {
+    return op2;
   }
 
 }

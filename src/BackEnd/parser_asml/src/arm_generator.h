@@ -8,6 +8,7 @@
 #ifndef __ARM_GENERATOR_H__
 #define __ARM_GENERATOR_H__
 
+#include "arm_instruction_factory.h"
 #include "asml_function.h"
 #include "arm_instruction.h"
 #include "asml_integer.h"
@@ -30,8 +31,8 @@ namespace arm {
     void pre_process_params (void);
     void process_params (void);
     void pre_process_variables (void);
-    void process_variables (void);
-    void pre_process_instructions (void);
+    //    void process_variables (void);
+    //    void pre_process_instructions (void);
     void process_instructions (void);
     void generate_prologue (void);
     void generate_epilogue (void);

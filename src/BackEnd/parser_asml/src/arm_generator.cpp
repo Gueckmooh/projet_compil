@@ -37,20 +37,20 @@ namespace arm {
     fp_offset += 4;
     to_save += ", lr";
     //}
-    pre_process_instructions();
+    //pre_process_instructions();
     pre_process_params();
     pre_process_variables();
     generate_prologue();
     process_params();
-    process_variables();
+    //    process_variables();
     process_instructions();
     generate_epilogue();
     *output << "main:\n";
     *output << prologue;
     *output << processed_params;
-    *output << processed_variables;
-    for (vector<arm_instruction*>::iterator it = instructions.begin();
-	 it != instructions.end();
+    //    *output << processed_variables;
+    for (vector<arm_instruction*>::reverse_iterator it = instructions.rbegin();
+	 it != instructions.rend();
 	 it++) {
       *output << (*it)->get_instruction();
     }
@@ -100,7 +100,7 @@ namespace arm {
       off-=4;
     }
   }
-
+  /*
   void arm_generator::process_variables (void) {
     vector<asml_variable*>::iterator it = asml->variable_begin();
     asml_integer* integer;
@@ -121,35 +121,22 @@ namespace arm {
       }
     }
   }
-
+  */
+  /*
   void arm_generator::pre_process_instructions (void) {
     vector<asml_instruction*>::iterator it = asml->instruction_begin();
-    while (it != asml->instruction_end() || !do_save_sp)
+    while (it != asml->instruction_end())
       do_save_sp = do_save_sp || (*it++)->get_type () == asml_instruction::FUNCALL;
   }
-
+  */
   void arm_generator::process_instructions (void) {
     vector<asml_instruction*>::iterator it = asml->instruction_begin ();
     arm_instruction* instruction;
-    asml_funcall* funcall;
     while (it != asml->instruction_end ()) {
-      switch ((*it)->get_type ()) {
-      case asml_instruction::FUNCALL:
-	funcall = dynamic_cast<asml_funcall*>(*it);
-	instruction = new arm_funcall ();
-	dynamic_cast<arm_funcall*>(instruction)->set_function_name ((funcall->get_funcname()).substr(1));
-	for (vector<string>::iterator it2 = funcall->begin();
-	     it2 != funcall->end();
-	     it2++) {
-	  instruction->add_param(*it2);
-	}
-	instruction->set_var_offset (&var_offsets);
-	it++;
-	instructions.push_back(instruction);
-	break;
-      default:
-	break;
-      }
+      instruction = arm_instruction_factory::create_instruction (*it);
+      instruction->set_var_offset (&var_offsets);
+      instructions.push_back(instruction);
+      it++;
     }
   }
 

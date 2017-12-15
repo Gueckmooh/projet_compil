@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "asml_factory.h"
+#include "asml_factory_stub.h"
 int yyparse();
 int yylex();
 int yyerror(const char* s);
-extern asml_factory factory;
+char* params;
+char* current;
 %}
 
 %union {
@@ -58,55 +59,35 @@ extern asml_factory factory;
 
 %%
 
-fundef:		LET UNDERSC EQUAL asmt {
-		    char* name = malloc (sizeof("main"));
-		    strcpy(name, "main");
-		    factory.name = name;
-		    }
+fundef:		LET UNDERSC EQUAL asmt { asml_set_function_name ("main"); }
 	;
 
-asmt:		LET IDENT EQUAL exp IN asmt  {
-		    char* var = (char*) malloc (sizeof ($2));
-		    strcpy(var, $2);
-		    factory.vars[factory.current_var] = var;
-		    factory.current_var++;
-		    }
-	|	LET IDENT EQUAL exp          {
-		    char* var = (char*) malloc (sizeof ($2));
-		    factory.vars[factory.current_var] = var;
-		    factory.current_var++;
-		    }
-	|	LET IDENT EQUAL call IN asmt  { }
-	|	call { }
-	|	exp { }
+asmt:		LET IDENT EQUAL exp IN asmt   { asml_add_int_variable ($2, $4); }
+	|	LET IDENT EQUAL call IN asmt  { asml_add_funcall ($4, $2, params); }
+	|	call { asml_add_funcall ($1, "0", params); }
+	|	exp {}
 	;
 
-exp:	 	INT                    { $$ = $1 }
+exp:	 	INT                    { $$ = $1; }
 	;
 
-call:		CALL LABEL param {
-		    char* op = (char*) malloc (sizeof ($2));
-		    strcpy(op, $2);
-		    factory.op[factory.current_instr][0] = op;
-		    factory.instr[factory.current_instr] = ACALL;
-		    $$ = factory.current_instr;
-		    factory.current_instr++;
-		    }
+call:		CALL LABEL param { $$ = $2;}
 	;
 
 param:		param IDENT {
-		    char* op = (char*) malloc (sizeof ($2));
-		    strcpy(op, $2);
-		    factory.op[factory.current_instr][factory.current_op] = op;
-		    factory.current_op++;
-		    }
+            strcpy(current, $2);
+	    current+=strlen(current);
+	    strcpy(current, " ");
+	    current+=strlen(current);
+                }
 	|	IDENT       {
-	            factory.current_op=1;
-		    char* op = (char*) malloc (sizeof ($1));
-		    strcpy(op, $1);
-		    factory.op[factory.current_instr][factory.current_op] = op;
-		    factory.current_op++;
-		    }
+	    params = (char*) malloc(sizeof (char));
+	    current = params;
+	    strcpy(current, $1);
+	    current+=strlen(current);
+	    strcpy(current, " ");
+	    current+=strlen(current);
+		}
 	;
 
 %%

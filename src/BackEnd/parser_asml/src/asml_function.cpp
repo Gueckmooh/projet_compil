@@ -2,9 +2,6 @@
 
 namespace asml {
 
-  asml_function::asml_function (string name) {
-    this->name = name;
-  }
   asml_function::~asml_function (void) {
     asml_variable* var;
     asml_instruction* instr;
@@ -64,8 +61,20 @@ namespace asml {
   vector<asml_instruction*>::iterator asml_function::instruction_begin (void) {
     return instructions.begin();
   }
-  
+
   vector<asml_instruction*>::iterator asml_function::instruction_end (void) {
     return instructions.end();
+  }
+
+  vector<asml_variable*> asml_function::get_variables (void) {
+    return variables;
+  }
+
+  vector<asml_variable*> asml_function::get_params (void) {
+    return params;
+  }
+
+  vector<asml_instruction*> asml_function::get_instructions (void) {
+    return instructions;
   }
 }

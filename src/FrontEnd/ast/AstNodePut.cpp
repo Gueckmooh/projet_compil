@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodePut.hpp"
+#include "AstNodeTernary.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodePut::AstNodePut(AstNode *t1, AstNode *t2, AstNode *t3){
     this->class_code = C_PUT;

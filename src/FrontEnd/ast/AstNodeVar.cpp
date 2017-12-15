@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodeVar.hpp"
+#include "AstNodeLeaf.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeVar::AstNodeVar(std::string var_name){
     this->class_code = C_VAR;

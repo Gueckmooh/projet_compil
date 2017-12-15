@@ -17,7 +17,9 @@ void AstNodeBinary::print(int indent){
 }
 
 void AstNodeBinary::traversal(AstVisitor *vis){
-    vis->visit_node(this);
+    vis->visit_node_start(this);
     this->t1->traversal(vis);
+    vis->visit_binary_node1(this);
     this->t2->traversal(vis);
+    vis->visit_node_end(this);
 }

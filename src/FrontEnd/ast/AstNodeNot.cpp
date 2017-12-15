@@ -1,7 +1,7 @@
-#include <iostream>
-#include "AstNodeNot.hpp"
+#include "AstNodeUnary.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeNot::AstNodeNot(AstNode *t1){
     this->class_code = C_NOT;

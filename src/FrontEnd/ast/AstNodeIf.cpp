@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeIf.hpp"
+#include "AstNodeTernary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeIf::AstNodeIf(AstNode *t1, AstNode *t2, AstNode *t3){
     this->class_code = C_IF;

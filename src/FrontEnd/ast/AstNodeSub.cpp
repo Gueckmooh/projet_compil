@@ -1,7 +1,7 @@
-#include <iostream>
-#include "AstNodeSub.hpp"
+#include "AstNodeBinary.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeSub::AstNodeSub(AstNode *t1, AstNode *t2){
     this->class_code = C_SUB;

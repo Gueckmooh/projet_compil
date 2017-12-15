@@ -1,8 +1,10 @@
-#include <iostream>
-#include <string>
-#include "AstNodeApp.hpp"
+#include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
+#include "utils.h"
+
+#include <iostream>
+#include <string>
 
 AstNodeApp::AstNodeApp(std::list<std::string> args_list, AstNode *t1){
     this->class_code = C_APP;
@@ -22,5 +24,7 @@ void AstNodeApp::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "APP\n" << std::endl;
+    std::cout << "APP ;" << "args =";
+    print_str_list(this->args_list);
+    std::cout << std::endl;
 }

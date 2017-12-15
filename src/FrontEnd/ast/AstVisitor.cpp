@@ -14,11 +14,38 @@ AstVisitor::AstVisitor(AstVisitor *next){
 
 AstVisitor::~AstVisitor(){}
 
-void AstVisitor::visit_node(AstNode *node){
+void AstVisitor::visit_node_start(AstNode *node){
     if(this->next){
-        this->next->visit_node(node);
+        this->next->visit_node_start(node);
     }
-    std::cout << "no way" << std::endl;
+    // specific visitor code
+}
+
+void AstVisitor::visit_node_end(AstNode *node){
+    if(this->next){
+        this->next->visit_node_end(node);
+    }
+    // specific visitor code
+}
+
+void AstVisitor::visit_binary_node1(AstNode *node){
+    if(this->next){
+        this->next->visit_binary_node1(node);
+    }
+    // specific visitor code
+}
+
+void AstVisitor::visit_ternary_node1(AstNode *node){
+    if(this->next){
+        this->next->visit_ternary_node1(node);
+    }
+    // specific visitor code
+}
+
+void AstVisitor::visit_ternary_node2(AstNode *node){
+    if(this->next){
+        this->next->visit_ternary_node2(node);
+    }
     // specific visitor code
 }
 

@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodeLet.hpp"
+#include "AstNodeBinary.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeLet::AstNodeLet(AstNode *t1, AstNode *t2, std::string var_name){
     this->class_code = C_LET;

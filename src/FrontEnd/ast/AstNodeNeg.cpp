@@ -1,7 +1,7 @@
-#include <iostream>
-#include "AstNodeNeg.hpp"
+#include "AstNodeUnary.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeNeg::AstNodeNeg(AstNode *t1){
     this->class_code = C_NEG;

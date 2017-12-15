@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFdiv.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFdiv::AstNodeFdiv(AstNode *t1, AstNode *t2){
     this->class_code = C_FDIV;

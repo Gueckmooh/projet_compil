@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeBool.hpp"
+#include "AstNodeLeaf.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeBool::AstNodeBool(bool b){
     this->class_code = C_BOOL;

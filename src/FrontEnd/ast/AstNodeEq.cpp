@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeEq.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeEq::AstNodeEq(AstNode *t1, AstNode *t2){
     this->class_code = C_EQ;

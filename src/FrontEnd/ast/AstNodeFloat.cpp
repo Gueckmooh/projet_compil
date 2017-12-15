@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFloat.hpp"
+#include "AstNodeLeaf.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFloat::AstNodeFloat(float b){
     this->class_code = C_FLOAT;

@@ -1,7 +1,8 @@
-#include <iostream>
-#include "AstNodeAdd.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
+
+#include <iostream>
 
 AstNodeAdd::AstNodeAdd(AstNode *t1, AstNode *t2){
     this->class_code = C_ADD;
@@ -21,5 +22,5 @@ void AstNodeAdd::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "PLUS\n" << std::endl;
+    std::cout << "PLUS" << std::endl;
 }

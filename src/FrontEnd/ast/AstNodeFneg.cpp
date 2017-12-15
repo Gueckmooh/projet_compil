@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFneg.hpp"
+#include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFneg::AstNodeFneg(AstNode *t1){
     this->class_code = C_FNEG;

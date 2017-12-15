@@ -28,30 +28,16 @@ void AstVisitor::visit_node_end(AstNode *node){
     // specific visitor code
 }
 
-void AstVisitor::visit_binary_node1(AstNode *node){
+void AstVisitor::visit_fun_def_start(FunDef *fun_def){
     if(this->next){
-        this->next->visit_binary_node1(node);
+        this->next->visit_fun_def_start(fun_def);
     }
     // specific visitor code
 }
 
-void AstVisitor::visit_ternary_node1(AstNode *node){
+void AstVisitor::visit_fun_def_end(FunDef *fun_def){
     if(this->next){
-        this->next->visit_ternary_node1(node);
-    }
-    // specific visitor code
-}
-
-void AstVisitor::visit_ternary_node2(AstNode *node){
-    if(this->next){
-        this->next->visit_ternary_node2(node);
-    }
-    // specific visitor code
-}
-
-void AstVisitor::visit_fun_def(FunDef *fun_def){
-    if(this->next){
-        this->next->visit_fun_def(fun_def);
+        this->next->visit_fun_def_end(fun_def);
     }
     // specific visitor code
 }

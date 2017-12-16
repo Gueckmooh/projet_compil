@@ -16,7 +16,8 @@ namespace arm {
       break;
     }
     instruction += "\tadd r0, r0, r1\n";
-    instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
+    if (op1.compare("0") != 0)
+      instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
     return instruction;
   }
 

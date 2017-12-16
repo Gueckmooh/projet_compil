@@ -8,8 +8,7 @@
 int yyparse();
 int yylex();
 int yyerror(const char* s);
-//char* params;
-//char* current;
+int hulu = 0;
 %}
 
 %code requires {
@@ -77,12 +76,32 @@ int yyerror(const char* s);
 
 %%
 
-fundef:		LET UNDERSC EQUAL asmt { asml_set_function_name ("main"); }
+prog:		fundef fundef
+	|	fundef
+	;
+
+fundef:		LET UNDERSC EQUAL asmt      {
+		                               asml_set_function_name ("main");
+		                               asml_validate_function();
+					       printf ("main, %d\n", hulu++);
+		                            }
+	|	LET LABEL EQUAL asmt  {
+	                                       asml_set_function_name ($2+1);
+                                               asml_validate_function();
+					       printf ("%s, %d\n", $2, hulu++);
+                                            }
+	|	LET LABEL param EQUAL asmt  {
+	                                       asml_add_int_param ($3);
+					       asml_set_function_name ($2+1);
+					       asml_validate_function ();
+					       printf ("%s, %d\n", $2, hulu++);
+		                            }
 	;
 
 asmt:		LET IDENT EQUAL INT IN asmt   {
 		    asml_add_int_variable ($2);
 		    asml_add_affectation ($2, $4);
+		    printf ("%s, %d\n", "asmt", hulu++);
 		    }
 	|	LET IDENT EQUAL exp IN asmt   {
 	    asml_add_int_variable ($2);
@@ -97,9 +116,22 @@ asmt:		LET IDENT EQUAL INT IN asmt   {
 	      break;
 	    }
 		}
-	|	LET IDENT EQUAL call IN asmt  {asml_add_funcall ($4.name, $2, $4.params);}
+	|	LET IDENT EQUAL call IN asmt  {
+	    asml_add_int_variable ($2);
+	    asml_add_funcall ($4.name, $2, $4.params);}
 |	call                          { asml_add_funcall ($1.name, "0", $1.params);}
-	|	exp                           {}
+	|	exp                           {
+	    switch ($1.type) {
+	    case 1:
+	      asml_add_addition ("0", $1.op1, $1.op2);
+	      break;
+	    case 2:
+	      asml_add_soustraction ("0", $1.op1, $1.op2);
+	      break;
+	    default:
+	      break;
+	    }
+		}
 	;
 
 exp:	 	ADD IDENT IDENT            {

@@ -2,8 +2,21 @@
 
 namespace arm {
 
+  arm_funcall::arm_funcall (void) {
+    is_returning = false;
+  }
+
   void arm_funcall::set_function_name (string name) {
     function_name = name;
+  }
+
+  void arm_funcall::set_retval (string ret) {
+    retval = ret;
+    is_returning = true;
+  }
+
+  string arm_funcall::get_retval (void) {
+    return retval;
   }
 
   bool arm_funcall::immediate (string instr) {
@@ -36,6 +49,9 @@ namespace arm {
       it++;
     }
     instruction += "\tbl " + function_name + "\n";
+    if (is_returning) {
+      instruction += "\tstr r0, [fp, #" + offset->find(retval)->second + "]\n";
+    }
     return instruction;
   }
 

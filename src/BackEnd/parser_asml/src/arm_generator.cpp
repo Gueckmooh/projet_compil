@@ -2,11 +2,15 @@
 
 namespace arm {
 
-  arm_generator::arm_generator (asml_function* fun) {
+  arm_generator::arm_generator (vector<asml_function*>* fun) {
     output = new ofstream ();
     filename = "default.s";
     asml = fun;
     do_save_sp = false;
+    for (vector<asml_function*>::iterator it = asml->begin();
+	 it != asml->end();
+	 it++)
+      generators.push_back(new arm_function_generator(*it));
   }
 
   arm_generator::~arm_generator (void) {
@@ -22,7 +26,11 @@ namespace arm {
     output->open(filename);
     *output << "\t.text" << endl;
     *output << "\t.global _start" << endl;
-    *output << "\t.global main" << endl;
+    for (vector<arm_function_generator*>::iterator it = generators.begin();
+	 it != generators.end();
+	 it++)
+      *output << "\t.global " << (*it)->get_name() << endl;
+    //*output << "\t.global main" << endl;
     *output << "_start:" << endl;
     *output << "\tbl main" << endl;
     *output << "\tbl min_caml_exit" << endl;
@@ -31,32 +39,40 @@ namespace arm {
   }
 
   void arm_generator::generate_function (void) {
-    fp_offset = 0;
+    stringstream* ss;
+    //fp_offset = 0;
     //if (do_save_sp || true) { // TODO
-    to_save = "fp";
-    fp_offset += 4;
-    to_save += ", lr";
+    //to_save = "fp";
+    //fp_offset += 4;
+    //to_save += ", lr";
     //}
     //pre_process_instructions();
-    pre_process_params();
-    pre_process_variables();
-    generate_prologue();
-    process_params();
+    //pre_process_params();
+    //pre_process_variables();
+    //generate_prologue();
+    //process_params();
     //    process_variables();
-    process_instructions();
-    generate_epilogue();
-    *output << "main:\n";
-    *output << prologue;
-    *output << processed_params;
+    //process_instructions();
+    //generate_epilogue();
+    //*output << "main:\n";
+    //*output << prologue;
+    //*output << processed_params;
     //    *output << processed_variables;
-    for (vector<arm_instruction*>::reverse_iterator it = instructions.rbegin();
-	 it != instructions.rend();
+    //for (vector<arm_instruction*>::reverse_iterator it = instructions.rbegin();
+	 //it != instructions.rend();
+	 //it++) {
+      //*output << (*it)->get_instruction();
+    //}
+    //*output << epilogue;
+    for (vector<arm_function_generator*>::iterator it = generators.begin();
+	 it != generators.end();
 	 it++) {
-      *output << (*it)->get_instruction();
+      ss = (*it)->generate();
+      *output << ss->str() << endl;
     }
-    *output << epilogue;
   }
 
+  /*
   void arm_generator::pre_process_params (void) {
     int off = -fp_offset -4;
     vector<asml_variable*>* params = asml->get_params ();
@@ -100,7 +116,7 @@ namespace arm {
       off-=4;
     }
   }
-  /*
+
   void arm_generator::process_variables (void) {
     vector<asml_variable*>::iterator it = asml->variable_begin();
     asml_integer* integer;
@@ -129,6 +145,7 @@ namespace arm {
       do_save_sp = do_save_sp || (*it++)->get_type () == asml_instruction::FUNCALL;
   }
   */
+  /*
   void arm_generator::process_instructions (void) {
     vector<asml_instruction*>::iterator it = asml->instruction_begin ();
     arm_instruction* instruction;
@@ -154,5 +171,6 @@ namespace arm {
     epilogue += "\tldmfd sp!, {" + to_save + "}\n";
     epilogue += "\tbx lr\n";
   }
+  */
 
 }

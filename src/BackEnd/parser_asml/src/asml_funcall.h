@@ -20,6 +20,8 @@ namespace asml {
     virtual void set_funcname (string);
     virtual void set_return (string);
     virtual void unset_return (void);
+    virtual bool is_returning (void);
+    virtual string get_retval (void);
     virtual void add_param (string);
     virtual vector<string>::iterator begin (void);
     virtual vector<string>::iterator end (void);

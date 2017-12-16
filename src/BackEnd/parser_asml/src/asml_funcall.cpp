@@ -20,6 +20,14 @@ namespace asml {
     do_return = false;
   }
 
+  bool asml_funcall::is_returning (void) {
+    return do_return;
+  }
+
+  string asml_funcall::get_retval (void) {
+    return return_variable;
+  }
+
   void asml_funcall::set_funcname (string name) {
     funcname = name;
   }

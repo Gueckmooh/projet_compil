@@ -3,23 +3,37 @@
 namespace asml {
 
   asml_function* asml_factory::function = NULL;
+  vector<asml_function*>* asml_factory::function_list = NULL;
 
-  void asml_factory::create_function (void) {
+  void asml_factory::initialize (void) {
+    function = new asml_function ();
+    function_list = new vector<asml_function*> ();
+  }
+
+  void asml_factory::validate_function (void) {
+    function_list->push_back(function);
+    function = NULL;
     function = new asml_function ();
   }
 
-  asml_function* asml_factory::get_function (void) {
-    return function;
+  vector<asml_function*>* asml_factory::get_function (void) {
+    return function_list;
   }
 
   void asml_factory::set_function_name (string name) {
     function->set_name(name);
   }
 
-  void asml_factory::add_int_param (string name) {
-    asml_variable* var = new asml_integer ();
-    var->set_name (name);
-    function->add_variable (var);
+  void asml_factory::add_int_param (vector<string>* name) {
+    asml_variable* var;
+    for (vector<string>::iterator it = name->begin();
+	 it != name->end();
+	 it++) {
+      var = new asml_integer ();
+      var->set_name (*it);
+      function->add_param (var);
+    }
+    delete name;
   }
 
   void asml_factory::add_int_variable (string name) {

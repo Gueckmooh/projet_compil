@@ -16,16 +16,18 @@ namespace asml {
 
   class asml_factory {
   public:
-    static void create_function (void);
-    static asml_function* get_function (void);
+    static void initialize (void);
+    static void validate_function (void);
+    static vector<asml_function*>* get_function (void);
     static void set_function_name (string);
-    static void add_int_param (string);
+    static void add_int_param (vector<string>*);
     static void add_int_variable (string);
     static void add_affectation (string, string);
     static void add_funcall (string, string, vector<string>*);
     static void add_addition (string, string, string);
     static void add_soustraction (string, string, string);
   protected:
+    static vector<asml_function*>* function_list;
     static asml_function* function;
   };
 

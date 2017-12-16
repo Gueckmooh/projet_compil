@@ -26,6 +26,9 @@ namespace arm {
 	 it++) {
       funcall->add_param(*it);
     }
+    if (fun->is_returning()) {
+      funcall->set_retval (fun->get_retval());
+    }
     return funcall;
   }
 

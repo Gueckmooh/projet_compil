@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFdiv.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFdiv::AstNodeFdiv(AstNode *t1, AstNode *t2){
     this->class_code = C_FDIV;
@@ -22,5 +22,5 @@ void AstNodeFdiv::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FDIV\n" << std::endl;
+    std::cout << "FDIV" << std::endl;
 }

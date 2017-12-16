@@ -4,6 +4,11 @@
 #include "AstNode.hpp"
 #include "config.h"
 
+
+/*
+    Parent class : AstNodeTernary
+*/
+
 class AstNodeTernary : public AstNode{
 protected:
     AstNode *t1, *t2, *t3;
@@ -15,4 +20,28 @@ public:
     void traversal(AstVisitor *vis);
 };
 
+
+/*
+    Children classes of AstNodeTernary
+*/
+
+//If
+class AstNodeIf  :public AstNodeTernary {
+public:
+    AstNodeIf(AstNode *t1, AstNode *t2, AstNode *t3);
+    ~AstNodeIf();
+
+    bool infer_types();
+    void print(int indent);
+};
+
+//Put
+class AstNodePut  :public AstNodeTernary {
+public:
+    AstNodePut(AstNode *t1, AstNode *t2, AstNode *t3);
+    ~AstNodePut();
+
+    bool infer_types();
+    void print(int indent);
+};
 #endif

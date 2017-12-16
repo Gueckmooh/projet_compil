@@ -11,15 +11,8 @@ namespace asml {
   class asml_integer : public asml_variable {
   public:
     asml_integer (void);
-
-    virtual void set_value (int);
-    virtual void unset_value (void);
-
-    virtual bool has_value (void);
-    virtual int get_value (void);
+    ~asml_integer (void) {};
   protected:
-    int value;
-    bool has_value;
   };
 
 }

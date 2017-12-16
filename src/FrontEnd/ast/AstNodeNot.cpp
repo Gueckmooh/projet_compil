@@ -1,7 +1,7 @@
-#include <iostream>
-#include "AstNodeNot.hpp"
+#include "AstNodeUnary.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeNot::AstNodeNot(AstNode *t1){
     this->class_code = C_NOT;
@@ -20,5 +20,5 @@ void AstNodeNot::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "NOT\n" << std::endl;
+    std::cout << "NOT" << std::endl;
 }

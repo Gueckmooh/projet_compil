@@ -1,30 +1,36 @@
-#include "asml.h"
-#ifdef __cplusplus
-#include <string>
-using namespace std;
-#endif //__cplusplus
+#include <iostream>
 
 #ifndef __ASML_FACTORY_H__
 #define __ASML_FACTORY_H__
 
-#define ACALL 1
-#define AAFFECT 2
+#include "asml_function.h"
+#include "asml_integer.h"
+#include "asml_affectation.h"
+#include "asml_funcall.h"
+#include "asml_addition.h"
+#include "asml_soustraction.h"
 
-typedef struct {
-  char* name;
-  char* params[32];
-  char* vars[32];
-  int* vals[32];
-  int instr[32];
-  char* op[32][32];
-  int current_param;
-  int current_var;
-  int current_instr;
-  int current_op;
-} asml_factory;
+using namespace std;
 
-#ifdef __cplusplus
-asml_function* create_function (asml_factory* af);
-#endif //__cplusplus
+namespace asml {
 
-#endif
+  class asml_factory {
+  public:
+    static void initialize (void);
+    static void validate_function (void);
+    static vector<asml_function*>* get_function (void);
+    static void set_function_name (string);
+    static void add_int_param (vector<string>*);
+    static void add_int_variable (string);
+    static void add_affectation (string, string);
+    static void add_funcall (string, string, vector<string>*);
+    static void add_addition (string, string, string);
+    static void add_soustraction (string, string, string);
+  protected:
+    static vector<asml_function*>* function_list;
+    static asml_function* function;
+  };
+
+}
+
+#endif //__ASML_FACTORY_H__

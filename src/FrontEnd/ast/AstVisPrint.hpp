@@ -15,8 +15,11 @@ public:
     AstVisPrint(AstVisitor *next);
     ~AstVisPrint();
 
-    void visit_node(AstNode *node);
-    void visit_fun_def(FunDef *fun_def);
+    void visit_node_start(AstNode *node);
+    void visit_node_end(AstNode *node);
+
+    void visit_fun_def_start(FunDef *fun_def);
+    void visit_fun_def_end(FunDef *fun_def);
 };
 
 #endif

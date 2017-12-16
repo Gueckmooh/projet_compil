@@ -1,30 +1,10 @@
 #include "AstNode.hpp"
-#include "AstNodeUnit.hpp"
-#include "AstNodeBool.hpp"
-#include "AstNodeInt.hpp"
-#include "AstNodeFloat.hpp"
-#include "AstNodeNot.hpp"
-#include "AstNodeNeg.hpp"
-#include "AstNodeFneg.hpp"
-#include "AstNodeAdd.hpp"
-#include "AstNodeSub.hpp"
-#include "AstNodeFadd.hpp"
-#include "AstNodeFsub.hpp"
-#include "AstNodeFmul.hpp"
-#include "AstNodeFdiv.hpp"
-#include "AstNodeEq.hpp"
-#include "AstNodeLe.hpp"
-#include "AstNodeArray.hpp"
-#include "AstNodeGet.hpp"
-#include "AstNodeIf.hpp"
-#include "AstNodePut.hpp"
-#include "AstNodeLet.hpp"
-#include "AstNodeVar.hpp"
 #include "AstNodeLetRec.hpp"
-#include "AstNodeApp.hpp"
-#include "AstNodeTuple.hpp"
-#include "AstNodeLetTuple.hpp"
 #include "FunDef.hpp"
+#include "AstNodeLeaf.hpp"
+#include "AstNodeUnary.hpp"
+#include "AstNodeBinary.hpp"
+#include "AstNodeTernary.hpp"
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -120,20 +100,20 @@ AstNode* build_ast(ptree t){
             break;
         case T_LETREC :
             result = new AstNodeLetRec(new FunDef(to_cpp_string(t->params.tletrec.fd->var),
-                                        to_cpp_str_list(t->params.tletrec.fd->args),
+                                        to_cpp_str_list(t->params.tletrec.fd->args),    /// TODO <- ici
                                         build_ast(t->params.tletrec.fd->body)
                                        ),
                                  build_ast(t->params.tletrec.t));
             break;
         case T_APP :
-            result = new AstNodeApp(to_cpp_str_list(t->params.tapp.l),
+            result = new AstNodeApp(to_cpp_ast_list(t->params.tapp.l),                  /// TODO <- ici
                               build_ast(t->params.tapp.t));
             break;
         case T_TUPLE :
-            result = new AstNodeTuple(to_cpp_str_list(t->params.ttuple.l));
+            result = new AstNodeTuple(to_cpp_ast_list(t->params.ttuple.l));             /// TODO <- ici
             break;
         case T_LETTUPLE :
-            result = new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),
+            result = new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),         /// TODO <- ici
                                    build_ast(t->params.lettuple.t1),
                                    build_ast(t->params.lettuple.t2));
             break;

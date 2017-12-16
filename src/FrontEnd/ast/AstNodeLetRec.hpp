@@ -1,4 +1,3 @@
-
 #ifndef AST_LET_REC_NODE_H
 #define AST_LET_REC_NODE_H
 
@@ -6,7 +5,7 @@
 #include "FunDef.hpp"
 #include "config.h"
 
-class AstNodeLetRec  :public AstNode {
+class AstNodeLetRec : public AstNode {
 protected:
     FunDef *fun_def;
     AstNode *t1;

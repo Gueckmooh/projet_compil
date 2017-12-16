@@ -1,7 +1,7 @@
-#include <iostream>
-#include "AstNodeNeg.hpp"
+#include "AstNodeUnary.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeNeg::AstNodeNeg(AstNode *t1){
     this->class_code = C_NEG;
@@ -20,5 +20,5 @@ void AstNodeNeg::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "NEG\n" << std::endl;
+    std::cout << "NEG" << std::endl;
 }

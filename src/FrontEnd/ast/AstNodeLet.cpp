@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodeLet.hpp"
+#include "AstNodeBinary.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeLet::AstNodeLet(AstNode *t1, AstNode *t2, std::string var_name){
     this->class_code = C_LET;
@@ -23,5 +23,5 @@ void AstNodeLet::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "LET\n" << std::endl;
+    std::cout << "LET " << this->var_name << std::endl;
 }

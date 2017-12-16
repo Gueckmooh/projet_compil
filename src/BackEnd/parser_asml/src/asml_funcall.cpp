@@ -4,10 +4,28 @@ namespace asml {
 
   asml_funcall::asml_funcall (void) {
     type_id = asml_instruction::FUNCALL;
+    do_return = false;
   }
 
   string asml_funcall::get_funcname (void) {
     return funcname;
+  }
+
+  void asml_funcall::set_return (string var) {
+    return_variable = var;
+    do_return = true;
+  }
+
+  void asml_funcall::unset_return (void) {
+    do_return = false;
+  }
+
+  bool asml_funcall::is_returning (void) {
+    return do_return;
+  }
+
+  string asml_funcall::get_retval (void) {
+    return return_variable;
   }
 
   void asml_funcall::set_funcname (string name) {

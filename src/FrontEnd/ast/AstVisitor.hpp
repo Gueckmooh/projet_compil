@@ -15,8 +15,12 @@ public:
     AstVisitor(AstVisitor *next);
     ~AstVisitor();
 
-    virtual void visit_node(AstNode *node);
-    virtual void visit_fun_def(FunDef *fun_def);
+    virtual void visit_node_start(AstNode *node);
+    virtual void visit_node_end(AstNode *node);
+
+
+    virtual void visit_fun_def_start(FunDef *fun_def);
+    virtual void visit_fun_def_end(FunDef *fun_def);
 };
 
 

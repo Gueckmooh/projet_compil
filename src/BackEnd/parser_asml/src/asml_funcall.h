@@ -13,10 +13,15 @@ namespace asml {
   class asml_funcall : public asml_instruction {
   public:
     asml_funcall (void);
+    ~asml_funcall (void) {};
 
     virtual string get_funcname (void);
 
     virtual void set_funcname (string);
+    virtual void set_return (string);
+    virtual void unset_return (void);
+    virtual bool is_returning (void);
+    virtual string get_retval (void);
     virtual void add_param (string);
     virtual vector<string>::iterator begin (void);
     virtual vector<string>::iterator end (void);
@@ -25,6 +30,8 @@ namespace asml {
     //virtual void print (void);
   protected:
     string funcname;
+    string return_variable;
+    bool do_return;
     vector<string> params;
   };
 

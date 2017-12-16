@@ -1,10 +1,10 @@
-#include <iostream>
-#include "AstNodeFloat.hpp"
+#include "AstNodeLeaf.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
-AstNodeFloat::AstNodeFloat(float b){
+AstNodeFloat::AstNodeFloat(float f){
     this->class_code = C_FLOAT;
     this->f = f;
 }
@@ -21,5 +21,5 @@ void AstNodeFloat::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FLOAT\n" << std::endl;
+    std::cout << "FLOAT value = "<< this->f << std::endl;
 }

@@ -13,8 +13,9 @@ AstNodeTernary::AstNodeTernary(AstNode *t1, AstNode *t2, AstNode *t3){
 AstNodeTernary::~AstNodeTernary(){}
 
 void AstNodeTernary::traversal(AstVisitor *vis){
-    vis->visit_node(this);
+    vis->visit_node_start(this);
     this->t1->traversal(vis);
     this->t2->traversal(vis);
     this->t3->traversal(vis);
+    vis->visit_node_end(this);
 }

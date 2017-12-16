@@ -1,8 +1,10 @@
+#include "ast.h"
+#include "list.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-#include "list.h"
+#include <stdio.h>
 
 plist empty() {
   plist l = (plist) malloc(sizeof(list));
@@ -12,13 +14,13 @@ plist empty() {
 }
 
 plist cons(void *element, plist l) {
-  plist new_list = (plist) malloc(sizeof(list));
-  listNode *node = (listNode *) malloc(sizeof(listNode));
-  node->data = element;
-  node->next = l->head;
-  new_list->head = node;
-  new_list->logicalLength = l->logicalLength + 1;
-  return new_list;
+    plist new_list = (plist) malloc(sizeof(list));
+    listNode *node = (listNode *) malloc(sizeof(listNode));
+    node->data = element;
+    node->next = l->head;
+    new_list->head = node;
+    new_list->logicalLength = l->logicalLength + 1;
+    return new_list;
 }
 
 void *head(plist l) {

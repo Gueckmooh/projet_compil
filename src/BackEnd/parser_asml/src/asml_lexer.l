@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include "asml_factory_stub.h"
 #include "asml_parser.h"
 #include "asml_util.h"
 %}
@@ -47,9 +48,10 @@ UNDERSC "_"
 %%
 {NIL}     { printf("NIL\n"); return NIL; }
 {DIGIT}+  { printf("INT\n");
-            yylval.token_int = atoi (yytext);
-            return INT;
-                }
+    char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
+    strncpy(new_token, yytext, strlen(yytext)+1);
+    yylval.token_str = new_token;
+    return INT; }
 {LPAREN}  { printf("LPAREN\n"); return LPAREN; }
 {RPAREN}  { printf("RPAREN\n"); return RPAREN; }
 {PLUS}    { printf("PLUS\n"); return PLUS; }

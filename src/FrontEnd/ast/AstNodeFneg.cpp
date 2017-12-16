@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFneg.hpp"
+#include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFneg::AstNodeFneg(AstNode *t1){
     this->class_code = C_FNEG;
@@ -21,5 +21,5 @@ void AstNodeFneg::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FNEG\n" << std::endl;
+    std::cout << "FNEG" << std::endl;
 }

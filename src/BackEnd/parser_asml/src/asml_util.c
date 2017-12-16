@@ -8,3 +8,10 @@ void first_word (char* dest, char* src) {
   strncpy (dest, src, idxmax);
   dest[idxmax] = '\0';
 }
+
+char* strend (char* str) {
+  char* c = str;
+  while (*c != '\0')
+    c++;
+  return c;
+}

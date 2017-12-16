@@ -1,8 +1,9 @@
+#include "AstNode.hpp"
+#include "AstNodeBinary.hpp"
+#include "config.h"
+#include "utils.h"
 #include <iostream>
 #include <string>
-#include "AstNodeLetTuple.hpp"
-#include "config.h"
-
 
 AstNodeLetTuple::AstNodeLetTuple(std::list<std::string> var_list,
                                  AstNode *t1,
@@ -25,5 +26,17 @@ void AstNodeLetTuple::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "TUPLE\n" << std::endl;
+    std::cout << "LET TUPLE args = ";
+    print_str_list(this->var_list);
+    std::cout << std::endl;
+}
+
+void AstNodeLetTuple::traversal(AstVisitor *vis){
+    vis->visit_node_start(this);
+    // for(std::list<AstNode *>::iterator i=this->var_list.begin() ; i != this->var_list.end() ; ++i){
+    //     (*i)->traversal(vis);
+    // }
+    this->t1->traversal(vis);
+    this->t2->traversal(vis);
+    vis->visit_node_end(this);
 }

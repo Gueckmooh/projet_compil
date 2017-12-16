@@ -1,9 +1,9 @@
-#include <iostream>
-#include <string>
-#include "AstNodeGet.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeGet::AstNodeGet(AstNode *t1, AstNode *t2){
     this->class_code = C_GET;
@@ -23,5 +23,5 @@ void AstNodeGet::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "GET\n" << std::endl;
+    std::cout << "GET" << std::endl;
 }

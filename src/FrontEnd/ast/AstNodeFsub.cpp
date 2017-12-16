@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeFsub.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeFsub::AstNodeFsub(AstNode *t1, AstNode *t2){
     this->class_code = C_FSUB;
@@ -22,5 +22,5 @@ void AstNodeFsub::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "FSUB\n" << std::endl;
+    std::cout << "FSUB" << std::endl;
 }

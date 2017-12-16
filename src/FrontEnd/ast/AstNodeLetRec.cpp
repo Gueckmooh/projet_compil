@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
 #include "AstNodeLetRec.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeLetRec::AstNodeLetRec(FunDef *fun_def, AstNode *t1){
     this->class_code = C_LETREC;
@@ -22,11 +22,12 @@ void AstNodeLetRec::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "LETREC\n" << std::endl;
+    std::cout << "LETREC" << std::endl;
 }
 
 void AstNodeLetRec::traversal(AstVisitor *vis){
-    vis->visit_node(this);
+    vis->visit_node_start(this);
     this->fun_def->traversal(vis);
     this->t1->traversal(vis);
+    vis->visit_node_end(this);
 }

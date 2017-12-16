@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodePut.hpp"
+#include "AstNodeTernary.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodePut::AstNodePut(AstNode *t1, AstNode *t2, AstNode *t3){
     this->class_code = C_PUT;
@@ -23,5 +23,5 @@ void AstNodePut::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "PUT\n" << std::endl;
+    std::cout << "PUT" << std::endl;
 }

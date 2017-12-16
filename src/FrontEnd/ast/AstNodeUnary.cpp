@@ -11,6 +11,7 @@ AstNodeUnary::AstNodeUnary(AstNode *t1){
 AstNodeUnary::~AstNodeUnary(){}
 
 void AstNodeUnary::traversal(AstVisitor *vis){
-    vis->visit_node(this);
+    vis->visit_node_start(this);
     this->t1->traversal(vis);
+    vis->visit_node_end(this);
 }

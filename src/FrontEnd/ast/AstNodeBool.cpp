@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeBool.hpp"
+#include "AstNodeLeaf.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeBool::AstNodeBool(bool b){
     this->class_code = C_BOOL;
@@ -21,5 +21,5 @@ void AstNodeBool::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "BOOL\n" << std::endl;
+    std::cout << "BOOL"<< this->b << std::endl;
 }

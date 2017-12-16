@@ -1,8 +1,8 @@
-#include <iostream>
-#include <string>
-#include "AstNodeVar.hpp"
+#include "AstNodeLeaf.hpp"
 #include "config.h"
 
+#include <iostream>
+#include <string>
 
 AstNodeVar::AstNodeVar(std::string var_name){
     this->class_code = C_VAR;
@@ -21,5 +21,5 @@ void AstNodeVar::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "VAR -> " << this->var_name << std::endl;
+    std::cout << "VAR " << this->var_name << std::endl;
 }

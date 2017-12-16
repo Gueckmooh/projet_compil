@@ -1,8 +1,8 @@
-#include <iostream>
-#include "AstNodeLe.hpp"
+#include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"
 #include "config.h"
 
+#include <iostream>
 
 AstNodeLe::AstNodeLe(AstNode *t1, AstNode *t2){
     this->class_code = C_LE;
@@ -22,5 +22,5 @@ void AstNodeLe::print(int indent){
     for (int i = 0 ; i < indent ; i++){
         std::cout << INDENT;
     }
-    std::cout << "LE\n" << std::endl;
+    std::cout << "LE" << std::endl;
 }

@@ -5,44 +5,33 @@ extern "C" {
 #include "asml_parser.h"
 }
 #include "asml_function.h"
+#include "asml_instruction.h"
 #include "asml_factory.h"
 #include "arm_generator.h"
 
 using namespace std;
-
-//list<asml_function*>* asml_list;
-asml_factory factory;
+using namespace asml;
+using namespace arm;
 
 int main (void) {
-  asml_function* fun;
-  factory.current_instr = 0;
-  factory.current_var = 0;
-  factory.current_instr = 0;
-  //asml_list = new list<asml_function*> ();
-  //asml_list->push_back (new asml_function ("test"));
+  vector<asml_function*>* function;
+  asml_factory::initialize();
+  arm_generator* generator;
   yyparse ();
-  printf ("%s\n", factory.name);
+  function = asml_factory::get_function();
   /*
-  for (int i = 0; i < factory.current_var; i++) {
-    printf ("Name = %s\n"
-	    "Val = %d\n",
-	    factory.vars[i],
-	    *factory.vals[i]);
-  }
-  for (int i = 0; i < factory.current_instr; i++) {
-    switch (factory.instr[i]) {
-    case ACALL:
-      printf ("Function : %s\n", factory.op[i][0]);
-      for (int j = 1; factory.op[i][j] != NULL; j++) {
-	printf ("Arg %d : %s\n", j, factory.op[i][j]);
-      }
+  for (vector<asml_function*>::iterator it = function->begin();
+       it != function->end();
+       it++) {
+    for (vector<asml_instruction*>::iterator it2 = (*it)->instruction_begin();
+	 it2 != (*it)->instruction_end();
+	 it2++) {
+      cout << (*it2)->get_type() << endl;
     }
+    cout << endl;
   }
   */
-  fun = create_function (&factory);
-  fun->print();
-  arm::arm_generator arm(fun);
-  arm.generate();
-  delete fun;
+  generator = new arm_generator (function);
+  generator->generate ();
   return 0;
 }

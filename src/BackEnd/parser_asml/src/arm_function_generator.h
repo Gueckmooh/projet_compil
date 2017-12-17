@@ -31,6 +31,7 @@ namespace arm {
     void process_params (void);
     void pre_process_variables (void);
     void process_instructions (void);
+    void pre_process_conditions (void);
     void generate_prologue (void);
     void generate_epilogue (void);
     stringstream* output;
@@ -44,6 +45,7 @@ namespace arm {
     string processed_params;
     string processed_variables;
     string to_save;
+    static int lien;
 
     string name;
     vector<arm_instruction*> instructions;

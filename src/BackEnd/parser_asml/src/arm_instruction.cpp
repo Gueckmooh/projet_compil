@@ -3,6 +3,12 @@
 
 namespace arm {
 
+  int lien = 0;
+
+  int arm_instruction::get_type (void) {
+    return type_id;
+  }
+
   void arm_instruction::set_var_offset (map<string, string>* map) {
     this->offset = map;
   }

@@ -2,6 +2,10 @@
 
 namespace arm {
 
+  arm_affectation::arm_affectation (void) {
+    type_id = arm_instruction::AFFECTATION;
+  }
+
   string arm_affectation::get_instruction (void) {
     string instruction;
     switch (arm_util::type_of(op2)) {
@@ -14,7 +18,8 @@ namespace arm {
     default:
       break;
     }
-    instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
+    if (op1.compare("0") != 0)
+      instruction += "\tstr r0, [fp, #" + offset->find(op1)->second + "]\n";
     return instruction;
   }
 

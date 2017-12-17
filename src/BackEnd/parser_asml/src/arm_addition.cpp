@@ -2,6 +2,10 @@
 
 namespace arm {
 
+  arm_addition::arm_addition (void) {
+    type_id = arm_instruction::ADDITION;
+  }
+
   string arm_addition::get_instruction (void) {
     string instruction;
     instruction += "\tldr r0, [fp, #" + offset->find(op2)->second + "]\n";

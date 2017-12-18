@@ -78,7 +78,7 @@ int hulu = 0;
 
 %%
 
-prog:		fundef fundef
+prog:	        prog fundef
 	|	fundef
 	;
 
@@ -146,13 +146,13 @@ asmt:		LET IDENT EQUAL INT IN asmt   {
                 }
 	 ;
 
-asmt_then:	LET IDENT EQUAL INT IN asmt   {
+asmt_then:	LET IDENT EQUAL INT IN asmt_then   {
                     asml_set_next(ASML_THEN);
 		    asml_add_int_variable ($2);
 		    asml_add_affectation ($2, $4);
 		    printf ("%s, %d\n", "asmt", hulu++);
                 }
-	|	LET IDENT EQUAL exp IN asmt   {
+	|	LET IDENT EQUAL exp IN asmt_then   {
                     asml_set_next(ASML_THEN);
                     asml_add_int_variable ($2);
 		    switch ($4.type) {
@@ -166,7 +166,7 @@ asmt_then:	LET IDENT EQUAL INT IN asmt   {
 			break;
 		    }
 		}
-	|	LET IDENT EQUAL call IN asmt  {
+	|	LET IDENT EQUAL call IN asmt_then  {
                     asml_set_next(ASML_THEN);
 	            asml_add_int_variable ($2);
 		    asml_add_funcall ($4.name, $2, $4.params);
@@ -195,13 +195,13 @@ asmt_then:	LET IDENT EQUAL INT IN asmt   {
 	 ;
 
 
-asmt_else:	LET IDENT EQUAL INT IN asmt   {
+asmt_else:	LET IDENT EQUAL INT IN asmt_else   {
                     asml_set_next(ASML_ELSE);
 		    asml_add_int_variable ($2);
 		    asml_add_affectation ($2, $4);
 		    printf ("%s, %d\n", "asmt", hulu++);
                 }
-	|	LET IDENT EQUAL exp IN asmt   {
+	|	LET IDENT EQUAL exp IN asmt_else   {
                     asml_set_next(ASML_ELSE);
                     asml_add_int_variable ($2);
 		    switch ($4.type) {
@@ -215,7 +215,7 @@ asmt_else:	LET IDENT EQUAL INT IN asmt   {
 			break;
 		    }
 		}
-	|	LET IDENT EQUAL call IN asmt  {
+	|	LET IDENT EQUAL call IN asmt_else  {
                     asml_set_next(ASML_ELSE);
 	            asml_add_int_variable ($2);
 		    asml_add_funcall ($4.name, $2, $4.params);

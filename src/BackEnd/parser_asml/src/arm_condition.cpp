@@ -26,18 +26,30 @@ namespace arm {
     delete boolean;
   }
 
+  void arm_condition::set_var_offset (map<string, string>* map) {
+    this->offset = map;
+    for (vector<arm_instruction*>::iterator it = list_then->begin();
+	 it != list_then->end();
+	 it++)
+      (*it)->set_var_offset(map);
+    for (vector<arm_instruction*>::iterator it = list_else->begin();
+	 it != list_else->end();
+	 it++)
+      (*it)->set_var_offset(map);
+  }
+
   string arm_condition::get_instruction (void) {
     stringstream ss;
     ss << boolean->get_instruction();
-    for (vector<arm_instruction*>::iterator it = list_then->begin();
-	 it != list_then->end();
+    for (vector<arm_instruction*>::reverse_iterator it = list_then->rbegin();
+	 it != list_then->rend();
 	 it++) {
       ss << (*it)->get_instruction();
     }
     ss << "\tb " << lFin << "\n";
     ss << lFalse << ":\n";
-    for (vector<arm_instruction*>::iterator it = list_else->begin();
-	 it != list_else->end();
+    for (vector<arm_instruction*>::reverse_iterator it = list_else->rbegin();
+	 it != list_else->rend();
 	 it++) {
       ss << (*it)->get_instruction();
     }

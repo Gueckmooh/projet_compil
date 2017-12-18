@@ -30,10 +30,14 @@ namespace asml {
   }
 
   void asml_condition::add_then (asml_instruction* instr) {
+    //vector<asml_instruction*>::iterator it = then_list->begin();
+    //then_list->insert(it, instr);
     then_list->push_back(instr);
   }
 
   void asml_condition::add_else (asml_instruction* instr) {
+    //vector<asml_instruction*>::iterator it = else_list->begin();
+    //else_list->insert(it, instr);
     else_list->push_back(instr);
   }
 

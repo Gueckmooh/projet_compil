@@ -12,3 +12,8 @@ pom.xml.asc
 .deps/
 .obj/
 include/
+src/BackEnd/parser_asml/asml
+src/BackEnd/parser_asml/champ_de_mine/
+src/BackEnd/parser_asml/foo.asml
+src/BackEnd/parser_asml/src/.backup/
+archive/

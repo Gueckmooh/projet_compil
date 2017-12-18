@@ -31,6 +31,7 @@ namespace arm {
     generate_prologue();
     process_params();
     process_instructions();
+    pre_process_conditions();
     generate_epilogue();
     *output << name <<":\n";
     *output << prologue;

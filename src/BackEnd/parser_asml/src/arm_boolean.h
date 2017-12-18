@@ -11,6 +11,7 @@ using namespace std;
 namespace arm {
 
   class arm_boolean {
+    friend class arm_condition;
   public:
     static const int CONJONCTION = 1; // TODO ??
     static const int DISJONCTION = 2; // TODO ??

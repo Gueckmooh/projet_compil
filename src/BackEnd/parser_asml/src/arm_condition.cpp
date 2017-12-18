@@ -34,6 +34,7 @@ namespace arm {
 	 it++) {
       ss << (*it)->get_instruction();
     }
+    ss << "\tb " << lFin << "\n";
     ss << lFalse << ":\n";
     for (vector<arm_instruction*>::iterator it = list_else->begin();
 	 it != list_else->end();
@@ -59,6 +60,7 @@ namespace arm {
   void arm_condition::set_lFalse (string l) {
     lFalse = l;
     boolean->set_lFalse (l);
+    boolean->offset = offset;
   }
 
   void arm_condition::set_lFin (string l) {

@@ -73,6 +73,8 @@ int hulu = 0;
 %type	<token_funcall>	call
 %type	<token_op>	exp
 %type	<token_str>	param
+%type	<token_str>	ident_or_int
+%type	<token_op>	cond
 
 %%
 
@@ -138,8 +140,125 @@ asmt:		LET IDENT EQUAL INT IN asmt   {
 	|	INT                           {
 	            asml_add_affectation ("0", $1);
 		}
+	|	IF cond THEN LPAREN asmt_then RPAREN ELSE LPAREN asmt_else RPAREN {
+	            asml_set_boolean ($2.op1, $2.op2, $2.type);
+		    asml_validate_condition();
+                }
 	 ;
 
+asmt_then:	LET IDENT EQUAL INT IN asmt   {
+                    asml_set_next(ASML_THEN);
+		    asml_add_int_variable ($2);
+		    asml_add_affectation ($2, $4);
+		    printf ("%s, %d\n", "asmt", hulu++);
+                }
+	|	LET IDENT EQUAL exp IN asmt   {
+                    asml_set_next(ASML_THEN);
+                    asml_add_int_variable ($2);
+		    switch ($4.type) {
+		    case 1:
+			asml_add_addition ($2, $4.op1, $4.op2);
+			break;
+		    case 2:
+			asml_add_soustraction ($2, $4.op1, $4.op2);
+			break;
+		    default:
+			break;
+		    }
+		}
+	|	LET IDENT EQUAL call IN asmt  {
+                    asml_set_next(ASML_THEN);
+	            asml_add_int_variable ($2);
+		    asml_add_funcall ($4.name, $2, $4.params);
+                }
+	|	call                          {
+                    asml_set_next(ASML_THEN);
+	            asml_add_funcall ($1.name, "0", $1.params);
+		}
+	|	exp                           {
+                    asml_set_next(ASML_THEN);
+	            switch ($1.type) {
+		    case 1:
+			asml_add_addition ("0", $1.op1, $1.op2);
+			break;
+		    case 2:
+			asml_add_soustraction ("0", $1.op1, $1.op2);
+			break;
+		    default:
+			break;
+		    }
+		}
+	|	INT                           {
+                    asml_set_next(ASML_THEN);
+	            asml_add_affectation ("0", $1);
+		}
+	 ;
+
+
+asmt_else:	LET IDENT EQUAL INT IN asmt   {
+                    asml_set_next(ASML_ELSE);
+		    asml_add_int_variable ($2);
+		    asml_add_affectation ($2, $4);
+		    printf ("%s, %d\n", "asmt", hulu++);
+                }
+	|	LET IDENT EQUAL exp IN asmt   {
+                    asml_set_next(ASML_ELSE);
+                    asml_add_int_variable ($2);
+		    switch ($4.type) {
+		    case 1:
+			asml_add_addition ($2, $4.op1, $4.op2);
+			break;
+		    case 2:
+			asml_add_soustraction ($2, $4.op1, $4.op2);
+			break;
+		    default:
+			break;
+		    }
+		}
+	|	LET IDENT EQUAL call IN asmt  {
+                    asml_set_next(ASML_ELSE);
+	            asml_add_int_variable ($2);
+		    asml_add_funcall ($4.name, $2, $4.params);
+                }
+	|	call                          {
+                    asml_set_next(ASML_ELSE);
+	            asml_add_funcall ($1.name, "0", $1.params);
+		}
+	|	exp                           {
+                    asml_set_next(ASML_ELSE);
+	            switch ($1.type) {
+		    case 1:
+			asml_add_addition ("0", $1.op1, $1.op2);
+			break;
+		    case 2:
+			asml_add_soustraction ("0", $1.op1, $1.op2);
+			break;
+		    default:
+			break;
+		    }
+		}
+	|	INT                           {
+                    asml_set_next(ASML_ELSE);
+	            asml_add_affectation ("0", $1);
+		}
+	 ;
+
+cond:		ident_or_int EQUAL ident_or_int {
+		    $$.type = ASML_EQUAL;
+                    $$.op1 = $1;
+                    $$.op2 = $3;
+                }
+	|	ident_or_int LE ident_or_int    {
+		    $$.type = ASML_LE;
+                    $$.op1 = $1;
+                    $$.op2 = $3;
+                }
+	|	ident_or_int GE ident_or_int    {
+		    $$.type = ASML_GE;
+                    $$.op1 = $1;
+                    $$.op2 = $3;
+                }
+	;
 
 exp:	 	ADD IDENT IDENT            {
 		    $$.type = 1;
@@ -193,6 +312,10 @@ param:		param IDENT {
 		    strcpy(strend(ret), " ");
 		    $$ = ret;
 		}
+	;
+
+ident_or_int:	IDENT { $$ = $1; }
+	|	INT   { $$ = $1; }
 	;
 
 %%

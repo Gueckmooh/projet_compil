@@ -29,14 +29,23 @@ namespace arm {
 
   string arm_boolean::get_instruction (void) {
     string instruction;
-    instruction += "\tldr r0, [fp, #" + offset->find(op1)->second + "]\n";
+    switch (arm_util::type_of(op1)) {
+    case arm_util::VARIABLE:
+      instruction += "\tldr r0, [fp, #" + offset->find(op1)->second + "]\n";
+      break;
+    case arm_util::DIRECT:
+      instruction += "\tmov r0, " + op1 + "\n";
+      break;
+    default:
+      break;
+    }
     switch (arm_util::type_of(op2)) {
     case arm_util::VARIABLE:
-      instruction += "\tldr r1, [fp, #" + offset->find(op1)->second + "]\n";
+      instruction += "\tldr r1, [fp, #" + offset->find(op2)->second + "]\n";
       instruction += "\tcmp r0, r1\n";
       break;
     case arm_util::DIRECT:
-      instruction += "\tcmp r0, " + op2 + "\n";
+      instruction += "\tcmp r0, #" + op2 + "\n";
       break;
     default:
       break;

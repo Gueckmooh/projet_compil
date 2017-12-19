@@ -1,4 +1,6 @@
 #include "optionparser.h"
+#include "param.h"
+#include "call_func.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -32,10 +34,12 @@ const option::Descriptor usage[]=
 };
 
 int main(int argc, char *argv[]) { 
+	int traitement_param = 0;
+  	bool is_inputfile = false;
+  	std::string inputfilename;
+  	std::string outputfilename;
 
   argc-=(argc>0); argv+=(argc>0); // skip program name argv[0] if present
-  bool is_inputfile = false;
-  std::string inputfilename;
   if ( argv[0][0] != '-' && argc != 0){
   	inputfilename = argv[0];
   	argc-=(argc>0); argv+=(argc>0); // input name argv[0] if present
@@ -64,10 +68,8 @@ for (int i=0; i < argc; i++) {
 
 /* GESTION DES ERREURS */
 
-//std::cout << argv[0];
-
   if (parse.error()){
-  	std::cout << "Erreur : ";
+  	std::cout << "Erreu r: ";
   	return 1;
   	// TODO : Print Stderr
   }
@@ -92,11 +94,15 @@ for (int i=0; i < argc; i++) {
 			f.close();
 		}
 		else {
-			std::cout << "Je ne suis pas ouvert \n";
+			std::cout << "Erreur d'ouverture du fichier input\n";
+			// TODO :print stderr;
+			return 1;
 		}
 	}
 	else {
-		std::cout <<"j'existe pas \n";
+		std::cout <<"Erreur : le fichier input n'existe pas \n";
+		// TODO : print stderr;
+		return 1;
 	}
 }
 
@@ -117,6 +123,7 @@ if (options[OUTPUT]){
 	std::ofstream outfile (options[OUTPUT].arg);
 	outfile << "zboub"; 
 	outfile.close();
+	outputfilename = options[OUTPUT].arg;
 }
 
 
@@ -129,31 +136,42 @@ if (options[OUTPUT]){
 
   if (options[VERSION]){
   	std::cout << "Version du logiciel : TODO \n";
-  	//return 0;
+  	return 0;
   }
 
   if (options[OUTPUT]){
   	std::cout << "On prends un fichier output : TODO \n";
+  	enable(traitement_param,PARAM_OUTPUT);
+  	if (!options[TYPECHECK] && !options[PARSER] && !options[ASML]){
+  	enable(traitement_param,TOTAL_ARM);}
   }
-  else if (!!options[HELP] && !options[VERSION]){
-  	// TODO : voir si on doit rajouter typecheck
-  	std::cout <<"On prends le fichier output par defaut : TODO \n";
+  else if (!options[HELP] && !options[VERSION] && !options[TYPECHECK]){
+  	std::cout <<"Erreur : aucun fichier output specifie \n";
+  	// TODO : stderr
+  	return 1;
   }
 
   if (options[TYPECHECK]){
   	std::cout << "On fait le Typecheck : TODO \n";
+  	enable(traitement_param,TOTAL_TYPECHECK);
   	//return 0;
   }
 
   if (options[PARSER]){
   	std::cout << "On fait le parsing : TODO \n";
+  	enable(traitement_param,TOTAL_PARSE);
   	// return 0;
   }
 
   if (options[ASML]){
   	std::cout << "On fait la generation ASML : TODO \n";
+  	enable(traitement_param,TOTAL_ASML);
   	// return 0;
   }
+if (options[OUTPUT]){
+	int b = mega_caller(traitement_param,inputfilename,outputfilename);}
+	else{
+int a=mega_caller(traitement_param,inputfilename);}
 
 return 0;
 

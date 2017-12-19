@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <system_error>
 
@@ -24,8 +25,10 @@ const option::Descriptor usage[]=
 	{VERSION,OTHER,"v","version",option::Arg::None,"-v, --version \t Print version and exit"},
 	{TYPECHECK,ENABLE,"t","typecheck",option::Arg::None,"-t, --typecheck \t Perform only Typecheck analysis. Return ErrorCode if incorrect typing [TODO]"},
 	{PARSER,ENABLE,"p","parser",option::Arg::None,"-p, --parser \t Perform only mincaml parsing. Print AST in output file"},
-	{ASML,ENABLE,"asml","asml",option::Arg::None,"-asml \t Perform only ASML generation"},
+	{ASML,ENABLE,"a","asml",option::Arg::None,"-a --asml \t Perform only ASML generation"},
 	{0,0,0,0,0,0}
+	// Option supplementaires :
+	// ASML Parsing to ARM ?
 };
 
 int main(int argc, char *argv[]) { 
@@ -40,6 +43,19 @@ int main(int argc, char *argv[]) {
 	is_inputfile = true;
 }
 
+
+// cas ou le nom du fichier n'est pas au debut.
+if (!is_inputfile){
+for (int i=0; i < argc; i++) {
+  if(strstr(argv[i], ".ml") ){
+    inputfilename = argv[i];
+    is_inputfile = true;
+  }
+}
+
+}
+
+
   option::Stats  stats(usage, argc, argv);
   std::vector<option::Option> options(stats.options_max);
   std::vector<option::Option> buffer(stats.buffer_max);
@@ -51,13 +67,14 @@ int main(int argc, char *argv[]) {
 //std::cout << argv[0];
 
   if (parse.error()){
-  	std::cout << "zboub";
+  	std::cout << "Erreur : ";
   	return 1;
   	// TODO : Print Stderr
   }
 
 
   if ((options[TYPECHECK].count() + options[PARSER].count() + options[ASML].count()) > 1){
+    
   	std::cout << "Erreur : Veuillez choisir une seule option \n";
   	//TODO : Print Stderr
   	return 1;
@@ -65,24 +82,44 @@ int main(int argc, char *argv[]) {
 
 //TODO : Test sur le fichier d'input
 // Check si le fichier existe réellement
-  
-std::ifstream f;
-
-// Set exceptions to be thrown on failure
-f.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-try {
-    f.open(inputfilename.c_str());
-} catch (std::system_error& e) {
-    std::cerr << e.code().message() << std::endl;
+  if (is_inputfile) {
+	std::ifstream f(inputfilename.c_str());
+	if (f.good()){
+		std::cout << "J'existe \n";
+		f.open(inputfilename.c_str());
+		if (f.is_open()){
+			std::cout << "Je suis ouvert \n";
+			f.close();
+		}
+		else {
+			std::cout << "Je ne suis pas ouvert \n";
+		}
+	}
+	else {
+		std::cout <<"j'existe pas \n";
+	}
 }
 
 
-// TODO : Test : aucun input fichier donne et on veut regarder la liste des arguments
-
+// Test : aucun input fichier donne et on veut regarder la liste des arguments
+if (!is_inputfile) {
+  if (!options[HELP] && !options[VERSION] && (argc > 0)){
+    std::cout <<"Erreur : Aucun fichier donne en entree ou mauvaise syntaxe \nTapez ./mincamlc -h pour afficher l'aide\n";
+    // TODO : Print Stderr
+    return 1;
+  }
+}
 //TODO : Si fichier d'output : TEST
 // Check si on peut créer ou effacer ce fichier. 
 // Si pas de O : fichier par defaut ? 
+if (options[OUTPUT]){
+	std::cout << options[OUTPUT].arg ;
+	std::ofstream outfile (options[OUTPUT].arg);
+	outfile << "zboub"; 
+	outfile.close();
+}
+
+
 
 /* TRAITEMENT DES OPTIONS */
   if (options[HELP] || ( argc == 0 && !is_inputfile) ){
@@ -98,9 +135,9 @@ try {
   if (options[OUTPUT]){
   	std::cout << "On prends un fichier output : TODO \n";
   }
-  else {
-  	// TODO : tester si on est pas dans Version ou Help. (et eventuellement typecheck)
-  	std::cout <<"On prends le fichier output par defaut : TODO";
+  else if (!!options[HELP] && !options[VERSION]){
+  	// TODO : voir si on doit rajouter typecheck
+  	std::cout <<"On prends le fichier output par defaut : TODO \n";
   }
 
   if (options[TYPECHECK]){

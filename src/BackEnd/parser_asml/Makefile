@@ -8,6 +8,7 @@
 #####                                                  #####
 CC = gcc
 CXX = g++
+AR = ar
 BISON = bison
 FLEX = flex
 LD = ld
@@ -28,6 +29,9 @@ BINDIR = bin
 TESTBINDIR = .test_bin
 LOGDIR = .log
 INCLUDEDIR = include
+LIBDIR = libs
+
+ARFLAGS = rcs
 
 FFILES = $(wildcard $(SRCDIR)/*.l)
 BFILES = $(wildcard $(SRCDIR)/*.y)
@@ -41,6 +45,9 @@ CXXFILES = $(wildcard $(SRCDIR)/*.cpp)
 BASEFILES = $(basename $(notdir $(CFILES) $(CXXFILES)))
 OBJFILES = $(addsuffix .o, $(BASEFILES))
 OBJWOMAIN:=$(shell echo $(OBJFILES) | sed -e "s/main.o//g")
+
+LIBARM:=$(shell echo $(OBJWOMAIN) | sed -e "s/asml[a-z,_]*\.o//g")
+LIBASML:=$(shell echo $(OBJWOMAIN) | sed -e "s/arm[a-z,_]*\.o//g")
 
 CTESTS = $(wildcard $(TESTDIR)/*.c)
 CXXTESTS = $(wildcard $(TESTDIR)/*.cpp)
@@ -89,7 +96,7 @@ LDFLAGS += -lfl
 FLEXFLAGS =
 BISONFLAGS =
 
-.PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test clean_lex_pars
+.PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test clean_lex_pars lib static dynamic
 
 all: lexpars directories inc $(EXEC)
 
@@ -99,6 +106,28 @@ test: lexpars testdirectories inc_test $(TESTFILES)
 
 run: all
 	./$(EXEC)
+
+lib: static dynamic
+
+#static: FLAGS += -fPIC
+static: clean directories
+static: $(LIBDIR)/libasml.a $(LIBDIR)/libarm.a
+
+$(LIBDIR)/libasml.a: $(addprefix $(OBJDIR)/, $(LIBASML))
+	$(AR) $(ARFLAGS) $@ $^
+
+$(LIBDIR)/libarm.a: $(addprefix $(OBJDIR)/, $(LIBARM))
+	$(AR) $(ARFLAGS) $@ $^
+
+dynamic: FLAGS += -fPIC
+dynamic: clean
+dynamic: directories $(LIBDIR)/libasml.so $(LIBDIR)/libarm.so
+
+$(LIBDIR)/libasml.so: $(addprefix $(OBJDIR)/, $(LIBASML))
+	$(CXX) --shared -o $@ $^ $(LDFLAGS)
+
+$(LIBDIR)/libarm.so: $(addprefix $(OBJDIR)/, $(LIBARM))
+	$(CXX) --shared -o $@ $^ $(LDFLAGS)
 
 test_run: test
 	$(QUIET)for file in $(BASETESTS); do echo "$(TESTBINDIR)/$$file > $(LOGDIR)/$$file.log"; $(TESTBINDIR)/$$file > $(LOGDIR)/$$file.log; done
@@ -115,11 +144,10 @@ $(LOGDIR):
 $(TESTBINDIR):
 	$(QUIET)$(MKDIR_P) $@
 
-$(INCLUDEDIR):
+$(LIBDIR):
 	$(QUIET)$(MKDIR_P) $@
 
-testdirectories: $(LOGDIR) $(TESTBINDIR) directories
-directories: $(OBJDIR) $(DEPDIR)
+directories: $(OBJDIR) $(DEPDIR) $(LIBDIR)
 
 inc: $(INCLUDEDIR)
 	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
@@ -139,7 +167,7 @@ $(addprefix $(OBJDIR)/, $(OBJTESTS)): $(OBJDIR)/%.o: $(DEPDIR)/%.deps
 $(SRCDIR)/%.c: $(SRCDIR)/%.l
 	$(FLEX) -o $@ $<
 
-$(SRCDIR)/%.c: $(SRCDIR)/%.y 
+$(SRCDIR)/%.c: $(SRCDIR)/%.y
 	$(BISON) -o $@ --defines=$(basename $<).h $<
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c $(DEPDIR)/%.deps
@@ -193,5 +221,6 @@ clean_inc:
 mrproper:  clean clean_deps clean_logs clean_dirs clean_lex_pars
 	$(QUIET)$(RM) $(EXEC)
 	$(QUIET)$(RM) $(TESTFILES)
+	$(QUIET)$(RM) $(LIBDIR)
 
 include $(wildcard .deps/*)

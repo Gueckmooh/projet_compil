@@ -7,10 +7,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-int yyparse();
-int yylex();
-int yyerror(const char* s);
+int asml_parse();
+int asml_lex();
+int asml_error(const char* s);
 %}
+
+%define api.prefix {asml_}
 
 %code requires {
 
@@ -113,7 +115,7 @@ ident_or_imm: 	INT
 
 %%
 
-int yyerror (const char* s) {
+int asml_error (const char* s) {
     fprintf(stderr, "%s\n", s);
     return 1;
 }

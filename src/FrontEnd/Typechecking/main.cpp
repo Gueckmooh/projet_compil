@@ -1,25 +1,24 @@
-/* 
- * File:   main.cpp
- * Author: bleuzeb
- *
- * Created on 12 décembre 2017, 12:51
- */
-
-#include "Ast.h"
-#include <stdlib.h>
+#include "Ast.hpp"
+#include "AstNode.hpp"
+#include "AstVisInfer.hpp"
 #include <iostream>
-/*
- * 
- */
-int main(int argc, char** argv) {
-    Ast ast ;
+
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        printf("usage: %s filename\n", argv[0]);
+        return EXIT_FAILURE ;
+    }
     try {
-	ast = Ast("../../pc-archive/mincaml/even-odd.ml") ;
+	Ast ast = Ast(argv[1]) ;
+        ast.getStrategy().setupStrategy(ast.getStrategy().PRINTER) ;
+        ast.getRoot()->apply(*ast.getStrategy().setupAstVisitor()) ;
+        std::cout << ast.getStrategy().getAstVis()->getCounter() << std::endl ;
+        ast.getStrategy().getAstVis()->resetCounter() ;
+        ast.getStrategy().setupStrategy(ast.getStrategy().INFERATOR) ;
+        ast.getRoot()->apply(*ast.getStrategy().setupAstVisitor()) ;
     } catch (std::string const & message) {
 	std::cout << message ;
 	return EXIT_FAILURE ;
     }
-    ast.print() ;
     return EXIT_SUCCESS ;
 }
-

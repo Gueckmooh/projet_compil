@@ -85,6 +85,13 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
     asml_parser_set_params ((asml_formal_arg_t*)asmt->exp->op2, dynamic_cast<asml_funcall*>(instruction));
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
+  case ASML_EXP_NEG    :
+    node = new asml_unary_node ();
+    instruction = new asml_negation ();
+    dynamic_cast<asml_negation*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
+    dynamic_cast<asml_negation*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
+    dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
+    break;
   }
   dynamic_cast<asml_unary_node*>(node)->set_next(asml_parser_create_tree(asmt->next));
   return node;

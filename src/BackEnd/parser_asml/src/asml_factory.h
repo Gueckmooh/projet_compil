@@ -10,6 +10,7 @@
 #include "asml_addition.h"
 #include "asml_soustraction.h"
 #include "asml_condition.h"
+#include "asml_negation.h"
 #include "asml_node.h"
 #include "asml_unary_node.h"
 #include "asml_binary_node.h"

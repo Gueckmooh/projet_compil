@@ -13,11 +13,7 @@
 #define ASML_COND_LE    10
 #define ASML_COND_GE    11
 #define ASML_EXP_CALL   12
-
-//typedef struct {} asml_asmt_t;
-//typedef struct {} asml_exp_t;
-//typedef struct {} asml_formal_arg_t;
-//typedef asml_condition_t;
+#define ASML_EXP_NEG    13
 
 typedef struct asml_exp {
   int type;

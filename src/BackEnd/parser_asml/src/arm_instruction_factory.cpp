@@ -14,6 +14,8 @@ namespace arm {
       return create_soustraction (dynamic_cast<asml_soustraction*>(instr));
     case asml_instruction::CONDITION:
       return create_condition (dynamic_cast<asml_condition*>(instr));
+    case asml_instruction::NEGATION:
+      return create_negation (dynamic_cast<asml_negation*>(instr));
     default:
       return NULL;
     }
@@ -73,6 +75,13 @@ namespace arm {
       condition->add_else(create_instruction(*it));
     }
     return condition;
+  }
+
+  arm_negation* arm_instruction_factory::create_negation (asml_negation* neg) {
+    arm_negation* negation = new arm_negation ();
+    negation->set_op1(neg->get_op1());
+    negation->set_op2(neg->get_op2());
+    return negation;
   }
 
 }

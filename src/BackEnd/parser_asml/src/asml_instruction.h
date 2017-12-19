@@ -16,6 +16,7 @@ namespace asml {
     static const int ADDITION = 3;
     static const int SOUSTRACTION = 4;
     static const int CONDITION = 5;
+    static const int NEGATION = 6;
 
     virtual ~asml_instruction (void) {};
 

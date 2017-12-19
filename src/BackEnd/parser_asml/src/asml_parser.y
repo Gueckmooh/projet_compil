@@ -92,6 +92,7 @@ exp: 		LPAREN exp RPAREN            { $$ = $2; }
 	| 	LABEL                        { $$ = asml_parser_create_exp (ASML_EXP_LABEL, $1, NULL, NULL); }
 	| 	ADD IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_ADD, $2, $3, NULL); }
 	| 	SUB IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_SUB, $2, $3, NULL); }
+	|	NEG IDENT                    { $$ = asml_parser_create_exp (ASML_EXP_NEG, $2, NULL, NULL); }
 	| 	IF cond THEN asmt ELSE asmt  { $$ = asml_parser_create_exp (ASML_EXP_IF, $2, $4, $6); }
 	| 	CALL LABEL formal_args       { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, $3, NULL); }
 	|	CALL LABEL                   { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, NULL, NULL); }

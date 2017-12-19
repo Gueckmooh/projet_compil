@@ -4,6 +4,7 @@ namespace arm {
 
   arm_funcall::arm_funcall (void) {
     is_returning = false;
+    type_id = arm_instruction::FUNCALL;
   }
 
   void arm_funcall::set_function_name (string name) {
@@ -30,23 +31,25 @@ namespace arm {
     int size = params.size();
     string var1, varn;
     vector<string>::reverse_iterator it = params.rbegin();
-    var1 = *it;
-    while (it != params.rend()) {
-      if (nb > 4) {
-	if (immediate (*it))
-	  instruction += "\tmov r0, #" + (*it) + "\n";
-	else
-	  instruction += "\tldr r0, [fp, #" + offset->find(*it)->second + "]\n";
-	instruction += "\tstr r0, [sp, #" + to_string(-8-(size-nb)*4) + "]\n";
-	nb--;
-      } else {
-	if (immediate (*it))
-	  instruction += "\tmov r" + to_string(nb-1) + ", #" + (*it) + "\n";
-	else
-	  instruction += "\tldr r" + to_string(nb-1) + ", [fp, #" + offset->find(*it)->second + "]\n";
-	nb--;
+    if (!params.empty()) {
+      var1 = *it;
+      while (it != params.rend()) {
+	if (nb > 4) {
+	  if (immediate (*it))
+	    instruction += "\tmov r0, #" + (*it) + "\n";
+	  else
+	    instruction += "\tldr r0, [fp, #" + offset->find(*it)->second + "]\n";
+	  instruction += "\tstr r0, [sp, #" + to_string(-8-(size-nb)*4) + "]\n";
+	  nb--;
+	} else {
+	  if (immediate (*it))
+	    instruction += "\tmov r" + to_string(nb-1) + ", #" + (*it) + "\n";
+	  else
+	    instruction += "\tldr r" + to_string(nb-1) + ", [fp, #" + offset->find(*it)->second + "]\n";
+	  nb--;
+	}
+	it++;
       }
-      it++;
     }
     instruction += "\tbl " + function_name + "\n";
     if (is_returning) {

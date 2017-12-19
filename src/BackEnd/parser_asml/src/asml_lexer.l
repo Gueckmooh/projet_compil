@@ -7,6 +7,7 @@
 %}
 
 %option noyywrap nounput noinput
+%option prefix="asml_"
 
 LOWER   [a-z]
 UPPER   [A-Z]
@@ -50,7 +51,7 @@ UNDERSC "_"
 {DIGIT}+  { printf("INT\n");
     char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
     strncpy(new_token, yytext, strlen(yytext)+1);
-    yylval.token_str = new_token;
+    asml_lval.token_str = new_token;
     return INT; }
 {LPAREN}  { printf("LPAREN\n"); return LPAREN; }
 {RPAREN}  { printf("RPAREN\n"); return RPAREN; }
@@ -85,13 +86,13 @@ UNDERSC "_"
 {UNDERSC}({DIGIT}|{LOWER}|{UPPER}|{UNDERSC})*   {
     char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
     strncpy(new_token, yytext, strlen(yytext)+1);
-    yylval.token_str = new_token;
+    asml_lval.token_str = new_token;
     printf("LABEL\n");
     return LABEL; }
 {LOWER}({DIGIT}|{LOWER}|{UPPER}|{UNDERSC})*   {
     char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
     strncpy(new_token, yytext, strlen(yytext)+1);
-    yylval.token_str = new_token;
+    asml_lval.token_str = new_token;
     printf("IDENT\n");
     return IDENT; }
 

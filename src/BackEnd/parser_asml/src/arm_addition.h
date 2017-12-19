@@ -13,6 +13,7 @@ namespace arm {
 
   class arm_addition : public arm_instruction {
   public:
+    arm_addition (void);
     ~arm_addition (void) {};
 
     virtual string get_instruction (void);

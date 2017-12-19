@@ -10,9 +10,12 @@ namespace arm {
       return create_affectation (dynamic_cast<asml_affectation*>(instr));
     case asml_instruction::ADDITION:
       return create_addition (dynamic_cast<asml_addition*>(instr));
-      break;
     case asml_instruction::SOUSTRACTION:
       return create_soustraction (dynamic_cast<asml_soustraction*>(instr));
+    case asml_instruction::CONDITION:
+      return create_condition (dynamic_cast<asml_condition*>(instr));
+    case asml_instruction::NEGATION:
+      return create_negation (dynamic_cast<asml_negation*>(instr));
     default:
       return NULL;
     }
@@ -53,6 +56,32 @@ namespace arm {
     soustraction->set_op2(add->get_op2());
     soustraction->set_op3(add->get_op3());
     return soustraction;
+  }
+
+  arm_condition* arm_instruction_factory::create_condition (asml_condition* cond) {
+    arm_condition* condition = new arm_condition ();
+    arm_boolean* boolean = new arm_boolean (cond->get_boolean()->get_type());
+    boolean->set_op1 (cond->get_boolean()->get_op1());
+    boolean->set_op2 (cond->get_boolean()->get_op2());
+    condition->set_boolean(boolean);
+    for (vector<asml_instruction*>::iterator it = cond->get_then()->begin();
+	 it != cond->get_then()->end();
+	 it++) {
+      condition->add_then(create_instruction(*it));
+    }
+    for (vector<asml_instruction*>::iterator it = cond->get_else()->begin();
+	 it != cond->get_else()->end();
+	 it++) {
+      condition->add_else(create_instruction(*it));
+    }
+    return condition;
+  }
+
+  arm_negation* arm_instruction_factory::create_negation (asml_negation* neg) {
+    arm_negation* negation = new arm_negation ();
+    negation->set_op1(neg->get_op1());
+    negation->set_op2(neg->get_op2());
+    return negation;
   }
 
 }

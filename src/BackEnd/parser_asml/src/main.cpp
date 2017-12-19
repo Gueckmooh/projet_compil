@@ -17,7 +17,7 @@ int main (void) {
   vector<asml_function*>* function;
   asml_factory::initialize();
   arm_generator* generator;
-  yyparse ();
+  asml_parse ();
   function = asml_factory::get_function();
   /*
   for (vector<asml_function*>::iterator it = function->begin();

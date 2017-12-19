@@ -2,6 +2,10 @@
 
 namespace arm {
 
+  arm_soustraction::arm_soustraction (void) {
+    type_id = arm_instruction::SOUSTRACTION;
+  }
+
   string arm_soustraction::get_instruction (void) {
     string instruction;
     instruction += "\tldr r0, [fp, #" + offset->find(op2)->second + "]\n";

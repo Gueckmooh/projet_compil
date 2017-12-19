@@ -11,6 +11,8 @@ namespace arm {
 
   class arm_affectation : public arm_instruction {
   public:
+    arm_affectation (void);
+
     virtual string get_instruction (void);
     virtual void set_op1 (string);
     virtual void set_op2 (string);

@@ -13,6 +13,7 @@ namespace arm {
 
   class arm_soustraction : public arm_instruction {
   public:
+    arm_soustraction (void);
     ~arm_soustraction (void) {};
 
     virtual string get_instruction (void);

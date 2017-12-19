@@ -2,6 +2,8 @@
 
 namespace arm {
 
+  int arm_function_generator::lien = 0;
+
   arm_function_generator::arm_function_generator (asml_function* fun) {
     output = new stringstream ();
     asml = fun;
@@ -29,12 +31,13 @@ namespace arm {
     generate_prologue();
     process_params();
     process_instructions();
+    pre_process_conditions();
     generate_epilogue();
     *output << name <<":\n";
     *output << prologue;
     *output << processed_params;
-    for (vector<arm_instruction*>::reverse_iterator it = instructions.rbegin();
-	 it != instructions.rend();
+    for (vector<arm_instruction*>::iterator it = instructions.begin();
+	 it != instructions.end();
 	 it++) {
       *output << (*it)->get_instruction();
     }
@@ -85,7 +88,7 @@ namespace arm {
       off-=4;
     }
   }
-  
+
   void arm_function_generator::process_instructions (void) {
     vector<asml_instruction*>::iterator it = asml->instruction_begin ();
     cout << name << " : " << to_string(asml->get_instructions()->size()) << endl;
@@ -95,6 +98,22 @@ namespace arm {
       instruction->set_var_offset (&var_offsets);
       instructions.push_back(instruction);
       it++;
+    }
+  }
+
+  void arm_function_generator::pre_process_conditions (void) {
+    string l;
+    arm_condition* cond;
+    for (vector<arm_instruction*>::iterator it = instructions.begin();
+	 it != instructions.end();
+	 it++) {
+      if ((*it)->get_type() == arm_instruction::CONDITION) {
+	cond = dynamic_cast<arm_condition*>(*it);
+	l = ".L" + to_string(lien++);
+	cond->set_lFalse (l);
+	l = ".L" + to_string(lien++);
+	cond->set_lFin (l);
+      }
     }
   }
 

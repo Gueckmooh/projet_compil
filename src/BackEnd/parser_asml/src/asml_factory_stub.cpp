@@ -19,6 +19,7 @@ extern "C" void asml_set_function_name (char* name) {
 }
 
 extern "C" void asml_add_int_param (char* params) {
+  /*
   vector<string>* vect = new vector<string> ();
   char* current = params;
   cout << string(params) << endl;
@@ -33,6 +34,9 @@ extern "C" void asml_add_int_param (char* params) {
     current += strlen (current)+1;
   }
   asml_factory::add_int_param (vect);
+  */
+  string name = string(params);
+  asml_factory::add_int_param (name);
 }
 
 extern "C" void asml_add_int_variable (char* param) {

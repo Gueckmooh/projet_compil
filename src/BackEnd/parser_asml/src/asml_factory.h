@@ -10,6 +10,9 @@
 #include "asml_addition.h"
 #include "asml_soustraction.h"
 #include "asml_condition.h"
+#include "asml_node.h"
+#include "asml_unary_node.h"
+#include "asml_binary_node.h"
 
 using namespace std;
 
@@ -24,9 +27,10 @@ namespace asml {
     static void initialize (void);
     static void validate_function (void);
     static void validate_condition (void);
+    static void add_function (asml_function*, asml_node*);
     static vector<asml_function*>* get_function (void);
     static void set_function_name (string);
-    static void add_int_param (vector<string>*);
+    static void add_int_param (string);
     static void add_int_variable (string);
     static void add_affectation (string, string);
     static void add_funcall (string, string, vector<string>*);
@@ -35,6 +39,7 @@ namespace asml {
     static void set_boolean (string, string, int);
     static void append (asml_instruction*);
     static void set_next (int);
+    static asml_instruction* create_instruction (asml_node*);
   protected:
     static int next;
     static vector<asml_function*>* function_list;

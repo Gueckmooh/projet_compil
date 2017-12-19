@@ -18,6 +18,12 @@ using namespace asml;
 #ifndef __ASML_FACTORY_STUB_H__
 #define __ASML_FACTORY_STUB_H__
 
+typedef struct {
+  char* op1;
+  char* op2;
+  int type;
+} asml_operation_t;
+
 #ifdef __cplusplus
 //extern "C" void asml_create_function (void);
 extern "C" void asml_validate_function (void);

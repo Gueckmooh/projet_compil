@@ -36,8 +36,8 @@ namespace arm {
     *output << name <<":\n";
     *output << prologue;
     *output << processed_params;
-    for (vector<arm_instruction*>::reverse_iterator it = instructions.rbegin();
-	 it != instructions.rend();
+    for (vector<arm_instruction*>::iterator it = instructions.begin();
+	 it != instructions.end();
 	 it++) {
       *output << (*it)->get_instruction();
     }

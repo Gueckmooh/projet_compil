@@ -1,35 +1,28 @@
 %{
-#include "asml_factory_stub.h"
+//#include "asml_factory_stub.h"
 #include "asml_parser.h"
-#include "asml_util.h"
+//#include "asml_util.h"
+#include "asml_parser_types.h"
+#include "asml_parser_driver.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 int yyparse();
 int yylex();
 int yyerror(const char* s);
-int hulu = 0;
 %}
 
 %code requires {
-    typedef struct {
-	int type;
-	char* op1;
-	char* op2;
-    } asml_parser_operation;
 
-    typedef struct {
-        char* name;
-	char* params;
-    } asml_parser_funcall;
+    #include "asml_parser_types.h"
+
 }
 
 %union {
     char* token_str;
-    int token_int;
-    float token_float;
-    asml_parser_operation token_op;
-    asml_parser_funcall token_funcall;
+    asml_asmt_t* token_asmt;
+    asml_exp_t* token_exp;
+    asml_formal_arg_t* token_args;
 }
 
 
@@ -70,256 +63,56 @@ int hulu = 0;
 %token	<token_str>	LABEL
 %token	<token_str>	IDENT
 %token			FLOAT
-%type	<token_funcall>	call
-%type	<token_op>	exp
-%type	<token_str>	param
-%type	<token_str>	ident_or_int
-%type	<token_op>	cond
+
+%type	<token_asmt>	asmt
+%type	<token_exp>	exp
+%type	<token_args>	formal_args
+%type	<token_str>	ident_or_imm
+%type	<token_exp>	cond
 
 %%
 
-prog:	        prog fundef
-	|	fundef
+toplevel:
+	|  	fundefs
+;
+
+fundefs:
+	| 	LET UNDERSC EQUAL asmt                    { asml_parser_create_function ("main", NULL, $4); }
+	| 	LET LABEL formal_args EQUAL asmt fundefs  { asml_parser_create_function ($2, $3, $5); }
+;
+
+asmt: 		LPAREN asmt RPAREN           { $$ = $2; }
+	| 	LET IDENT EQUAL exp IN asmt  { $$ = asml_parser_add_asmt ($2, $4, $6); }
+	| 	exp                          { $$ = asml_parser_add_asmt (NULL, $1, NULL); }
+;
+
+exp: 		LPAREN exp RPAREN            { $$ = $2; }
+	| 	INT                          { $$ = asml_parser_create_exp (ASML_EXP_INT, $1, NULL, NULL); }
+	| 	IDENT                        { $$ = asml_parser_create_exp (ASML_EXP_IDENT, $1, NULL, NULL); }
+	| 	LABEL                        { $$ = asml_parser_create_exp (ASML_EXP_LABEL, $1, NULL, NULL); }
+	| 	ADD IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_ADD, $2, $3, NULL); }
+	| 	SUB IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_SUB, $2, $3, NULL); }
+	| 	IF cond THEN asmt ELSE asmt  { $$ = asml_parser_create_exp (ASML_EXP_IF, $2, $4, $6); }
+	| 	CALL LABEL formal_args       { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, $3, NULL); }
+	|	CALL LABEL                   { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, NULL, NULL); }
+;
+
+cond:		IDENT EQUAL ident_or_imm  { $$ = asml_parser_create_exp (ASML_COND_EQUAL, $1, $3, NULL); }
+	|	IDENT LE ident_or_imm     { $$ = asml_parser_create_exp (ASML_COND_LE, $1, $3, NULL); }
+	|	IDENT GE ident_or_imm     { $$ = asml_parser_create_exp (ASML_COND_GE, $1, $3, NULL); }
 	;
 
-fundef:		LET UNDERSC EQUAL asmt      {
-		    asml_set_function_name ("main");
-		    asml_validate_function();
-		    printf ("main, %d\n", hulu++);
-                }
-	|	LET LABEL EQUAL asmt  {
-	            asml_set_function_name ($2+1);
-		    asml_validate_function();
-		    printf ("%s, %d\n", $2, hulu++);
-                }
-	|	LET LABEL param EQUAL asmt  {
-	            asml_add_int_param ($3);
-		    asml_set_function_name ($2+1);
-		    asml_validate_function ();
-		    printf ("%s, %d\n", $2, hulu++);
-                }
-	;
+formal_args: 	IDENT formal_args  { $$ = asml_parser_add_arg ($1, $2); }
+	| 	IDENT              { $$ = asml_parser_add_arg ($1, NULL); }
+;
 
-asmt:		LET IDENT EQUAL INT IN asmt   {
-		    asml_add_int_variable ($2);
-		    asml_add_affectation ($2, $4);
-		    printf ("%s, %d\n", "asmt", hulu++);
-                }
-	|	LET IDENT EQUAL exp IN asmt   {
-                    asml_add_int_variable ($2);
-		    switch ($4.type) {
-		    case 1:
-			asml_add_addition ($2, $4.op1, $4.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ($2, $4.op1, $4.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	LET IDENT EQUAL call IN asmt  {
-	            asml_add_int_variable ($2);
-		    asml_add_funcall ($4.name, $2, $4.params);
-                }
-	|	call                          {
-	            asml_add_funcall ($1.name, "0", $1.params);
-		}
-	|	exp                           {
-	            switch ($1.type) {
-		    case 1:
-			asml_add_addition ("0", $1.op1, $1.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ("0", $1.op1, $1.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	INT                           {
-	            asml_add_affectation ("0", $1);
-		}
-	|	IF cond THEN LPAREN asmt_then RPAREN ELSE LPAREN asmt_else RPAREN {
-	            asml_set_boolean ($2.op1, $2.op2, $2.type);
-		    asml_validate_condition();
-                }
-	 ;
-
-asmt_then:	LET IDENT EQUAL INT IN asmt_then   {
-                    asml_set_next(ASML_THEN);
-		    asml_add_int_variable ($2);
-		    asml_add_affectation ($2, $4);
-		    printf ("%s, %d\n", "asmt", hulu++);
-                }
-	|	LET IDENT EQUAL exp IN asmt_then   {
-                    asml_set_next(ASML_THEN);
-                    asml_add_int_variable ($2);
-		    switch ($4.type) {
-		    case 1:
-			asml_add_addition ($2, $4.op1, $4.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ($2, $4.op1, $4.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	LET IDENT EQUAL call IN asmt_then  {
-                    asml_set_next(ASML_THEN);
-	            asml_add_int_variable ($2);
-		    asml_add_funcall ($4.name, $2, $4.params);
-                }
-	|	call                          {
-                    asml_set_next(ASML_THEN);
-	            asml_add_funcall ($1.name, "0", $1.params);
-		}
-	|	exp                           {
-                    asml_set_next(ASML_THEN);
-	            switch ($1.type) {
-		    case 1:
-			asml_add_addition ("0", $1.op1, $1.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ("0", $1.op1, $1.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	INT                           {
-                    asml_set_next(ASML_THEN);
-	            asml_add_affectation ("0", $1);
-		}
-	 ;
-
-
-asmt_else:	LET IDENT EQUAL INT IN asmt_else   {
-                    asml_set_next(ASML_ELSE);
-		    asml_add_int_variable ($2);
-		    asml_add_affectation ($2, $4);
-		    printf ("%s, %d\n", "asmt", hulu++);
-                }
-	|	LET IDENT EQUAL exp IN asmt_else   {
-                    asml_set_next(ASML_ELSE);
-                    asml_add_int_variable ($2);
-		    switch ($4.type) {
-		    case 1:
-			asml_add_addition ($2, $4.op1, $4.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ($2, $4.op1, $4.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	LET IDENT EQUAL call IN asmt_else  {
-                    asml_set_next(ASML_ELSE);
-	            asml_add_int_variable ($2);
-		    asml_add_funcall ($4.name, $2, $4.params);
-                }
-	|	call                          {
-                    asml_set_next(ASML_ELSE);
-	            asml_add_funcall ($1.name, "0", $1.params);
-		}
-	|	exp                           {
-                    asml_set_next(ASML_ELSE);
-	            switch ($1.type) {
-		    case 1:
-			asml_add_addition ("0", $1.op1, $1.op2);
-			break;
-		    case 2:
-			asml_add_soustraction ("0", $1.op1, $1.op2);
-			break;
-		    default:
-			break;
-		    }
-		}
-	|	INT                           {
-                    asml_set_next(ASML_ELSE);
-	            asml_add_affectation ("0", $1);
-		}
-	 ;
-
-cond:		ident_or_int EQUAL ident_or_int {
-		    $$.type = ASML_EQUAL;
-                    $$.op1 = $1;
-                    $$.op2 = $3;
-                }
-	|	ident_or_int LE ident_or_int    {
-		    $$.type = ASML_LE;
-                    $$.op1 = $1;
-                    $$.op2 = $3;
-                }
-	|	ident_or_int GE ident_or_int    {
-		    $$.type = ASML_GE;
-                    $$.op1 = $1;
-                    $$.op2 = $3;
-                }
-	;
-
-exp:	 	ADD IDENT IDENT            {
-		    $$.type = 1;
-		    $$.op1 = $2;
-		    $$.op2 = $3;
-		}
-	|	SUB IDENT IDENT            {
-		    $$.type = 2;
-		    $$.op1 = $2;
-		    $$.op2 = $3;
-		}
-	|	ADD IDENT INT              {
-		    $$.type = 1;
-		    $$.op1 = $2;
-		    $$.op2 = $3;
-		}
-	|	SUB IDENT INT              {
-		    $$.type = 2;
-		    $$.op1 = $2;
-		    $$.op2 = $3;
-		}
-	;
-
-call:		CALL LABEL param {
-		    $$.name = $2; $$.params = $3;
-                }
-	|	CALL LABEL       {
-	            $$.name = $2; $$.params = NULL;
-		}
-	;
-
-param:		param IDENT {
-	            strcpy(strend($1), $2);
-		    strcpy(strend($1), " ");
-		    $$ = $1;
-                }
-	|	IDENT       {
-	            char* ret = (char*) malloc(sizeof (char)*256);
-		    strcpy(ret, $1);
-		    strcpy(strend(ret), " ");
-		    $$ = ret;
-		}
-	|	param INT {
-	            strcpy(strend($1), $2);
-		    strcpy(strend($1), " ");
-		    $$ = $1;
-                }
-	|	INT       {
-	            char* ret = (char*) malloc(sizeof (char)*256);
-		    strcpy(ret, $1);
-		    strcpy(strend(ret), " ");
-		    $$ = ret;
-		}
-	;
-
-ident_or_int:	IDENT { $$ = $1; }
-	|	INT   { $$ = $1; }
-	;
+ident_or_imm: 	INT
+	| 	IDENT
+;
 
 %%
 
 int yyerror (const char* s) {
-    return 0;
-    }
+    fprintf(stderr, "%s\n", s);
+    return 1;
+}

@@ -29,7 +29,7 @@ void add_or_replace(plist env, str_to_str *new_element){
     while(l_node != NULL){
         element = (str_to_str *)l_node->data;
         if (strcmp(new_element->src, element->src) == 0){
-            element->dest = new_element->dest;
+            l_node->data = new_element;
             return;
         }
         l_node = l_node->next;

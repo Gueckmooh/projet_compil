@@ -147,8 +147,11 @@ $(TESTBINDIR):
 $(LIBDIR):
 	$(QUIET)$(MKDIR_P) $@
 
+$(INCLUDEDIR):
+	$(QUIET)$(MKDIR_P) $@
+
 testdirectories: directories $(TESTBINDIR)
-directories: $(OBJDIR) $(DEPDIR) $(LIBDIR)
+directories: $(OBJDIR) $(DEPDIR) $(LIBDIR) $(INCLUDEDIR)
 
 inc: $(INCLUDEDIR)
 	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done

@@ -211,6 +211,9 @@ int main(int argc, char **argv) {
         return 0;
     }
 
+
+    /// parsing
+
     yyin = file;
 
     // yydebug = 1;
@@ -220,9 +223,14 @@ int main(int argc, char **argv) {
         return 0;
     }
 
+
+    /// global -> je fais
     knorm_var_counter = 0;
     alpha_var_counter = 0;
     print_term(p);
+
+    /// fonctions pour knorm, alpha et reduce let
+
     printf("\n\n");
     print_term(knorm(p));
     printf("\n\n");

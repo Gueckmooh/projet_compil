@@ -432,7 +432,8 @@
         parsecall(&p,argv[1]);
         print_term(p);
 	//printf("_________\n");
-    parseprint(p,argv[2]);
+        if (argc ==3) {
+    parseprint(p,argv[2]);}
     //printf("___ ___ ___ \n");
         /*
     	file = fopen(argv[1], "r");

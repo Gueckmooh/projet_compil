@@ -7,7 +7,7 @@
 #include "assert.h"
 #include "string.h"
 
-#define MAX_ID 10 
+#define MAX_ID 10
 
 char buffer[MAX_ID];
 
@@ -16,7 +16,7 @@ id id_gen() {
     buffer[1] = 'v';
     static int cnt = 0;
     sprintf(buffer+2, "%d", cnt);
-    char *res = malloc(sizeof(buffer)); 
+    char *res = malloc(sizeof(buffer));
     strcpy(res, buffer);
     cnt++;
     return res;
@@ -39,7 +39,7 @@ ptree ast_let(id v, ptree t1, ptree t2) {
     ptree t = malloc(sizeof(tree));
     t->code = T_LET;
     t->params.tlet.v = v;
-    t->params.tlet.t = gentvar(); 
+    t->params.tlet.t = gentvar();
     t->params.tlet.t1 = t1;
     t->params.tlet.t2 = t2;
     return t;
@@ -151,7 +151,7 @@ ptree ast_put(ptree t1, ptree t2, ptree t3) {
 ptree ast_app(ptree t1, plist l) {
     ptree t = malloc(sizeof(tree));
     t->code = T_APP;
-    t->params.tapp.t = t1; 
+    t->params.tapp.t = t1;
     t->params.tapp.l = l;
     return t;
 }
@@ -179,4 +179,68 @@ ptree ast_letrec(pfundef fd, ptree t1) {
     t->params.tletrec.t = t1;
     return t;
 }
- 
+
+ptree apply_vis(ptree t, ptree (*vis)(ptree)){
+    listNode *l_node;
+    switch(t->code){
+        // leaves
+        case T_INT :
+        case T_LET :
+        case T_VAR :
+        case T_UNIT :
+        case T_BOOL :
+        case T_FLOAT :
+        case T_TUPLE :
+            return t;
+
+        //unary
+        case T_NEG :
+        case T_NOT :
+        case T_FNEG :
+            t->params.t = vis(t->params.t);
+            return t;
+
+        //binary
+        case T_ADD :
+        case T_SUB :
+        case T_FADD :
+        case T_FSUB :
+        case T_FMUL :
+        case T_FDIV :
+        case T_EQ :
+        case T_LE :
+        case T_ARRAY :
+        case T_GET :
+        case T_LETTUPLE :
+            t->params.tbinary.t1 = vis(t->params.tbinary.t1);
+            t->params.tbinary.t2 = vis(t->params.tbinary.t2);
+            return t;
+
+        //ternary
+        case T_IF :
+        case T_PUT :
+            t->params.tternary.t1 = vis(t->params.tternary.t1);
+            t->params.tternary.t2 = vis(t->params.tternary.t2);
+            t->params.tternary.t3 = vis(t->params.tternary.t3);
+            return t;
+
+        //letrec
+        case T_LETREC :
+            t->params.tletrec.t = vis(t->params.tletrec.t);
+            t->params.tletrec.fd->body = vis(t->params.tletrec.fd->body);
+            return t;
+
+        //app -> has a list  of trees
+        case T_APP :
+            t->params.tapp.t = vis(t->params.tapp.t);
+            l_node = t->params.tapp.l->head;
+            while(l_node != NULL){
+                l_node->data = vis(l_node->data);
+                l_node = l_node->next;
+            }
+            return t;
+        default :
+            printf("Error in apply_vis ; t->code = %d\n", t->code);
+            exit(1);
+    }
+}

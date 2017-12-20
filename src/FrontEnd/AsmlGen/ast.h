@@ -40,7 +40,7 @@ struct tree_;
 struct fundef {
     id var;
     type t;
-    plist args; 
+    plist args;
     struct tree_ *body;
 };
 
@@ -85,8 +85,8 @@ typedef struct tree_ {
           struct tree_ *t1;
           struct tree_ *t2;
       } lettuple;
-  } params; 
-} tree; 
+  } params;
+} tree;
 
 typedef tree *ptree;
 
@@ -141,4 +141,7 @@ ptree ast_lettuple(plist l, ptree t1, ptree t2);
 ptree ast_letrec(pfundef fd, ptree t1);
 
 id id_gen();
+
+ptree apply_vis(ptree t, ptree (*vis)(ptree));
+
 #endif

@@ -79,8 +79,8 @@ toplevel:
 ;
 
 fundefs:
-	| 	LET UNDERSC EQUAL asmt                    { asml_parser_create_function ("main", NULL, $4); }
-	| 	LET LABEL formal_args EQUAL asmt fundefs  { asml_parser_create_function ($2, $3, $5); }
+	    | 	LET UNDERSC EQUAL asmt                    { asml_parser_create_function(asml_parser_package_function ("main", NULL, $4)); }
+	| 	LET LABEL formal_args EQUAL asmt fundefs  { asml_parser_create_function(asml_parser_package_function ($2, $3, $5)); }
 ;
 
 asmt: 		LPAREN asmt RPAREN           { $$ = $2; }

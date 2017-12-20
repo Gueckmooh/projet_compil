@@ -1,6 +1,9 @@
 #include "asml_parser_driver.h"
 
-extern "C" void asml_parser_create_function (char* name, asml_formal_arg_t* args, asml_asmt_t* asmt) {
+extern "C" void asml_parser_create_function (asml_function_t* func) {
+  char* name = func->name;
+  asml_formal_arg_t* args = func->args;
+  asml_asmt_t* asmt = func->asmt;
   asml_function* function = new asml_function();
   asml_variable* var;
   asml_node* tree;
@@ -146,4 +149,12 @@ extern "C" asml_formal_arg_t* asml_parser_add_arg (char* op, asml_formal_arg_t* 
   args->val = op;
   args->next = next;
   return args;
+}
+
+extern "C" asml_function_t* asml_parser_package_function (char* name, asml_formal_arg_t* args, asml_asmt_t* asmt) {
+  asml_function_t* func = (asml_function_t*) malloc (sizeof(asml_function_t));
+  func->name = name;
+  func->args = args;
+  func->asmt = asmt;
+  return func;
 }

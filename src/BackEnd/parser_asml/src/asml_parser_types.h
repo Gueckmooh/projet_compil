@@ -33,4 +33,10 @@ typedef struct asml_formal_arg {
   struct asml_formal_arg* next;
 } asml_formal_arg_t;
 
+typedef struct {
+  char* name;
+  asml_formal_arg_t* args;
+  asml_asmt_t* asmt;
+} asml_function_t;
+
 #endif // __ASML_PARSER_TYPE_H__

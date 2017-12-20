@@ -6,15 +6,16 @@ Group Member : Baptiste BLEUZE, Enzo BRIGNON, Florian MARCO, Maxime RAYNAL
 
 USAGE
 =====
- USAGE: ./mincamlc input_file [options] 
- Options :
- -h, --help                Print usage.
- -o, --output output_file  You must specifiy an output filename.
- -v, --version             Print version.
- -t, --typecheck           Perform only Typecheck analysis. Return ErrorCode if incorrect typing 
- -p, --parser              Perform only mincaml parsing. Print AST in output file
- -a --asml                 Perform only ASML generation. Print ASML in output file.
- -i, --asmlinput           Take ASML input and generate ARM output. Print ARM in output file.
+ |USAGE: ./mincamlc input_file [options] ||
+ |PARAMETER| FUNCTION|
+ |---|---|---|
+ |-h, --help|                Print usage.|
+ |-o, --output output_file|  You must specifiy an output filename.|
+ |-v, --version           | Print version.|
+ |-t, --typecheck        |  Perform only Typecheck analysis. Return ErrorCode if incorrect typing.| 
+ |-p, --parser           |  Perform only mincaml parsing. Print AST in output file|
+ |-a --asml               |  Perform only ASML generation. Print ASML in output file.|
+ |-i, --asmlinput         | Take ASML input and generate ARM output. Print ARM in output file.|
  
  TODO LIST
  =====

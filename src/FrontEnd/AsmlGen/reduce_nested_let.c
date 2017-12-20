@@ -59,7 +59,9 @@ ptree reduce_nested_let(ptree t){
         case T_LE :
         case T_IF :
         case T_LETREC :
+            return ast_letrec(t->params.tletrec.fd, t->params.tletrec.t);
         case T_APP :
+            return ast_app(t->params.tapp.t, t->params.tapp.l);
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :

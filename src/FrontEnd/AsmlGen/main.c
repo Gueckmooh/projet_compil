@@ -231,5 +231,6 @@ int main(int argc, char **argv) {
     print_term(reduce_nested_let(alpha_convert(knorm(p), empty())));
     printf("\n\n");
     print_term(reduce_nested_let(p));
+    printf("\n\n");
     return 0;
 }

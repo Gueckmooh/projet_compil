@@ -94,14 +94,12 @@ for (int i=0; i < argc; i++) {
 			f.close();
 		}
 		else {
-			std::cout << "Erreur d'ouverture du fichier input\n";
-			// TODO :print stderr;
+			std::cerr << "Erreur d'ouverture du fichier input\n";
 			return 1;
 		}
 	}
 	else {
-		std::cout <<"Erreur : le fichier input n'existe pas \n";
-		// TODO : print stderr;
+		std::cerr <<"Erreur : le fichier input n'existe pas \n";
 		return 1;
 	}
 }
@@ -110,8 +108,7 @@ for (int i=0; i < argc; i++) {
 // Test : aucun input fichier donne et on veut regarder la liste des arguments
 if (!is_inputfile) {
   if (!options[HELP] && !options[VERSION] && (argc > 0)){
-    std::cout <<"Erreur : Aucun fichier donne en entree ou mauvaise syntaxe \nTapez ./mincamlc -h pour afficher l'aide\n";
-    // TODO : Print Stderr
+    std::cerr <<"Erreur : Aucun fichier donne en entree ou mauvaise syntaxe \nTapez ./mincamlc -h pour afficher l'aide\n";
     return 1;
   }
 }
@@ -121,7 +118,6 @@ if (!is_inputfile) {
 if (options[OUTPUT]){
 	std::cout << options[OUTPUT].arg ;
 	std::ofstream outfile (options[OUTPUT].arg);
-	outfile << "zboub"; 
 	outfile.close();
 	outputfilename = options[OUTPUT].arg;
 }
@@ -146,8 +142,7 @@ if (options[OUTPUT]){
   	enable(traitement_param,TOTAL_ARM);}
   }
   else if (!options[HELP] && !options[VERSION] && !options[TYPECHECK]){
-  	std::cout <<"Erreur : aucun fichier output specifie \n";
-  	// TODO : stderr
+  	std::cerr <<"Erreur : aucun fichier output specifie \n";
   	return 1;
   }
 
@@ -171,7 +166,7 @@ if (options[OUTPUT]){
 if (options[OUTPUT]){
 	int b = mega_caller(traitement_param,inputfilename,outputfilename);}
 	else{
-int a=mega_caller(traitement_param,inputfilename);}
+int a=mega_caller(traitement_param,inputfilename,"");}
 
 return 0;
 

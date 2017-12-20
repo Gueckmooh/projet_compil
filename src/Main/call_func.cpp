@@ -38,12 +38,9 @@ int ARM_caller (int zboub){
 	return 0;
 }
 
-int mega_caller (int param, string input ...){
-	string output;
-	va_list args;
-	va_start(args, input);
+int mega_caller (int param, string input, string output){
+
 	if (is_enabled(param,PARAM_OUTPUT)){
-		output = va_arg(args, string);
 		cout << "ALORS";
 		std::cout << output;
 		std::cout << "ENZO COUCOUCOUCOUCOU";

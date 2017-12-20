@@ -1,7 +1,6 @@
 #include "asml_addition.h"
 #include "asml_factory.h"
 #include "asml_instruction.h"
-#include "asml_parser.h"
 #include "asml_variable.h"
 #include "asml_affectation.h"
 #include "asml_factory_stub.h"
@@ -19,3 +18,6 @@
 #include "asml_generator.h"
 #include "asml_parser_driver.h"
 #include "asml_util.h"
+extern "C" {
+#include "asml_parser.h"
+}

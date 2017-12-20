@@ -141,8 +141,7 @@ ptree knorm(ptree t){
         case T_ARRAY :
         case T_GET :
         case T_PUT :
-            apply_vis(t, knorm);
-            break;
+            return apply_vis(t, knorm);
         default :
             printf("TBI. knorm, t->code = %d\n", t->code);
             return NULL;

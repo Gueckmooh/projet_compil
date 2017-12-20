@@ -8,14 +8,23 @@ USAGE
 =====
 
 USAGE mincamlc input_file options
+
 |PARAMETER| FUNCTION|
+
 | --- | --- | --- |
+
 |-h, --help|                Print usage.|
+
 |-o, --output output_file|  You must specifiy an output filename.|
+
 |-v, --version           | Print version.|
+
 |-t, --typecheck        |  Perform only Typecheck analysis. Return ErrorCode if incorrect typing.| 
+
 |-p, --parser           |  Perform only mincaml parsing. Print AST in output file|
+
 |-a --asml               |  Perform only ASML generation. Print ASML in output file.|
+
 |-i, --asmlinput         | Take ASML input and generate ARM output. Print ARM in output file.|
  
  TODO LIST
@@ -24,11 +33,49 @@ USAGE mincamlc input_file options
 FRONT END 
 ------
 
+- [ ] Typechecking
+
+- [X] K-Normalization
+- [X] alpha-conversion
+- [X] reduction of nested-let
+- [ ] closure conversion
+- [ ] ASML generation
+- [ ] beta-reduction
+- [ ] inline expansion
+- [ ] constant folding
+- [ ] elimination of unnecessary definitions
+
+- [ ] Contact with backend structure
+
+
 BACK END 
 ------
 
+- [X] simple arithmetic expression
+- [X] call to external functions
+- [X] functions (let rec)
+- [X] if-then-else
+- [ ] closures, tuple, arrays
+
+- [X] ASML Parsing
+- [X] ASML Generation
+- [X] ARM Generation
+
+- [X] Basic Register Allocation
+- [ ] Smart Register Allocation : dominance tree
+- [ ] Garbage Collector
+
 GENERAL
 ------
+
+- [X] Command Line Options 
+- [ ] Full MAKEFILE
+- [ ] Libraries integration
+- [ ] Full Integration
+
+- [ ] Test files
+- [ ] Make Test (basic BASH)
+- [ ] Make Test (python)
 
 NOTES
 =====

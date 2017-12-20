@@ -77,4 +77,22 @@ namespace asml {
   vector<asml_instruction*>* asml_function::get_instructions (void) {
     return &instructions;
   }
+
+  string asml_function::generate (void) {
+    string ret;
+    ret += "let " + (name.compare("main") == 0 ? "_" : name);
+    for (vector<asml_variable*>::iterator it = params.begin();
+	 it != params.end();
+	 it++) {
+      ret += " " + (*it)->get_name();
+    }
+    ret += " =\n";
+    for (vector<asml_instruction*>::iterator it = instructions.begin();
+	 it != instructions.end();
+	 it++) {
+      ret += (*it)->generate(1);
+    }
+    return ret;
+  }
+
 }

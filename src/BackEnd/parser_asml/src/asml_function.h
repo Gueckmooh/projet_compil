@@ -32,6 +32,8 @@ namespace asml {
     virtual vector<asml_variable*>* get_variables (void);
     virtual vector<asml_variable*>* get_params (void);
     virtual vector<asml_instruction*>* get_instructions (void);
+
+    virtual string generate (void);
   protected:
     string name;
     vector<asml_variable*> variables;

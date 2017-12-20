@@ -27,7 +27,7 @@ namespace asml {
     virtual vector<string>::iterator end (void);
     virtual int size (void);
     virtual string operator[] (int);
-    //virtual void print (void);
+    virtual string generate (int);
   protected:
     string funcname;
     string return_variable;

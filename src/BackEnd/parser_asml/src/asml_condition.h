@@ -16,14 +16,19 @@ namespace asml {
     asml_condition (void);
     ~asml_condition (void);
 
+    virtual void set_var (string);
     virtual void set_boolean (asml_boolean*);
     virtual void add_then (asml_instruction*);
     virtual void add_else (asml_instruction*);
 
+    virtual string get_var (void);
     virtual asml_boolean* get_boolean (void);
     virtual vector<asml_instruction*>* get_then (void);
     virtual vector<asml_instruction*>* get_else (void);
+
+    virtual string generate (int);
   protected:
+    string var;
     asml_boolean* boolean;
     vector<asml_instruction*>* then_list;
     vector<asml_instruction*>* else_list;

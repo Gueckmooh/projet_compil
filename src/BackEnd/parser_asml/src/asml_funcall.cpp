@@ -52,4 +52,22 @@ namespace asml {
     return params[t];
   }
 
+  string asml_funcall::generate (int ident) {
+    string ret;
+    for (int i = 0; i < ident; i++)
+      ret += "\t";
+    if (do_return)
+      ret += "let " + return_variable + " =";
+    ret += "call " + funcname;
+    for (vector<string>::iterator it = params.begin();
+	 it != params.end();
+	 it++)
+      ret += " " + (*it);
+    if (do_return)
+      ret += " in";
+    ret += "\n";
+    return ret;
+  }
+
+
 }

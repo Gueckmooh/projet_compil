@@ -6,6 +6,10 @@ namespace asml {
     type_id = asml_node::BINARY;
   }
 
+  string asml_binary_node::get_var (void) {
+    return var;
+  }
+
   asml_boolean* asml_binary_node::get_boolean (void) {
     return boolean;
   }
@@ -16,6 +20,10 @@ namespace asml {
 
   asml_node* asml_binary_node::get_next_false (void) {
     return next_false;
+  }
+
+  void asml_binary_node::set_var (string var) {
+    this->var = var;
   }
 
   void asml_binary_node::set_boolean (asml_boolean* boolean) {

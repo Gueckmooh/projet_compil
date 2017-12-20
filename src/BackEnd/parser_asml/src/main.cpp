@@ -8,6 +8,7 @@ extern "C" {
 #include "asml_instruction.h"
 #include "asml_factory.h"
 #include "arm_generator.h"
+#include "asml_generator.h"
 
 using namespace std;
 using namespace asml;
@@ -17,6 +18,7 @@ int main (void) {
   vector<asml_function*>* function;
   asml_factory::initialize();
   arm_generator* generator;
+  //asml_generator* asml_gen;
   asml_parse ();
   function = asml_factory::get_function();
   /*
@@ -33,5 +35,7 @@ int main (void) {
   */
   generator = new arm_generator (function);
   generator->generate ();
+  //asml_gen = new asml_generator (function);
+  //asml_gen->generate();
   return 0;
 }

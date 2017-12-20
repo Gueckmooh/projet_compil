@@ -22,6 +22,8 @@ namespace asml {
     virtual void set_op1 (string);
     virtual void set_op2 (string);
     virtual void set_op3 (string);
+
+    virtual string generate (int);
   protected:
     string op1;
     string op2;

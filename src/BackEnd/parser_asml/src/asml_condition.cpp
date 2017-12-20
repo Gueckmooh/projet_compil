@@ -25,20 +25,24 @@ namespace asml {
     delete else_list;
   }
 
+  void asml_condition::set_var (string) {
+    this->var = var;
+  }
+
   void asml_condition::set_boolean (asml_boolean* boolean) {
     this->boolean = boolean;
   }
 
   void asml_condition::add_then (asml_instruction* instr) {
-    //vector<asml_instruction*>::iterator it = then_list->begin();
-    //then_list->insert(it, instr);
     then_list->push_back(instr);
   }
 
   void asml_condition::add_else (asml_instruction* instr) {
-    //vector<asml_instruction*>::iterator it = else_list->begin();
-    //else_list->insert(it, instr);
     else_list->push_back(instr);
+  }
+
+  string asml_condition::get_var (void) {
+    return var;
   }
 
   asml_boolean* asml_condition::get_boolean (void) {
@@ -51,6 +55,32 @@ namespace asml {
 
   vector<asml_instruction*>* asml_condition::get_else (void) {
     return else_list;
+  }
+
+  string asml_condition::generate (int indent) {
+    string ret;
+    for (int i = 0; i < indent; i++)
+      ret += "\t";
+    if (var.compare("0") != 0)
+      ret += "let " + var + " = ";
+    ret += "if " + boolean->generate() + " (\n";
+    for (vector<asml_instruction*>::iterator it = then_list->begin();
+	 it != then_list->end();
+	 it++) {
+      ret += (*it)->generate(indent+1);
+    }
+    for (int i = 0; i < indent; i++)
+      ret += "\t";
+    ret += ") else (\n";
+    for (vector<asml_instruction*>::iterator it = else_list->begin();
+	 it != else_list->end();
+	 it++) {
+      ret += (*it)->generate(indent+1);
+    }
+    for (int i = 0; i < indent; i++)
+      ret += "\t";
+    ret += ")\n";
+    return ret;
   }
 
 }

@@ -54,7 +54,14 @@ namespace arm {
       ss << (*it)->get_instruction();
     }
     ss << lFin << ":\n";
+    if (var.compare("0") != 0) {
+      ss << "\tstr r0, [fp, #", offset->find(var)->second + "]\n";
+    }
     return ss.str();
+  }
+
+  void arm_condition::set_var (string var) {
+    this->var = var;
   }
 
   void arm_condition::add_then (arm_instruction* instr) {

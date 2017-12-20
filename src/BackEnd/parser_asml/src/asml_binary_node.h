@@ -11,14 +11,17 @@ namespace asml {
     asml_binary_node (void);
     virtual ~asml_binary_node (void) {};
 
+    virtual string get_var (void);
     virtual asml_boolean* get_boolean (void);
     virtual asml_node* get_next_true (void);
     virtual asml_node* get_next_false (void);
 
+    virtual void set_var (string);
     virtual void set_boolean (asml_boolean*);
     virtual void set_next_true (asml_node*);
     virtual void set_next_false (asml_node*);
   protected:
+    string var;
     asml_node* next_true;
     asml_node* next_false;
     asml_boolean* boolean;

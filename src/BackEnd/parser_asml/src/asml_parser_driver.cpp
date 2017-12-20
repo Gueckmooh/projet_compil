@@ -38,21 +38,21 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
   case ASML_EXP_INT    :
     node = new asml_unary_node ();
     instruction = new asml_affectation ();
-    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string(asmt->op));
+    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     dynamic_cast<asml_affectation*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
   case ASML_EXP_IDENT  :
     node = new asml_unary_node ();
     instruction = new asml_affectation ();
-    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string(asmt->op));
+    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     dynamic_cast<asml_affectation*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
   case ASML_EXP_LABEL  :
     node = new asml_unary_node ();
     instruction = new asml_affectation ();
-    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string(asmt->op));
+    dynamic_cast<asml_affectation*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     dynamic_cast<asml_affectation*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
@@ -78,6 +78,7 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
     dynamic_cast<asml_binary_node*>(node)->set_next_true(asml_parser_create_tree ((asml_asmt_t*)asmt->exp->op2));
     dynamic_cast<asml_binary_node*>(node)->set_next_false(asml_parser_create_tree ((asml_asmt_t*)asmt->exp->op3));
     dynamic_cast<asml_binary_node*>(node)->set_boolean(boolean);
+    dynamic_cast<asml_binary_node*>(node)->set_var(string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     break;
   case ASML_EXP_CALL   :
     node = new asml_unary_node ();

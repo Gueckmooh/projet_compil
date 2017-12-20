@@ -22,4 +22,18 @@ namespace asml {
     op2 = op;
   }
 
+  string asml_negation::generate (int indent) {
+    string ret;
+    for (int i = 0; i < indent; i++)
+      ret += "\t";
+    if (op1.compare ("0") != 0)
+      ret += "let " + op1 + " = ";
+    ret += "neg " + op2;
+    if (op1.compare ("0") != 0)
+      ret += " in";
+    ret += "\n";
+    return ret;
+  }
+
+
 }

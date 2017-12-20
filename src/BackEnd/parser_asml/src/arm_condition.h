@@ -20,6 +20,7 @@ namespace arm {
 
     virtual string get_instruction (void);
 
+    virtual void set_var (string);
     virtual void add_then (arm_instruction*);
     virtual void add_else (arm_instruction*);
     virtual void set_boolean (arm_boolean*);
@@ -27,6 +28,7 @@ namespace arm {
     virtual void set_lFin (string);
     virtual void set_var_offset (map<string, string>*);
   protected:
+    string var;
     arm_boolean* boolean;
     vector<arm_instruction*>* list_then;
     vector<arm_instruction*>* list_else;

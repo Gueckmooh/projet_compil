@@ -29,14 +29,6 @@ namespace arm {
     void generate (void);
   protected:
     void generate_function (void);
-    /*
-    void pre_process_params (void);
-    void process_params (void);
-    void pre_process_variables (void);
-    void process_instructions (void);
-    void generate_prologue (void);
-    void generate_epilogue (void);
-    */
     ofstream* output;
     vector<asml_function*>* asml;
     string filename;

@@ -30,4 +30,17 @@ namespace asml {
     op3 = op;
   }
 
+  string asml_addition::generate (int indent) {
+    string ret;
+    for (int i = 0; i < indent; i++)
+      ret += "\t";
+    if (op1.compare ("0") != 0)
+      ret += "let " + op1 + " = ";
+    ret += "add " + op2 + " " + op3;
+    if (op1.compare ("0") != 0)
+      ret += " in";
+    ret += "\n";
+    return ret;
+  }
+
 }

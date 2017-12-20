@@ -26,4 +26,22 @@ namespace asml {
     return op2;
   }
 
+  string asml_boolean::generate (void) {
+    string ret;
+    ret += op1;
+    switch (type_id) {
+    case LE:
+      ret += " <= ";
+      break;
+    case GE:
+      ret += " >= ";
+      break;
+    case EQUAL:
+      ret += " = ";
+      break;
+    }
+    ret += op2;
+    return ret;
+  }
+
 }

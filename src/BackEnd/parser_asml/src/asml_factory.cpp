@@ -32,6 +32,7 @@ namespace asml {
       return dynamic_cast<asml_unary_node*>(node)->get_instruction();
     else {
       condition = new asml_condition();
+      condition->set_var (dynamic_cast<asml_binary_node*>(node)->get_var());
       condition->set_boolean (dynamic_cast<asml_binary_node*>(node)->get_boolean());
       current_node = dynamic_cast<asml_binary_node*>(node)->get_next_true();
       while (current_node != NULL) {

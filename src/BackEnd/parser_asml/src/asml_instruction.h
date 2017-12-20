@@ -21,7 +21,7 @@ namespace asml {
     virtual ~asml_instruction (void) {};
 
     virtual int get_type (void);
-    //virtual void print (void) = 0;
+    virtual string generate (int) = 0;
   protected:
     int type_id;
   };

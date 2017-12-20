@@ -27,6 +27,8 @@ namespace asml {
     virtual string get_op2 (void);
 
     virtual int get_type (void);
+
+    virtual string generate (void);
   protected:
     int type_id;
     string op1;

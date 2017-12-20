@@ -61,6 +61,7 @@ namespace arm {
   arm_condition* arm_instruction_factory::create_condition (asml_condition* cond) {
     arm_condition* condition = new arm_condition ();
     arm_boolean* boolean = new arm_boolean (cond->get_boolean()->get_type());
+    condition->set_var (cond->get_var());
     boolean->set_op1 (cond->get_boolean()->get_op1());
     boolean->set_op2 (cond->get_boolean()->get_op2());
     condition->set_boolean(boolean);

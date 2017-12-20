@@ -147,6 +147,7 @@ $(TESTBINDIR):
 $(LIBDIR):
 	$(QUIET)$(MKDIR_P) $@
 
+testdirectories: directories $(TESTBINDIR)
 directories: $(OBJDIR) $(DEPDIR) $(LIBDIR)
 
 inc: $(INCLUDEDIR)

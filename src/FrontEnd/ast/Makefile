@@ -5,6 +5,7 @@ CFLAGS=-Wfatal-errors -Wall -g
 OBJ = lexer.o parser.o type.o list.o ast.o
 TRUC = $(wildcard *.cpp)
 OBJ += $(addsuffix .o, $(basename $(TRUC)))
+OBJWOMAIN:=$(shell echo $(OBJ) | sed -e "s/main.o//g")
 # OBJ += $($(wildcard *.c):.c=.o)
 FLEXFILES = lexer.l
 YACCFILES = parser.y
@@ -28,6 +29,10 @@ parser.y: ast.h
 	$(CC) -c -o $@ $< $(CFLAGS)
 %.o: %.cpp
 	$(CXX)  -c -o $@ $< $(CFLAGS)
+
+static: $(OBJWOMAIN)
+	ar rcs libast.a $^
+
 $(TARGET): $(OBJ)
 		$(CXX) -o $@ $(OBJ) $(CFLAGS) -lfl
 

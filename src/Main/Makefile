@@ -51,7 +51,7 @@ DEBUGFLAGS = -O0
 
 INCLUDE = $(INCLUDEDIR)
 
-INCLUDEFLAGS = $(addprefix -I, $(INCLUDE)) -I../BackEnd/parser_asml/include
+INCLUDEFLAGS = $(addprefix -I, $(INCLUDE)) -I../BackEnd/parser_asml/src
 
 FLAGS = -Wall
 FLAGS += -Werror

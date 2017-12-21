@@ -16,7 +16,7 @@ QUIET =@
 ############################################################
 ##########      CONFIGURATION OF THE OBJECTS      ##########
 #####                                                  #####
-EXEC = mlc
+EXEC = mincamlc
 
 SRCDIR = src
 OBJDIR = .obj
@@ -42,6 +42,11 @@ LOGTESTS = $(addsuffix .log, $(BASETESTS))
 
 SRCINCFILES = $(wildcard $(SRCDIR)/*.h)
 INCFILES = $(notdir $(wildcard $(INCLUDEDIR)/*.h))
+
+MAINPATH = src/Main
+BACKENDPATH = src/BackEnd/parser_asml
+FRONTENDPATH1 = src/FrontEnd/AsmlGen
+FRONTENDPATH2 = src/FrontEnd/ast
 
 ############################################################
 ##########       CONFIGURATION OF THE FLAGS       ##########
@@ -72,11 +77,11 @@ CFLAGS += -std=c99
 CXXFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CXXFLAGS += -std=c++11
 
-LDFLAGS = -lpthread
+LDFLAGS = -lpthread -L$(FRONTENDPATH1) -L$(FRONTENDPATH2) -L$(BACKENDPATH)/libs -lasml -larm -lAsmlGen -last
 
 .PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test
 
-all: directories inc $(EXEC)
+all: directories lib inc $(MAINPATH)/$(EXEC).o $(EXEC)
 
 test: testdirectories inc $(TESTFILES)
 
@@ -105,8 +110,11 @@ testdirectories: $(LOGDIR) $(TESTBINDIR) directories
 directories: $(OBJDIR) $(DEPDIR)
 
 inc: $(INCLUDEDIR)
-	$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
-	$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
+	$(QUIET)rm -f include/*
+	$(QUIET)cd $(BACKENDPATH) && $(MAKE) inc
+	$(QUIET)cp $(MAINPATH)/src/*.h $(BACKENDPATH)/include/* $(FRONTENDPATH1)/*.h include/.
+#$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
+#$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 
 %.o: $(OBJDIR)
 %.deps: $(DEPDIR)
@@ -138,7 +146,15 @@ $(DEPDIR)/%.deps: $(TESTDIR)/%.c
 $(DEPDIR)/%.deps: $(TESTDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDEFLAGS) -MM $< | sed -e "s/\(.*\).o: /$(DEPDIR)\/\1.deps \1.o: /" > $@
 
-$(EXEC): $(addprefix $(OBJDIR)/, $(OBJFILES))
+$(MAINPATH)/$(EXEC).o:
+	$(QUIET)cd $(MAINPATH) && $(MAKE) obj
+
+lib:
+	$(QUIET)cd $(BACKENDPATH) && $(MAKE) static
+	$(QUIET)cd $(FRONTENDPATH1) && $(MAKE) static
+	$(QUIET)cd $(FRONTENDPATH2) && $(MAKE) static
+
+$(EXEC): $(MAINPATH)/mincamlc.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(TESTBINDIR)/%: $(addprefix $(OBJDIR)/, $(OBJWOMAIN) %.o)
@@ -159,5 +175,9 @@ clean_dirs:
 mrproper:  clean clean_deps clean_logs clean_dirs
 	$(QUIET)$(RM) $(EXEC)
 	$(QUIET)$(RM) $(TESTFILES)
+	$(QUIET)cd $(MAINPATH) && make mrproper
+	$(QUIET)cd $(BACKENDPATH) && make mrproper
+	$(QUIET)cd $(FRONTENDPATH1) && make clean
+	$(QUIET)cd $(FRONTENDPATH2) && make clean
 
 include $(wildcard .deps/*)

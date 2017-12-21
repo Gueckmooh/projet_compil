@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #ifndef AST_TO_ASMLT_H
 #define AST_TO_ASMLT_H
 

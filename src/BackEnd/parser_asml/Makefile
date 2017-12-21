@@ -100,6 +100,7 @@ BISONFLAGS =
 
 all: lexpars directories inc $(EXEC)
 
+asml_parser.h: asml_parser.c
 lexpars: $(LPFILES)
 
 test: lexpars testdirectories inc_test $(TESTFILES)
@@ -110,7 +111,7 @@ run: all
 lib: static dynamic
 
 #static: FLAGS += -fPIC
-static: clean directories
+static: directories
 static: $(LIBDIR)/libasml.a $(LIBDIR)/libarm.a
 
 $(LIBDIR)/libasml.a: $(addprefix $(OBJDIR)/, $(LIBASML))

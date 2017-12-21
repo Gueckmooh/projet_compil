@@ -70,9 +70,8 @@ int main(int argc, char *argv[]) {
   /* GESTION DES ERREURS */
 
   if (parse.error()){
-    std::cout << "Erreur: ";
+    std::cerr << "Erreur: Parsing Error ";
     return 1;
-    // TODO : Print Stderr
   }
 
 
@@ -82,15 +81,15 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  //TODO : Test sur le fichier d'input
+  //Test sur le fichier d'input
   // Check si le fichier existe réellement
   if (is_inputfile) {
     std::ifstream f(inputfilename.c_str());
     if (f.good()){
-      std::cout << "J'existe \n";
+      //std::cout << "J'existe \n";
       f.open(inputfilename.c_str());
       if (f.is_open()){
-	std::cout << "Je suis ouvert \n";
+	//std::cout << "Je suis ouvert \n";
 	f.close();
       }
       else {
@@ -116,7 +115,7 @@ int main(int argc, char *argv[]) {
   // Check si on peut créer ou effacer ce fichier. 
   // Si pas de O : fichier par defaut ? 
   if (options[OUTPUT]){
-    std::cout << options[OUTPUT].arg ;
+    //std::cout << options[OUTPUT].arg ;
     std::ofstream outfile (options[OUTPUT].arg);
     outfile.close();
     outputfilename = options[OUTPUT].arg;
@@ -131,14 +130,14 @@ int main(int argc, char *argv[]) {
   }
 
   if (options[VERSION]){
-    std::cout << "Version du logiciel : TODO \n";
+    std::cout << "Version du logiciel : 0.0.1 \n";
     return 0;
   }
 
   if (options[OUTPUT]){
-    std::cout << "On prends un fichier output : TODO \n";
+    //std::cout << "On prends un fichier output : TODO \n";
     enable(traitement_param,PARAM_OUTPUT);
-    if (!options[TYPECHECK] && !options[PARSER] && !options[ASML]){
+    if (!options[TYPECHECK] && !options[PARSER] && !options[ASML] && !options[ASMLI]){
       enable(traitement_param,TOTAL_ARM);}
   }
   else if (!options[HELP] && !options[VERSION] && !options[TYPECHECK]){

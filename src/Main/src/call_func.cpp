@@ -57,36 +57,34 @@ int ARM_caller (int zboub){
 int mega_caller (int param, string input, string output){
 
   if (is_enabled(param,PARAM_OUTPUT)){
-    cout << "ALORS";
-    std::cout << output;
-    std::cout << "ENZO COUCOUCOUCOUCOU";
+    cout << "OUTPUT OK";
   }
   if (is_enabled(param,PARAM_PARSE)){
-    std::cout << "COUCOU ENZO \n";
+    std::cout << "PARSE OK \n";
     if (!(is_enabled(param,PARAM_TYPECHECK)) && !(is_enabled(param,PARAM_ASMLI))){
       std::cout << "ON PRINT LE PARSE \n";
     }
   }
 
   if (is_enabled(param, PARAM_TYPECHECK)){
-    std::cout << "COUCOU COUCOU \n";
+    std::cout << "ON FAIT LE TYPECHECK \n";
 
   }
 
   if (is_enabled(param, PARAM_ASML)){
-    std::cout << "coucou ASML \n";
+    std::cout << "ON GENERE LE ASML \n";
     if (!(is_enabled(param,PARAM_ARM))){
       std::cout << "ON PRINT LE ASML \n";
     }
   }
 
   if(is_enabled(param,PARAM_ASMLI)){
-  	std::cout << "COUCOU ASMLI TO ARM \n";
+  	std::cout << "ON PASSE DU ASML INPUT AU ARM \n";
   	ASML_PARSER(input,output);
   }
 
   if (is_enabled(param,PARAM_ARM)){
-    std::cout << "COUCOU ARM\n";
+    std::cout << "ON GENERE DE L'ARM\n";
   }
   return 0;
 }

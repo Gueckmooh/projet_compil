@@ -1,6 +1,7 @@
 #include <list>
 #include <stdio.h>
 #include <iostream>
+/*
 extern "C" {
 #include "asml_parser.h"
 }
@@ -9,6 +10,10 @@ extern "C" {
 #include "asml_factory.h"
 #include "arm_generator.h"
 #include "asml_generator.h"
+*/
+
+#include "asml.h"
+#include "arm.h"
 
 using namespace std;
 using namespace asml;

@@ -66,3 +66,16 @@ str_to_str *new_str_to_str(char *src, char *dest){
     res->dest = dest;
     return res;
 }
+
+bool is_in_env(char *func_name, plist env){
+    listNode *l_node = env->head;
+    str_to_str *env_element;
+    while (l_node != NULL){
+        env_element = (void *)l_node->data;
+        if (strcmp(env_element->src, func_name) == 0){
+            return true;
+        }
+        l_node = l_node->next;
+    }
+    return false;
+}

@@ -8,6 +8,8 @@
 
 ptree knorm(ptree t){
     char *new_var1, *new_var2;
+    listNode *l_node;
+    ptree tmp;
     assert(t);
     switch(t->code){
         case T_LET :
@@ -28,8 +30,8 @@ ptree knorm(ptree t){
                 (t->params.tbinary.t1->code == T_SUB) ||
                 (t->params.tbinary.t2->code == T_ADD) ||
                 (t->params.tbinary.t2->code == T_SUB)){
-                new_var1 = knorm_gen_varname();
-                new_var2 = knorm_gen_varname();
+                new_var1 = gen_varname();
+                new_var2 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t1),
@@ -44,7 +46,7 @@ ptree knorm(ptree t){
                 );
             // case -> 1st operand is not a variable
             } else if (t->params.tbinary.t1->code != T_VAR){
-                new_var1 = knorm_gen_varname();
+                new_var1 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t1),
@@ -56,7 +58,7 @@ ptree knorm(ptree t){
             // case -> 2nd operand is neither an int nor a variable
             } else if ((t->params.tbinary.t2->code != T_VAR) &&
                         t->params.tbinary.t2->code != T_INT){
-                new_var1 = knorm_gen_varname();
+                new_var1 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t2),
@@ -76,8 +78,8 @@ ptree knorm(ptree t){
                 (t->params.tbinary.t1->code == T_SUB) ||
                 (t->params.tbinary.t2->code == T_ADD) ||
                 (t->params.tbinary.t2->code == T_SUB)){
-                new_var1 = knorm_gen_varname();
-                new_var2 = knorm_gen_varname();
+                new_var1 = gen_varname();
+                new_var2 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t1),
@@ -92,7 +94,7 @@ ptree knorm(ptree t){
                 );
             // case -> 1st operand is not a variable
             } else if (t->params.tbinary.t1->code != T_VAR){
-                new_var1 = knorm_gen_varname();
+                new_var1 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t1),
@@ -104,7 +106,7 @@ ptree knorm(ptree t){
             // case -> 2nd operand is neither an int nor a variable
             } else if ((t->params.tbinary.t2->code != T_VAR) &&
                         t->params.tbinary.t2->code != T_INT){
-                new_var1 = knorm_gen_varname();
+                new_var1 = gen_varname();
                 return ast_let(
                     new_var1,
                     knorm(t->params.tbinary.t2),
@@ -121,11 +123,43 @@ ptree knorm(ptree t){
             // transforms a boolean in an int of {0,1}
             return ast_integ((t->params.b == true ? 1 : 0));
 
+        case T_APP :
+            // case -> func name is not a var -> insert let
+            if (t->params.tapp.t->code != T_VAR){
+                new_var1 = gen_funcname();
+                tmp = t->params.tapp.t;
+                t->params.tapp.t = ast_var(new_var1);
+                return knorm(ast_let(new_var1, tmp, t));
+            }
+
+            // case -> one of args is not a var but an expression -> insert let
+            l_node = t->params.tapp.l->head;
+            while(l_node != NULL){
+                if (((ptree)l_node->data)->code != T_VAR){
+                    new_var1 = gen_varname();
+                    tmp = (ptree)(l_node->data);
+                    l_node->data = (void *)ast_var(new_var1);
+                    return knorm(ast_let(new_var1, tmp, t));
+                }
+                l_node = l_node->next;
+            }
+
+        case T_NEG :
+            if(t->params.t->code != T_VAR){
+                new_var1 = gen_varname();
+                return ast_let(
+                    new_var1,
+                    t->params.t,
+                    ast_neg(ast_var(new_var1))
+                );
+            } else {
+                return t;
+            }
+
         case T_UNIT :
         case T_INT :
         case T_FLOAT :
         case T_NOT :
-        case T_NEG :
         case T_FNEG :
         case T_FADD :
         case T_FSUB :
@@ -135,13 +169,13 @@ ptree knorm(ptree t){
         case T_LE :
         case T_IF :
         case T_LETREC :
-        case T_APP :
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :
             return apply_vis(t, knorm);
+            break;
         default :
             printf("TBI. knorm, t->code = %d\n", t->code);
             return NULL;

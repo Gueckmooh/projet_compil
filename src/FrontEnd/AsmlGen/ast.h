@@ -90,6 +90,14 @@ typedef struct tree_ {
 
 typedef tree *ptree;
 
+
+typedef struct _vis_args_t{
+    ptree t;
+    plist env;
+} vis_args_t;
+
+typedef vis_args_t *vis_args;
+
 ptree ast_var(id v);
 
 ptree ast_unit();

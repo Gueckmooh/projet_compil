@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern int knorm_var_counter;
-extern int alpha_var_counter;
+extern int varname_counter;
+extern int funcname_counter;
 
 char *cpy_str(char *src){
     char *res = malloc(strlen(src) + 1);
@@ -12,16 +12,29 @@ char *cpy_str(char *src){
     return res;
 }
 
-char *knorm_gen_varname(){
+char *gen_varname(){
     char *res = malloc(VARNAME_SIZE);
-    sprintf(res,"k%d", knorm_var_counter);
-    knorm_var_counter ++;
+    sprintf(res,"v%d", varname_counter);
+    varname_counter ++;
     return res;
 }
 
-char *alpha_gen_varname(){
+char *gen_funcname(){
     char *res = malloc(VARNAME_SIZE);
-    sprintf(res,"v%d", alpha_var_counter);
-    alpha_var_counter ++;
+    sprintf(res,"_f%d", funcname_counter);
+    funcname_counter ++;
+    return res;
+}
+
+char *prefix_funcname(char * funcname){
+    char *new_funcname = malloc(strlen(funcname) + strlen(ASML_FUNC_PREFIX) + 1);
+    strcpy(new_funcname, ASML_FUNC_PREFIX);
+    strcat(new_funcname, funcname);
+    return new_funcname;
+}
+
+char *int_to_str(int i){
+    char *res = malloc(VARNAME_SIZE);
+    sprintf(res,"%d", i);
     return res;
 }

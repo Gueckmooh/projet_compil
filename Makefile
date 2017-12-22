@@ -175,9 +175,9 @@ clean_dirs:
 mrproper:  clean clean_deps clean_logs clean_dirs
 	$(QUIET)$(RM) $(EXEC)
 	$(QUIET)$(RM) $(TESTFILES)
-	$(QUIET)cd $(MAINPATH) && make mrproper
 	$(QUIET)cd $(BACKENDPATH) && make mrproper
 	$(QUIET)cd $(FRONTENDPATH1) && make clean
 	$(QUIET)cd $(FRONTENDPATH2) && make clean
+	$(QUIET)cd $(MAINPATH) && make mrproper
 
 include $(wildcard .deps/*)

@@ -123,6 +123,9 @@ asml_boolean* asml_parser_create_boolean (asml_exp_t* boolean) {
 
 void asml_parser_set_params (asml_formal_arg_t* args, asml_funcall* funcall) {
   while (args != NULL) {
+    if (args->val == NULL) {
+      break;
+    }
     funcall->add_param (string(args->val));
     args = args->next;
   }

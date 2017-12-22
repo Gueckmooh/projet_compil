@@ -4,6 +4,7 @@
 // Cette fonction renvois la structure.
 
 int parser_caller (int zboub){
+	
   return 0;
 }
 
@@ -55,14 +56,18 @@ int ARM_caller (int zboub){
 }
 
 int mega_caller (int param, string input, string output){
-
-  if (is_enabled(param,PARAM_OUTPUT)){
+  ptree p = (ptree)malloc(sizeof(ptree));
+  asml_function_t *t=NULL;
+  /*if (is_enabled(param,PARAM_OUTPUT)){
     cout << "OUTPUT OK";
-  }
+  }*/
   if (is_enabled(param,PARAM_PARSE)){
-    std::cout << "PARSE OK \n";
+	 
+	 parsecall(&p,const_cast<char*>(input.c_str()));
+    //std::cout << "PARSE OK \n";
     if (!(is_enabled(param,PARAM_TYPECHECK)) && !(is_enabled(param,PARAM_ASMLI))){
-      std::cout << "ON PRINT LE PARSE \n";
+      std::cout << "Not Implemented : On ne genere pas de fichier, mais on print l'arbre \n";
+      parseprint(p,const_cast<char*>(output.c_str()));
     }
   }
 
@@ -70,21 +75,32 @@ int mega_caller (int param, string input, string output){
     std::cout << "ON FAIT LE TYPECHECK \n";
 
   }
-
+asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){
-    std::cout << "ON GENERE LE ASML \n";
+    ptree p2 = ast_transform(p);
+    t=build_asml_from_ptree(p2);
     if (!(is_enabled(param,PARAM_ARM))){
-      std::cout << "ON PRINT LE ASML \n";
+      parseprint(p2,const_cast<char*>(output.c_str()));
+
+      asml_parser_create_function(t);
+      vector <asml_function*>*vect = asml_factory::get_function();
+      asml_generator* generator = new asml_generator(vect);
+      generator->set_name(output);
+      generator->generate();
     }
   }
 
   if(is_enabled(param,PARAM_ASMLI)){
-  	std::cout << "ON PASSE DU ASML INPUT AU ARM \n";
+  	//std::cout << "ON PASSE DU ASML INPUT AU ARM \n";
   	ASML_PARSER(input,output);
   }
 
   if (is_enabled(param,PARAM_ARM)){
-    std::cout << "ON GENERE DE L'ARM\n";
+    asml_parser_create_function(t);
+    vector <asml_function*>*vect = asml_factory::get_function();
+    arm_generator* generator = new arm_generator(vect);
+    generator->set_name(output);
+    generator->generate();
   }
   return 0;
 }

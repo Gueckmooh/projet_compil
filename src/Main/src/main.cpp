@@ -146,25 +146,25 @@ int main(int argc, char *argv[]) {
   }
 
   if (options[TYPECHECK]){
-    std::cout << "On fait le Typecheck : TODO \n";
+    //std::cout << "On fait le Typecheck : TODO \n";
     enable(traitement_param,TOTAL_TYPECHECK);
     //return 0;
   }
 
   if (options[PARSER]){
-    std::cout << "On fait le parsing : TODO \n";
+    //std::cout << "On fait le parsing : TODO \n";
     enable(traitement_param,TOTAL_PARSE);
     // return 0;
   }
 
   if (options[ASML]){
-    std::cout << "On fait la generation ASML : TODO \n";
+    //std::cout << "On fait la generation ASML : TODO \n";
     enable(traitement_param,TOTAL_ASML);
     // return 0;
   }
 
 if (options[ASMLI]){
-  std::cout <<"On fait le parsing ASML to ARM : TOOD \n";
+  //std::cout <<"On fait le parsing ASML to ARM : TOOD \n";
   enable(traitement_param,PARAM_ASMLI);
 
 }

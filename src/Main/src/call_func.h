@@ -4,22 +4,26 @@
 #include "param.h"
 #include "asml.h"
 #include "arm.h"
-
+extern "C" {
 #include "alpha_conv.h"
 #include "ast.h"
 #include "ast_to_asmlt.h"
 #include "env.h"
 #include "knorm.h"
 #include "list.h"
-//#include "parser.h"
+#include "func.h"
 #include "reduce_nested_let.h"
 #include "type.h"
 #include "utils.h"
+}
 
 #include <string>
 #include <iostream>
 #include <cstdarg>
 using namespace std;
+using namespace asml;
+using namespace arm;
+
 // Cette fonction prends en parametre, le fichier d'entree
 // Cette fonction renvois la structure.
 

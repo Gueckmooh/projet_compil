@@ -146,17 +146,80 @@ asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
     if(ast_args_list == NULL){
         return NULL;
     }
-    listNode *ast_node =ast_args_list->head;
-    asml_formal_arg_t *result = malloc(sizeof(asml_formal_arg_t)),
-                      *current = result;
-    ptree ast_list_elem;
+    listNode *ast_node = ast_args_list->head;
+    ptree ast_list_elem = (ptree) ast_node->data;
+    ast_node = ast_node->next;
+    asml_formal_arg_t *result = malloc(sizeof(asml_formal_arg_t)), *current = result;
+    assert(ast_list_elem->code == T_VAR);
+    result->val = ast_list_elem->params.v;
     while(ast_node != NULL){
-        ast_list_elem = (ptree) ast_node->data;
-        assert(ast_list_elem->code == T_VAR);
         current->next = malloc(sizeof(asml_formal_arg_t));
-        current->val = ast_list_elem->params.v;
         current = current->next;
+        ast_list_elem = (ptree) ast_node->data;
+        current->val = ast_list_elem->params.v;
         ast_node = ast_node->next;
     }
-    return result->next;
+    return result;
+}
+
+void print_asml_fun(asml_function_t *t){
+    if(t == NULL){
+        printf("FUN :( all NULL)\n");
+        return;
+    }
+    printf("FUN : (name = ");
+    (t->name == NULL ? printf("NULL ;; args = (") : printf("%s ;; exp = ", (char *)t->name));
+    print_asml_fun_args(t->args);
+    printf(" ;; asmt =");
+    print_asml_asmt(t->asmt);
+    printf(")");
+}
+
+void print_asml_asmt(asml_asmt_t *t){
+    if (t == NULL){
+        printf("ASMT :(ALL NULL)");
+        return;
+    }
+    printf("ASMT:(name = ");
+    (t->op == NULL ? printf("NULL") : printf("%s", (char *)(char *)t->op));
+    printf(" ;; exp = ");
+    print_asml_exp(t->exp);
+    printf(" ;; next = ");
+    print_asml_asmt(t->next);
+    printf(")");
+}
+
+void print_asml_exp(asml_exp_t *t){
+    if (t == NULL){
+        printf("EXP : (ALL NULL)");
+    }
+    printf("EXP:(type = ");
+    switch(t->type){
+        case ASML_EXP_INT:
+            printf("int ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_IDENT:
+            printf("Ident ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_LABEL:
+            printf("label ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_ADD:
+            printf("add ;; op1 = %s, op2 = %s", (char *)t->op1, (char *)t->op2);
+            break;
+        case ASML_EXP_CALL:
+            printf("call : fun name = %s ;; args = (", (char *)t->op1);
+            print_asml_fun_args(t->op2);
+            printf(")");
+            break;
+        default:
+            printf("type = %d ", t->type);
+    }
+    printf(")");
+}
+
+void print_asml_fun_args(asml_formal_arg_t *t){
+    if (!t) return;
+    printf(" %s ", (char *)t->val);
+    print_asml_fun_args(t->next);
 }

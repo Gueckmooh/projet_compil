@@ -69,7 +69,7 @@ ptree knorm(ptree t){
                 );
             // case -> everything is fine
             } else {
-                // return ast_add(t->params.tbinary.t1, t->params.tbinary.t2);
+                return t;
             }
 
         case T_SUB :
@@ -117,7 +117,7 @@ ptree knorm(ptree t){
                 );
             // case -> everything is fine
             } else {
-                // return ast_sub(t->params.tbinary.t1, t->params.tbinary.t2);
+                return t;
             }
         case T_BOOL :
             // transforms a boolean in an int of {0,1}

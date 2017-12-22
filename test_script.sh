@@ -56,10 +56,11 @@ fi
 
 echo "Test de traitement de l'ASML"
 
-scripts/mincamlc tests/asml_to_arm/print_zero.asml -i -o tmp/outasml1
-tmp/outasml1
+scripts/mincamlc tests/asml_to_arm/print_zero.asml -i -o tests/outasml1.s
+cd tests && make outasml1.s
+qemu-arm ./outasml1
 T8=$?
-
+cd ..
 scripts/asml tests/asml_to_arm/print_zero.asml 
 T9=$?
 

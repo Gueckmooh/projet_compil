@@ -45,7 +45,7 @@ FRONT END
 - [ ] constant folding
 - [ ] elimination of unnecessary definitions
 
-- [ ] Contact with backend structure
+- [X] Contact with backend structure
 
 
 BACK END 
@@ -69,12 +69,12 @@ GENERAL
 ------
 
 - [X] Command Line Options 
-- [ ] Full MAKEFILE
-- [ ] Libraries integration
+- [X] Full MAKEFILE
+- [X] Libraries integration
 - [ ] Full Integration
 
-- [ ] Test files
-- [ ] Make Test (basic BASH)
+- [X] Test files
+- [X] Make Test (basic BASH)
 - [ ] Make Test (python)
 
 NOTES

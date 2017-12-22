@@ -1,9 +1,13 @@
 #include "ast.h"
 #include "list.h"
 #include "asml_parser_types.h"
+#include "ast_to_asmlt.h"
+#include "utils.h"
 
+#include <stdio.h>
 #include <assert.h>
-
+#include <stdlib.h>
+#include <unistd.h>
 asml_asmt_t *to_asml_asmt(ptree t){
     asml_asmt_t *new_asml_asmt = malloc(sizeof(asml_asmt_t));
     assert(t);
@@ -27,7 +31,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
             return new_asml_asmt;
         case T_BOOL :
             fprintf(
-                STDERR_FILENO,
+                stderr,
                 "Error : trying to convert a T_BOOL ast -> should not happen\n");
             return NULL;
         case T_FLOAT :
@@ -66,16 +70,16 @@ asml_exp_t *to_asml_exp(ptree t){
                 new_exp->op1 = (void *)t->params.tbinary.t1->params.v;
             } else {
                 fprintf(
-                    STDERR_FILENO,
+                    stderr,
                     "Error -> first operand of add exp is not a var.\n");
             }
             if (t->params.tbinary.t2->code == T_VAR){
-                new_exp->op2 = (void *)t->params.tbinary.t2->params.v
+                new_exp->op2 = (void *)t->params.tbinary.t2->params.v;
             } else if (t->params.tbinary.t2->code == T_INT){
-                new_exp->op2 = (void *)int_to_str(t->params.tbinary.t2->i)
+                new_exp->op2 = (void *)int_to_str(t->params.tbinary.t2->params.i);
             } else {
                 fprintf(
-                    STDERR_FILENO,
+                    stderr,
                     "Error -> first operand of add exp is not a var.\n");
             }
             return new_exp;
@@ -86,7 +90,7 @@ asml_exp_t *to_asml_exp(ptree t){
             return new_exp;
 
         case T_APP :
-            nex_exp->type = ASML_EXP_CALL;
+            new_exp->type = ASML_EXP_CALL;
             assert(t->params.tapp.t->code == T_VAR);
             new_exp->op1 = t->params.tapp.t->params.v;
             new_exp->op2 = args_list_to_asml_args_list(t->params.tapp.l);
@@ -94,7 +98,7 @@ asml_exp_t *to_asml_exp(ptree t){
 
         case T_BOOL :
             fprintf(
-                STDERR_FILENO,
+                stderr,
                 "Error -> T_BOOL present in ast to asml_asmlt convert.\n");
                 return NULL;
 
@@ -128,14 +132,14 @@ asml_exp_t *to_asml_exp(ptree t){
 }
 
 asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
-    listNode *ast_node = l->head;
-    asml_formal_arg_t *current, res = current;
+    listNode *ast_node =ast_args_list->head;
+    asml_formal_arg_t *current = NULL, *res = current;
     ptree ast_list_elem;
-    while(l_node != NULL){
-        ast_list_elem = (ptree) l_node->data;
+    while(ast_node != NULL){
+        ast_list_elem = (ptree) ast_node->data;
         assert(ast_list_elem->code == T_VAR);
         current->next = malloc(sizeof(asml_formal_arg_t));
-        current->next->val = ast_list_elem->params.v
+        current->next->val = ast_list_elem->params.v;
         current = current->next;
     }
     return res->next;

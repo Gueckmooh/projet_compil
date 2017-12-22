@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wfatal-errors -Wall -g
 
-OBJ = lexer.o parser.o type.o list.o ast.o knorm.o env.o alpha_conv.o utils.o reduce_nested_let.o main.o
+OBJ = lexer.o parser.o type.o list.o ast.o knorm.o env.o alpha_conv.o utils.o reduce_nested_let.o ast_to_asmlt.o main.o
 OBJWOMAIN:=$(shell echo $(OBJ) | sed -e "s/main.o//g")
 FLEXFILES = lexer.l
 YACCFILES = parser.y

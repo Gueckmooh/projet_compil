@@ -36,8 +36,8 @@ ARFLAGS = rcs
 FFILES = $(wildcard $(SRCDIR)/*.l)
 BFILES = $(wildcard $(SRCDIR)/*.y)
 
-LPFILES = $(addsuffix .c, $(basename $(FFILES)))
-LPFILES += $(addsuffix .c, $(basename $(BFILES)))
+LPFILES = $(addsuffix .c, $(basename $(BFILES)))
+LPFILES += $(addsuffix .c, $(basename $(FFILES)))
 
 CFILES = $(wildcard $(SRCDIR)/*.c)
 CFILES += $(LPFILES)

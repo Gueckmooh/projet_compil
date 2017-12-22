@@ -1,33 +1,31 @@
 #include "AstNode.hpp"
 #include "AstVisitor.hpp"
+#include "AstVis.hpp"
 #include <assert.h>
 
 AstNode::AstNode(int class_code) :
-class_code(class_code), ty(TY_UNDEFINED) {}
+class_code(class_code), tc(TY_UNDEFINED) {}
 
 AstNode::AstNode(int class_code, TCode tc) :
-class_code(class_code), ty(tc) {}
+class_code(class_code), tc(tc) {}
 
-AstNode::AstNode(int class_code, TCode tc, std::string var) :
-class_code(class_code), ty(tc, var) {}
-
-
-Type AstNode::getType() const {
-    return ty ;
+TCode AstNode::getType() const {
+    return tc ;
 }
 
-void AstNode::accept(AstVisAbstract& vis) {
-    vis.visit_node(*this) ;
+void AstNode::setTc(TCode tc) {
+    this->tc = tc;
 }
 
-void AstNode::apply(AstVisitor & vis) {
-    vis.incrCounter() ;
-    vis.indent() ;
-    accept(*vis.getPrior()) ;
+void AstNode::apply(AstVisitor * vis) {
+    vis->incrCounter() ;
+    vis->indent() ;
+    accept(vis->getPrior()) ;
     traversal(vis) ;
-    accept(*vis.getFeedBack()) ;
-    vis.unindent() ;
+    accept(vis->getFeedBack()) ;
+    vis->unindent() ;
 }
+
 
 std::string AstNode::class_code_to_string() {
     
@@ -89,6 +87,35 @@ std::string AstNode::class_code_to_string() {
     }
     assert(false) ;
 }
+
+std::string AstNode::TCode_to_string(TCode tc) {
+    switch(tc) {
+        case TY_ARRAY :
+            return "array" ;
+        case TY_BOOL :
+            return "bool" ;
+        case TY_FLOAT :
+            return "float" ;
+        case TY_FUN :
+            return "(" + printType() + ")" ;
+        case TY_INT :
+            return "int" ;
+        case TY_TUPLE :
+            return "(" + printType() + ")" ;
+        case TY_UNDEFINED :
+            return "UNDEFINED" ;
+        case TY_UNIT :
+            return "unit" ;
+        case TY_VAR :
+            return "val : " + printType() ; 
+    }
+    assert(false) ;
+}
+
+std::string AstNode::printType() {
+    return "" ;
+}
+
 
 std::ostream& AstNode::print(std::ostream& os) { return os ; }
 

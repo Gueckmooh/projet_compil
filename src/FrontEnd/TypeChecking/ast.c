@@ -7,7 +7,7 @@
 #include "assert.h"
 #include "string.h"
 
-#define MAX_ID 10
+#define MAX_ID 6
 
 char buffer_ast[MAX_ID];
 
@@ -302,7 +302,7 @@ id copy_id(id original_id){
  */
     assert(original_id);
     char * id_cpy = (char *)malloc(sizeof(MAX_ID));
-    strcpy(id_cpy, original_id);
+    strncpy(id_cpy, original_id, MAX_ID-1);
     return id_cpy;
 }
 
@@ -372,13 +372,11 @@ ptree free_ast(ptree t) {
             free(t->params.tlet.v) ;
             break ;
         case T_VAR :
-            free(t->params.v) ;
+            //free(t->params.v) ;
             break ;
         case T_LETREC :
             free_ast(t->params.tletrec.fd->body) ;
-            free_list(t->params.tletrec.fd->args) ;
-            free(t->params.tletrec.fd->args) ;
-            t->params.tletrec.fd->args = NULL ;
+            t->params.tletrec.fd->args = free_list_string(t->params.tletrec.fd->args) ;
             free(t->params.tletrec.fd->var) ;
             free(t->params.tletrec.fd->t.params.var) ;
             free(t->params.tletrec.fd) ;
@@ -386,28 +384,20 @@ ptree free_ast(ptree t) {
             break ;
         case T_APP :
             free_ast(t->params.tapp.t) ;
-            free_list(t->params.tapp.l) ;
-            free(t->params.tapp.l) ;
-            t->params.tapp.l = NULL ;
+            t->params.tapp.l = free_list_node(t->params.tapp.l) ;
             break ;
         case T_TUPLE :
-            free_list(t->params.ttuple.l) ;
-            free(t->params.ttuple.l) ;
-            t->params.lettuple.l = NULL ;
+            t->params.ttuple.l = free_list_node(t->params.ttuple.l) ;
             break ;
         case T_LETTUPLE :
             free_ast(t->params.lettuple.t1) ;
             free_ast(t->params.lettuple.t2) ;
-            free_list(t->params.lettuple.l) ;
-            free(t->params.lettuple.l) ;
-            t->params.lettuple.l = NULL ;
+            t->params.lettuple.l = free_list_string(t->params.lettuple.l) ;
             break ;
         default:
              printf("%d ", t->code);
              assert(false);
     }
-    
-    printf("libération\n") ;
     free(t) ;
     return NULL ;
 }

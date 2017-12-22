@@ -15,8 +15,8 @@ ptype gentvar() {
     buffer[0] = '?';
     buffer[1] = 't';
     res->params.var = (char *) malloc(sizeof(buffer));
-    sprintf(buffer+2, "%d", cnt);
-    strcpy(res->params.var, buffer);
+    snprintf(buffer+2, sizeof(cnt), "%d", cnt);
+    strncpy(res->params.var, buffer, sizeof(buffer) -1 );
     cnt++;
     return res;
 }

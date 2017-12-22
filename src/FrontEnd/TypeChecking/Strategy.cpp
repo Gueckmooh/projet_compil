@@ -1,64 +1,59 @@
 #include "Strategy.hpp"
 #include "AstVisitor.hpp"
-#include "AstVisInfer.hpp"
+#include "AstVisTypeChecking.hpp"
 #include <cassert>
 
-Strategy::Strategy() : vis(NULL), strat(TRAVERSAL) {
-}
+Strategy::Strategy(TAstVisitor typeAstVisitor) :
+typeAstVisitor(typeAstVisitor), strat(S_TRAVERSAL), Env(NULL) {}
 
-void Strategy::setupStrategy(TAstVisitor typeAstVisitor) {
-    this->typeAstVisitor = typeAstVisitor ;
-}
+Strategy::Strategy(TAstVisitor typeAstVisitor, Environment * Env) :
+typeAstVisitor(typeAstVisitor), Env(Env) {}
 
-void Strategy::setupStrategy(TAstVisitor typeAstVisitor, Strat strat) {
-    setupStrategy(typeAstVisitor) ;
-    this->strat = strat ;
-}
+Strategy::Strategy(TAstVisitor typeAstVisitor, Strat strat) :
+typeAstVisitor(typeAstVisitor), strat(strat), Env(NULL) {}
 
-AstVisitor* Strategy::getAstVis() const {
-    return vis ;
-}
-
-
-AstVisitor* Strategy::setupAstVisitor() {
-    if (vis) {
-	delete vis ;
-    }
+AstVisitor * Strategy::setupAstVisitor() {
     AstVisAbstract * prior, * feedback ;
+    AstVisitor *AstVis ;
     switch(typeAstVisitor) {
-	case DESTRUCTOR :
-	    prior = new AstVisGhost() ;
-	    feedback = new AstVisDestruct() ;
-	    break ;
-	case INFERATOR :
-	    prior = new AstVisGhost() ;
-	    feedback = new AstVisInfer() ;
-	    break ;
-	case PRINTER :
-	    switch(strat) {
-		case TRAVERSAL :
-		    prior = new AstVisPrint() ;
-		    feedback = new AstVisGhost() ;
-		    break ;
-		case REVERSAL :
-		    prior = new AstVisGhost() ;
-		    feedback = new AstVisPrint() ;
-		    break ;
-		case ROUND_TRIP :
-		    prior = new AstVisPrint() ;
-		    feedback = new AstVisPrint() ;
-	    }
-	    break ;
-	assert(false) ;    
-    }    
-    vis = new AstVisitor(prior, feedback) ;
-    prior->setAstVist(vis) ;
-    feedback->setAstVist(vis) ;
-
-    return vis ;
+        case V_TYPE_CHECKER :
+            prior = new AstVisExplore(Env) ;
+            feedback = new AstVisInfer(Env) ;
+            break ;
+        case V_DESTRUCTOR :
+            prior = new AstVisGhost() ;
+            feedback = new AstVisDestruct() ;
+            break ;
+        case V_INFERATOR :
+            prior = new AstVisGhost() ;
+            feedback = new AstVisInfer(Env) ;
+            break;
+        case V_PRINTER :
+            switch(strat) {
+                case S_TRAVERSAL :
+                    prior = new AstVisPrint() ;
+                    feedback = new AstVisGhost() ;
+                    break ;
+                case S_REVERSAL :
+                    prior = new AstVisGhost() ;
+                    feedback = new AstVisPrint() ;
+                    break ;
+                case S_ROUND_TRIP :
+                    prior = new AstVisPrint() ;
+                    feedback = new AstVisPrint() ;
+                default :
+                    assert(false) ;
+            }
+            break;
+        default:
+             assert(false) ;
+    }       
+    AstVis = new AstVisitor(prior, feedback) ;
+    prior->setAstVis(AstVis) ;
+    feedback->setAstVis(AstVis) ; 
+    return AstVis ;
 }
 
 Strategy::~Strategy() {
-    delete vis ;
 }
 

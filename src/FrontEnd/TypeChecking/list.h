@@ -26,5 +26,6 @@ plist tail(plist l);
 plist append(plist l1, plist l2);
 bool is_empty(plist l);
 plist copy_list(plist list);
-void free_list(plist list);
+plist free_list_node(plist list);
+plist free_list_string(plist list);
 #endif

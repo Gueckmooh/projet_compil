@@ -61,12 +61,30 @@ plist copy_list(plist list){
     return list;
 }
 
-void free_list(plist list) {
-    if (!list) {
-        plist cur = tail(list) ;
-        free_list(cur) ;
-        free_ast(cur->head->data) ;
-        free(cur->head) ;
-        free(cur) ;
+plist free_list_node(plist list) {
+    if (list) {
+        listNode * node = list->head, *tmp ;
+        while (node) {
+            tmp = node ;
+            node = node->next ;
+            free_ast(tmp->data) ;
+            free(tmp) ;
+        }
     }
+    
+    return NULL ;
+}
+
+plist free_list_string (plist list) {
+    if (list) {
+        listNode * node = list->head, *tmp ;
+        while (node) {
+            tmp = node ;
+            node = node->next ;
+            free(tmp->data) ;
+            free(tmp) ;
+        }
+    }
+    
+    return NULL ;
 }

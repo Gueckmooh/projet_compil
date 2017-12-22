@@ -17,10 +17,7 @@ std::list<std::string> to_cpp_str_list(plist c_list){
     while(node != NULL){
         c_str = (char *) node->data;
         cpp_list.push_back(to_cpp_string(c_str));
-        listNode *tmp = node ;
         node = node->next;
-        free(tmp->data) ;
-        free(tmp) ;
     }
     return cpp_list;
 }
@@ -32,10 +29,7 @@ std::list<AstNode *> to_cpp_node_list(plist c_list){
     while(node != NULL){
         t = (ptree) node->data;
         cpp_list.push_back(Ast::build_ast(t));
-        listNode *tmp = node ;
         node = node->next;
-        free_ast((ptree)tmp->data) ;
-        free(tmp) ;
     }
     return cpp_list;
 }

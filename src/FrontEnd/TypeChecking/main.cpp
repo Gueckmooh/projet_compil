@@ -1,7 +1,8 @@
 #include "Ast.hpp"
 #include "AstNode.hpp"
-#include "AstVisInfer.hpp"
+#include "AstVisTypeChecking.hpp"
 #include <iostream>
+#include <fstream>
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -9,13 +10,12 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE ;
     }
     try {
+        Environment env ;
 	Ast ast = Ast(argv[1]) ;
-        ast.getStrategy().setupStrategy(ast.getStrategy().PRINTER) ;
-        ast.getRoot()->apply(*ast.getStrategy().setupAstVisitor()) ;
-        std::cout << ast.getStrategy().getAstVis()->getCounter() << std::endl ;
-        ast.getStrategy().getAstVis()->resetCounter() ;
-        ast.getStrategy().setupStrategy(ast.getStrategy().INFERATOR) ;
-        ast.getRoot()->apply(*ast.getStrategy().setupAstVisitor()) ;
+        AstVisitor * TypeChecker = Strategy(Strategy::V_TYPE_CHECKER, &env).setupAstVisitor() ;
+        ast.visitAst(TypeChecker) ;
+        delete TypeChecker ;
+        free_ast(ast.ast) ;
     } catch (std::string const & message) {
 	std::cout << message ;
 	return EXIT_FAILURE ;

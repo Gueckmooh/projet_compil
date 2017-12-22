@@ -7,25 +7,27 @@
 #include "AstNodeBinary.hpp"
 #include "AstNodeTernary.hpp"
 #include "AstVisitor.hpp"
+#include "AstVis.hpp"
 
-Ast::Ast() : strategy(Strategy()), root(NULL) {}
+Ast::Ast() : root(NULL) {}
+
+Ast::Ast(ptree ast) {
+    this->ast = ast ;
+    root = build_ast(ast) ;
+}
 
 Ast::Ast(const char* filename) {
     FILE *file = fopen(filename, "r");
     std::string name = filename ;
-    std::cout << name << std::endl ;
     if (file == NULL)
         throw std::string("cannot open file " + name + "\n") ;
-    std::cout << "OK\n" ;
     ptree ast ;
     yyin = file;
     if (yyparse(&ast))
         throw std::string("parse error\n") ;
-    print_term(ast) ;
-    std::cout << std::endl ;
+    //print_term(ast) ;
+    this->ast = ast ;
     root = build_ast(ast) ;
-    free_ast(ast) ;
-    std::cout << "FACK!" << std::endl ;
 }
 
 AstNode* Ast::build_ast(ptree t){
@@ -111,22 +113,18 @@ AstNode* Ast::build_ast(ptree t){
     }
 }
 
-Strategy & Ast::getStrategy() {
-    return strategy ;
+void Ast::visitAst(AstVisitor * vis) {
+    root->apply(vis) ;
 }
 
-AstNode* Ast::getRoot() const {
-    return root;
-}
 
 Ast::~Ast() {
     if (root != NULL) {
-	Strategy strat ;
-	strat.setupStrategy(strategy.DESTRUCTOR) ;
-	AstVisitor * vis = strat.setupAstVisitor() ;
-        root->apply(*vis) ;
-        std::cout << "Destruction de l'AST" << std::endl ;
-        std::cout << "Nombre de Noeuds Détruits : " << vis->getCounter() << std::endl ;
+        AstVisitor * destructor = Strategy(Strategy::V_DESTRUCTOR).setupAstVisitor() ;
+        visitAst(destructor) ;
+        destructor->getOs() << "Nombre de noeuds détruits : " << destructor->getCounter() << std::endl ;
+        destructor->getOs() << "Destruction de l'AST" << std::endl ;
+        delete destructor ;
         root = NULL ;
     }
 }

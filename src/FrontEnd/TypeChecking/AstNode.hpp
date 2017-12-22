@@ -32,26 +32,31 @@
 #define C_FUNDEF 26
 
 #include <string>
-#include "Type.hpp"
+#include "type.h"
+#include "AstVis.hpp"
 
 class AstVisitor ;
 class AstVisAbstract ;
 
+using std::string ;
+
 class AstNode {
 protected:
     int class_code ;
-    Type ty ;
+    TCode tc ;
+    virtual std::ostream & print(std::ostream& os) ;
 public:
     AstNode(int class_code) ;
     AstNode(int class_code, TCode tc) ;
-    AstNode(int class_code, TCode tc, std::string var) ;
-    Type getType() const ;
-    virtual void accept (AstVisAbstract & vis) ;
-    void apply(AstVisitor & vis) ;
-    virtual void traversal(AstVisitor & vis) = 0 ;
+    TCode getType() const ;
+    void setTc(TCode tc);
+    virtual void accept (AstVisAbstract * vis) = 0 ;
+    virtual void traversal(AstVisitor * vis) = 0 ;
+    void apply(AstVisitor * vis) ;
     std::string class_code_to_string() ;
-    virtual std::ostream & print(std::ostream& os) ;
     friend std::ostream& operator<<(std::ostream& os, AstNode& node) ;
+    virtual std::string printType() ;
+    string TCode_to_string(TCode tc);
     virtual ~AstNode() = 0 ;
 };
 

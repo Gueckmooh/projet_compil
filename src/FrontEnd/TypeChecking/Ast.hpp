@@ -10,15 +10,15 @@ class AstVisitor;
 class Strategy;
 
 class Ast {
-protected:
-    Strategy strategy ;
+private :
     AstNode * root ;
 public:
+    ptree ast ;
     Ast();
+    Ast(ptree ast);
     Ast(const char* filename) ;
     static AstNode * build_ast(ptree t) ;
-    Strategy & getStrategy() ;
-    AstNode * getRoot() const;
+    void visitAst (AstVisitor * vis) ;
     virtual ~Ast();
 };
 

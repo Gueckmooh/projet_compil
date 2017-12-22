@@ -2,44 +2,14 @@
 #define AST_VISITOR_H
 
 #include "AstNode.hpp"
-#include "AstVisitor.hpp"
+#include <fstream>
+#include <iostream>
 #include <string>
 
 class AstNode;
 class AstVisInfer;
-
-class AstVisAbstract {
-protected:
-    AstVisitor * AstVis ;
-public:
-    AstVisAbstract();
-    void setAstVist(AstVisitor * AstVis);
-    virtual void visit_node(AstNode & node) = 0 ;
-    virtual ~AstVisAbstract() = 0 ;
-};
-
-class AstVisGhost : public AstVisAbstract {
-public:
-    AstVisGhost();
-    void visit_node(AstNode& node) override;
-    virtual ~AstVisGhost();
-};
-
-class AstVisDestruct : public AstVisAbstract {
-public:
-    AstVisDestruct();
-    void visit_node(AstNode& node) override;
-    virtual ~AstVisDestruct();
-
-};
-
-class AstVisPrint : public AstVisAbstract {
-public:
-    AstVisPrint();
-    ~AstVisPrint();
-    void visit_node(AstNode& node) override;
-    virtual void print (AstNode & node) ;
-};
+class AstVisitor ;
+class AstVisAbstract;
 
 class AstVisitor {
 private:
@@ -47,11 +17,14 @@ private:
     int cpt ;
 protected:
     AstVisAbstract *prior,  *feedback ;
+    //std::ofstream os = std::ofstream("/dev/null") ;
+    std::ostream & os = std::cout ;
 public:
     const std::string INDENT = "  " ;
     AstVisitor(AstVisAbstract * prior, AstVisAbstract * feedback);
-    AstVisAbstract* getPrior() const;
-    AstVisAbstract* getFeedBack() const;
+    AstVisAbstract * getPrior() const;
+    AstVisAbstract * getFeedBack() const;
+    std::ostream & getOs() ;
     void indent ();
     void unindent ();
     int getIndent () const;

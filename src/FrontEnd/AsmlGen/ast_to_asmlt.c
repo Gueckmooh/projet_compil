@@ -8,12 +8,12 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
-
+#include <string.h>
 
 asml_function_t *build_asml_from_ptree(ptree t){
     asml_function_t *result = malloc(sizeof(asml_function_t));
-    result->code = malloc(6);
-    strcpy(result->code, "main");
+    result->name = malloc(6);
+    strcpy(result->name, "main");
     result->args = NULL;
     result->asmt = to_asml_asmt(t);
     return result;

@@ -8,7 +8,7 @@
 
 asml_function_t *build_asml_from_ptree(ptree t);
 
-asml_asmt_t *to_asml_asmtt(ptree t);
+asml_asmt_t *to_asml_asmt(ptree t);
 
 asml_exp_t *to_asml_exp(ptree t);
 

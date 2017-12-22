@@ -12,8 +12,7 @@ scripts/mincamlc tests/syntax/invalid/no_closing_paren.ml -p -o tmp/parse1
 T1=$?
 scripts/mincamlc tests/syntax/valid/simple_call.ml -p -o tmp/parse2
 T2=$?
-#TODO : MODIFIER LES VALEURS RETOURS
-if [ $(($T1 + $T2)) = 1 ]; then 
+if [ $(($T1 + $T2)) = 0 ]; then 
 	echo "Parsing effectue avec succes"
 else
 	echo "Echec du test de parsing"
@@ -29,7 +28,6 @@ T4=$?
 scripts/mincamlc tests/typechecking/valid/simple_call.ml -t
 T5=$?
 
-#TODO : MODIFIER LES VALEURS RETOURS
 if [ $(($(($T3 + $T4))+ $T5)) = 0 ]; then
 	echo "Typechecking effectue avec succes"
 else
@@ -38,12 +36,11 @@ fi
 
 echo "Test d'execution"
 
-scripts/mincamlc tests/gen-code/op.ml -o tmp/outcode1
+scripts/mincamlc tests/gen-code/op.ml -o tests/outcode1.s
+cd tests && make && ./default.arm 
+T6=$?
 
 ocamlc tests/gen-code/op.ml -o tmp/outgood1
-
-tmp/outcode1
-T6=$?
 
 tmp/outgood1
 T7=$?
@@ -54,13 +51,14 @@ else
 	echo "Echec du test d'execution"
 fi
 
+cd tests && make clean && rm outcode1.s
+
 echo "Test de traitement de l'ASML"
 
 scripts/mincamlc tests/asml_to_arm/print_zero.asml -i -o tests/outasml1.s
-cd tests && make outasml1.s
-qemu-arm ./outasml1
+cd tests && make && ./default.arm 
 T8=$?
-cd ..
+
 scripts/asml tests/asml_to_arm/print_zero.asml 
 T9=$?
 
@@ -69,5 +67,7 @@ if [ $T8 = $T9 ]; then
 else
 	echo "Echec du test de traduction ASML to ARM"
 fi
+ls
+cd tests && make clean && rm outcode1.s
 
-
+#YA DES PTITS BUGS JY RETOUCHE QUAND ON A FINI LINTEGRATION

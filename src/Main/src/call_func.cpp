@@ -70,11 +70,12 @@ int mega_caller (int param, string input, string output){
       parseprint(p,const_cast<char*>(output.c_str()));
     }
   }
-
+// TYPECHECK NOT YET IMPLEMENTED
+/*
   if (is_enabled(param, PARAM_TYPECHECK)){
     std::cout << "ON FAIT LE TYPECHECK \n";
 
-  }
+  }*/
 asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){
     ptree p2 = ast_transform(p);

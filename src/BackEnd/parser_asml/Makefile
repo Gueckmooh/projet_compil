@@ -218,7 +218,7 @@ clean_dirs:
 	$(QUIET)$(RM) $(OBJDIR) $(DEPDIR) $(LOGDIR) $(TESTBINDIR)
 
 clean_lex_pars:
-	$(QUIET)$(RM) $(LPFILES) $(addsuffix .h, $(basename $(LPFILES)))
+	$(QUIET)$(RM) $(LPFILES) #$(addsuffix .h, $(basename $(LPFILES)))
 
 clean_inc:
 	$(QUIET)$(RM) $(INCLUDEDIR)

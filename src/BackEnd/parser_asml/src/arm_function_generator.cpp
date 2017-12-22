@@ -33,7 +33,10 @@ namespace arm {
     process_instructions();
     pre_process_conditions();
     generate_epilogue();
-    *output << name.substr(1) <<":\n";
+    if (name[0] == '_')
+      *output << name.substr(1) <<":\n";
+    else
+      *output << name <<":\n";
     *output << prologue;
     *output << processed_params;
     for (vector<arm_instruction*>::iterator it = instructions.begin();

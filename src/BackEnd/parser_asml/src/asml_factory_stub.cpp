@@ -51,7 +51,7 @@ extern "C" void asml_add_funcall (char* funcname, char* retval, char* params) {
   vector<string>* vect = new vector<string> ();
   char* current = params;
   if (params != NULL) {
-    cout << string(params) << endl;
+    //cout << string(params) << endl;
     while (*current != '\0') {
       if (*current == ' ')
 	*current = '\0';

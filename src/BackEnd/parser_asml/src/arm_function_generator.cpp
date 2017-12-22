@@ -81,7 +81,7 @@ namespace arm {
 
   void arm_function_generator::pre_process_variables (void) {
     int off = (-fp_offset -4) - 4 * nb_params;
-    cout << -fp_offset << endl;
+    //cout << -fp_offset << endl;
     vector<asml_variable*>* variables = asml->get_variables ();
     nb_variables = variables->size();
     for (vector<asml_variable*>::reverse_iterator it = variables->rbegin();
@@ -94,7 +94,7 @@ namespace arm {
 
   void arm_function_generator::process_instructions (void) {
     vector<asml_instruction*>::iterator it = asml->instruction_begin ();
-    cout << name << " : " << to_string(asml->get_instructions()->size()) << endl;
+    //cout << name << " : " << to_string(asml->get_instructions()->size()) << endl;
     arm_instruction* instruction;
     while (it != asml->instruction_end ()) {
       instruction = arm_instruction_factory::create_instruction (*it);

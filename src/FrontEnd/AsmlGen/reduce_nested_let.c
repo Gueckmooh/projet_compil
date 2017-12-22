@@ -10,7 +10,7 @@ ptree reduce_nested_let(ptree t){
         t->params.tlet.t1 = reduce_nested_let(t->params.tlet.t1);
         t->params.tlet.t2 = reduce_nested_let(t->params.tlet.t2);
         if(t->params.tlet.t1->code == T_LET){
-            return ast_let(
+            return reduce_nested_let(ast_let(
                 t->params.tlet.t1->params.tlet.v,
                 t->params.tlet.t1->params.tlet.t1,
                 ast_let(
@@ -18,7 +18,7 @@ ptree reduce_nested_let(ptree t){
                     t->params.tlet.t1->params.tlet.t2,
                     t->params.tlet.t2
                 )
-            );
+            ));
         } else {
             return t;
         }

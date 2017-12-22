@@ -6,7 +6,7 @@
 #include "asml_parser_types.h"
 #include "ast.h"
 
-asml_asmt_t ast_to_asmlt(ptree t);
+asml_asmt_t *to_asml_asmtt(ptree t);
 
 asml_exp_t *to_asml_exp(ptree t);
 

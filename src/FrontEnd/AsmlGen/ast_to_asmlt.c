@@ -132,15 +132,20 @@ asml_exp_t *to_asml_exp(ptree t){
 }
 
 asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
+    if(ast_args_list == NULL){
+        return NULL;
+    }
     listNode *ast_node =ast_args_list->head;
-    asml_formal_arg_t *current = NULL, *res = current;
+    asml_formal_arg_t *result = malloc(sizeof(asml_formal_arg_t)),
+                      *current = result;
     ptree ast_list_elem;
     while(ast_node != NULL){
         ast_list_elem = (ptree) ast_node->data;
         assert(ast_list_elem->code == T_VAR);
         current->next = malloc(sizeof(asml_formal_arg_t));
-        current->next->val = ast_list_elem->params.v;
+        current->val = ast_list_elem->params.v;
         current = current->next;
+        ast_node = ast_node->next;
     }
-    return res->next;
+    return result->next;
 }

@@ -81,12 +81,12 @@ LDFLAGS = -lpthread -L$(FRONTENDPATH1) -L$(FRONTENDPATH2) -L$(BACKENDPATH)/libs 
 
 .PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test
 
-all: directories lib inc $(MAINPATH)/$(EXEC).o $(EXEC)
+all: directories lib inc $(MAINPATH)/$(EXEC).o scripts/$(EXEC)
 
 test: testdirectories inc $(TESTFILES)
 
 run: all
-	./$(EXEC)
+	./scripts/$(EXEC)
 
 test_run: test
 	$(QUIET)for file in $(BASETESTS); do echo "$(TESTBINDIR)/$$file > $(LOGDIR)/$$file.log"; $(TESTBINDIR)/$$file > $(LOGDIR)/$$file.log; done
@@ -154,7 +154,7 @@ lib:
 	$(QUIET)cd $(FRONTENDPATH1) && $(MAKE) static
 	$(QUIET)cd $(FRONTENDPATH2) && $(MAKE) static
 
-$(EXEC): $(MAINPATH)/mincamlc.o
+scripts/$(EXEC): $(MAINPATH)/mincamlc.o
 	$(CXX) $^ -o $@ $(LDFLAGS)
 
 $(TESTBINDIR)/%: $(addprefix $(OBJDIR)/, $(OBJWOMAIN) %.o)
@@ -173,7 +173,7 @@ clean_dirs:
 	$(QUIET)$(RM) $(OBJDIR) $(DEPDIR) $(LOGDIR) $(TESTBINDIR)
 
 mrproper:  clean clean_deps clean_logs clean_dirs
-	$(QUIET)$(RM) $(EXEC)
+	$(QUIET)$(RM) scripts/$(EXEC)
 	$(QUIET)$(RM) $(TESTFILES)
 	$(QUIET)cd $(BACKENDPATH) && make mrproper
 	$(QUIET)cd $(FRONTENDPATH1) && make clean

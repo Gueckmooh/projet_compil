@@ -11,9 +11,9 @@ typedef struct _listNode {
 typedef struct {
   int logicalLength;
   listNode *head;
-} list;
+} list_t;
 
-typedef list *plist;
+typedef list_t *plist;
 
 plist empty();
 

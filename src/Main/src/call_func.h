@@ -4,6 +4,18 @@
 #include "param.h"
 #include "asml.h"
 #include "arm.h"
+
+#include "alpha_conv.h"
+#include "ast.h"
+#include "ast_to_asmlt.h"
+#include "env.h"
+#include "knorm.h"
+#include "list.h"
+//#include "parser.h"
+#include "reduce_nested_let.h"
+#include "type.h"
+#include "utils.h"
+
 #include <string>
 #include <iostream>
 #include <cstdarg>

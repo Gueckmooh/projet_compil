@@ -7,14 +7,14 @@
 #include "list.h"
 
 plist empty() {
-  plist l = malloc(sizeof(list));
+  plist l = malloc(sizeof(list_t));
   l->logicalLength = 0;
   l->head = NULL;
   return l;
 }
 
 plist cons(void *element, plist l) {
-    plist new = malloc(sizeof(list));
+    plist new = malloc(sizeof(list_t));
     listNode *node = malloc(sizeof(listNode));
     node->data = element;
     node->next = l->head;
@@ -30,7 +30,7 @@ void *head(plist l) {
 
 plist tail(plist l) {
   assert(l->head != NULL);
-  plist new = malloc(sizeof(list));
+  plist new = malloc(sizeof(list_t));
   new->head = l->head->next;
   new->logicalLength = l->logicalLength - 1;
   return new;
@@ -45,12 +45,12 @@ plist append(plist l1, plist l2) {
 }
 
 
-int list_size(list *list)
+int list_size(list_t *list)
 {
   return list->logicalLength;
 }
 
 
-bool is_empty(list *list) {
+bool is_empty(list_t *list) {
     return (list_size(list) == 0);
 }

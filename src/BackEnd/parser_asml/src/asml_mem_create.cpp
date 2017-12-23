@@ -2,6 +2,10 @@
 
 namespace asml {
 
+  asml_mem_create::asml_mem_create (void) {
+    type_id = asml_instruction::MEM_NEW;
+  }
+
   string asml_mem_create::generate (int indent) {
     string ret;
     for (int i = 0; i < indent; i++)

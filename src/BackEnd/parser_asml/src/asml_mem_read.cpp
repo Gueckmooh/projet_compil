@@ -2,6 +2,10 @@
 
 namespace asml {
 
+  asml_mem_read::asml_mem_read (void) {
+    type_id = asml_instruction::MEM_READ;
+  }
+
   string asml_mem_read::generate (int indent) {
     string ret;
     for (int i = 0; i < indent; i++)
@@ -19,7 +23,7 @@ namespace asml {
     this->op = op;
   }
 
-  void asml_mem_read::set_mem_offset (string mem_offser) {
+  void asml_mem_read::set_mem_offset (string mem_offset) {
     this->mem_offset = mem_offset;
   }
 

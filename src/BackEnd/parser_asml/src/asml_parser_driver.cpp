@@ -96,6 +96,30 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
     dynamic_cast<asml_negation*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
+  case ASML_MEM_NEW:
+    node = new asml_unary_node ();
+    instruction = new asml_mem_create ();
+    dynamic_cast<asml_mem_create*>(instruction)->set_op(string((asmt->op == NULL ? "0" : (char*)asmt->op)));
+    dynamic_cast<asml_mem_create*>(instruction)->set_size(string((char*)asmt->exp->op1));
+    dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
+    break;
+  case ASML_MEM_READ:
+    node = new asml_unary_node ();
+    instruction = new asml_mem_read ();
+    dynamic_cast<asml_mem_read*>(instruction)->set_op(string((asmt->op == NULL ? "0" : (char*)asmt->op)));
+    dynamic_cast<asml_mem_read*>(instruction)->set_mem_addr(string((char*)asmt->exp->op1));
+    dynamic_cast<asml_mem_read*>(instruction)->set_mem_offset(string((char*)asmt->exp->op2));
+    dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
+    break;
+  case ASML_MEM_WRITE:
+    node = new asml_unary_node ();
+    instruction = new asml_mem_write ();
+    dynamic_cast<asml_mem_write*>(instruction)->set_op(string((asmt->op == NULL ? "0" : (char*)asmt->op)));
+    dynamic_cast<asml_mem_write*>(instruction)->set_mem_addr(string((char*)asmt->exp->op1));
+    dynamic_cast<asml_mem_write*>(instruction)->set_mem_offset(string((char*)asmt->exp->op2));
+    dynamic_cast<asml_mem_write*>(instruction)->set_value(string((char*)asmt->exp->op3));
+    dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
+    break;
   }
   dynamic_cast<asml_unary_node*>(node)->set_next(asml_parser_create_tree(asmt->next));
   return node;

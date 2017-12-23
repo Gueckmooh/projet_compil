@@ -2,11 +2,7 @@
 
 namespace arm {
 
-  arm_mem_create::arm_mem_create (void) {
-    type_id = arm_instruction::MEM_CREATE;
-  }
-
-  string arm_mem_create::generate (void) {
+  string arm_mem_create::get_instruction (void) {
     string instruction;
     switch (arm_util::type_of (size)) {
     case arm_util::DIRECT:

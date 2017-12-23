@@ -14,7 +14,7 @@ namespace arm {
     arm_mem_read (void);
     virtual ~arm_mem_read (void) {};
 
-    virtual string generate (void);
+    virtual string get_instruction (void);
 
     virtual void set_op (string);
     virtual void set_mem_offset (string);

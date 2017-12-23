@@ -14,7 +14,7 @@ namespace arm {
     arm_mem_write (void);
     virtual ~arm_mem_write (void) {};
 
-    virtual string generate (int);
+    virtual string get_instruction (void);
 
     virtual void set_op (string);
     virtual void set_mem_offset (string);

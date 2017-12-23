@@ -88,16 +88,19 @@ asmt: 		LPAREN asmt RPAREN           { $$ = $2; }
 	| 	exp                          { $$ = asml_parser_add_asmt (NULL, $1, NULL); }
 ;
 
-exp: 		LPAREN exp RPAREN            { $$ = $2; }
-	| 	INT                          { $$ = asml_parser_create_exp (ASML_EXP_INT, $1, NULL, NULL); }
-	| 	IDENT                        { $$ = asml_parser_create_exp (ASML_EXP_IDENT, $1, NULL, NULL); }
-	| 	LABEL                        { $$ = asml_parser_create_exp (ASML_EXP_LABEL, $1, NULL, NULL); }
-	| 	ADD IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_ADD, $2, $3, NULL); }
-	| 	SUB IDENT ident_or_imm       { $$ = asml_parser_create_exp (ASML_EXP_SUB, $2, $3, NULL); }
-	|	NEG IDENT                    { $$ = asml_parser_create_exp (ASML_EXP_NEG, $2, NULL, NULL); }
-	| 	IF cond THEN asmt ELSE asmt  { $$ = asml_parser_create_exp (ASML_EXP_IF, $2, $4, $6); }
-	| 	CALL LABEL formal_args       { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, $3, NULL); }
-	|	CALL LABEL                   { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, NULL, NULL); }
+exp: 		LPAREN exp RPAREN                                       { $$ = $2; }
+	| 	INT                                                     { $$ = asml_parser_create_exp (ASML_EXP_INT, $1, NULL, NULL); }
+	| 	IDENT                                                   { $$ = asml_parser_create_exp (ASML_EXP_IDENT, $1, NULL, NULL); }
+	| 	LABEL                                                   { $$ = asml_parser_create_exp (ASML_EXP_LABEL, $1, NULL, NULL); }
+	| 	ADD IDENT ident_or_imm                                  { $$ = asml_parser_create_exp (ASML_EXP_ADD, $2, $3, NULL); }
+	| 	SUB IDENT ident_or_imm                                  { $$ = asml_parser_create_exp (ASML_EXP_SUB, $2, $3, NULL); }
+	|	NEG IDENT                                               { $$ = asml_parser_create_exp (ASML_EXP_NEG, $2, NULL, NULL); }
+	| 	IF cond THEN asmt ELSE asmt                             { $$ = asml_parser_create_exp (ASML_EXP_IF, $2, $4, $6); }
+	| 	CALL LABEL formal_args                                  { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, $3, NULL); }
+	|	CALL LABEL                                              { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, NULL, NULL); }
+	|	NEW ident_or_imm                                        { $$ = asml_parser_create_exp (ASML_MEM_NEW, $2, NULL, NULL); }
+	| 	MEM LPAREN IDENT PLUS ident_or_imm RPAREN               { $$ = asml_parser_create_exp (ASML_MEM_READ, $3, $5, NULL); }
+	| 	MEM LPAREN IDENT PLUS ident_or_imm RPAREN ASSIGN IDENT  { $$ = asml_parser_create_exp (ASML_MEM_WRITE, $3, $5, $8); }
 ;
 
 cond:		IDENT EQUAL ident_or_imm  { $$ = asml_parser_create_exp (ASML_COND_EQUAL, $1, $3, NULL); }

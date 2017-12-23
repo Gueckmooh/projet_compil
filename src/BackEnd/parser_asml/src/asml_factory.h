@@ -14,6 +14,9 @@
 #include "asml_node.h"
 #include "asml_unary_node.h"
 #include "asml_binary_node.h"
+#include "asml_mem_create.h"
+#include "asml_mem_read.h"
+#include "asml_mem_write.h"
 
 using namespace std;
 

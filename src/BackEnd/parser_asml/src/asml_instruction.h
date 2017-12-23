@@ -17,7 +17,9 @@ namespace asml {
     static const int SOUSTRACTION = 4;
     static const int CONDITION = 5;
     static const int NEGATION = 6;
-    static const int NEW_MEM = 7;
+    static const int MEM_NEW = 7;
+    static const int MEM_READ = 8;
+    static const int MEM_WRITE = 9;
 
     virtual ~asml_instruction (void) {};
 

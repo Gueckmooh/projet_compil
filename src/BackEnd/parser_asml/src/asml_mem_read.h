@@ -11,6 +11,7 @@ namespace asml {
 
   class asml_mem_read : public asml_instruction {
   public:
+    asml_mem_read (void);;
     virtual ~asml_mem_read (void) {};
 
     virtual string generate (int);

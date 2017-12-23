@@ -6,7 +6,7 @@ namespace arm {
     type_id = arm_instruction::MEM_READ;
   }
 
-  string arm_mem_read::generate (void) {
+  string arm_mem_read::get_instruction (void) {
     string instruction;
     instruction += "\tldr r0, [fp, #" + offset->find(mem_addr)->second + "]\n";
     switch (arm_util::type_of (mem_offset)) {
@@ -22,7 +22,7 @@ namespace arm {
     default:
       break;
     }
-    instruction += "\tstr r0, [fp, #" + offset->find(op)->second + "]\n";
+    instruction += "\tstr r1, [fp, #" + offset->find(op)->second + "]\n";
     return instruction;
   }
 

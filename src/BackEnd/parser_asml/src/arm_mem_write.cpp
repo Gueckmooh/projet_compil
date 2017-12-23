@@ -6,7 +6,7 @@ namespace arm {
     type_id = arm_instruction::MEM_WRITE;
   }
 
-  string arm_mem_write::generate (int indent) {
+  string arm_mem_write::get_instruction (void) {
     string instruction;
     instruction += "\tldr r0, [fp, #" + offset->find(mem_addr)->second + "]\n";
     switch (arm_util::type_of (value)) {
@@ -36,7 +36,7 @@ namespace arm {
     this->op = op;
   }
 
-  void arm_mem_write::set_mem_offset (string mem_offser) {
+  void arm_mem_write::set_mem_offset (string mem_offset) {
     this->mem_offset = mem_offset;
   }
 

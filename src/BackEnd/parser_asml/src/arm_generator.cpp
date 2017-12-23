@@ -31,6 +31,7 @@ namespace arm {
 	 it++)
       *output << "\t.global " << (*it)->get_name() << endl;
     *output << "_start:" << endl;
+    *output << "\tbl __mem_init" << endl;
     *output << "\tbl main" << endl;
     *output << "\tbl min_caml_exit" << endl;
     generate_function();

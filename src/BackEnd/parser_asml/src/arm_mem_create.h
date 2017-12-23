@@ -10,10 +10,10 @@ using namespace std;
 namespace arm {
 
   class arm_mem_create : public arm_instruction {
-    arm_mem_create (void);
-    virtual ~arm_mem_create (void) {};
+  public:
+     ~arm_mem_create (void) {};
 
-    virtual string generate (void);
+    virtual string get_instruction (void);
 
     virtual void set_op (string);
     virtual void set_size (string);

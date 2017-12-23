@@ -11,7 +11,8 @@ namespace asml {
 
   class asml_mem_create : public asml_instruction {
   public:
-    virtual ~asml_mem_create (void);
+    asml_mem_create (void);
+    virtual ~asml_mem_create (void) {};
 
     virtual string generate (int);
 

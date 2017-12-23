@@ -16,6 +16,12 @@ namespace arm {
       return create_condition (dynamic_cast<asml_condition*>(instr));
     case asml_instruction::NEGATION:
       return create_negation (dynamic_cast<asml_negation*>(instr));
+    case asml_instruction::MEM_NEW:
+      return create_mem_create (dynamic_cast<asml_mem_create*>(instr));
+    case asml_instruction::MEM_READ:
+      return create_mem_read (dynamic_cast<asml_mem_read*>(instr));
+    case asml_instruction::MEM_WRITE:
+      return create_mem_write (dynamic_cast<asml_mem_write*>(instr));
     default:
       return NULL;
     }
@@ -83,6 +89,29 @@ namespace arm {
     negation->set_op1(neg->get_op1());
     negation->set_op2(neg->get_op2());
     return negation;
+  }
+
+  arm_mem_create* arm_instruction_factory::create_mem_create (asml_mem_create* create) { //TODO
+    arm_mem_create* mem = new arm_mem_create ();
+    mem->set_op(create->get_op());
+    mem->set_size(create->get_size());
+    return mem;
+  }
+
+  arm_mem_read* arm_instruction_factory::create_mem_read (asml_mem_read* read) { //TODO
+    arm_mem_read* mem = new arm_mem_read();
+    mem->set_op(read->get_op());
+    mem->set_mem_offset(read->get_mem_offset());
+    mem->set_mem_addr(read->get_mem_addr());
+    return mem;
+  }
+
+  arm_mem_write* arm_instruction_factory::create_mem_write (asml_mem_write* write) { //TODO
+    arm_mem_write* mem = new arm_mem_write();
+    mem->set_mem_offset(write->get_mem_offset());
+    mem->set_mem_addr(write->get_mem_addr());
+    mem->set_value(write->get_value());
+    return mem;
   }
 
 }

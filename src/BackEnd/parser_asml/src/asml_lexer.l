@@ -47,6 +47,7 @@ CARRAY  "_min_caml_create_array"
 UNDERSC "_"
 
 %%
+[[:space:]]+      ;
 {NIL}     { /*printf("NIL\n");*/ return NIL; }
 {DIGIT}+  { /*printf("INT\n");*/
     char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));

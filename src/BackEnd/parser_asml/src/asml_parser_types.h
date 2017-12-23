@@ -16,6 +16,9 @@
 #define ASML_EXP_CALL   11 // op1 : un char* - le nom de la fonction appelée
                            // op2 : un asml_formal_arg_t* - les arguments à
                            //       passer à la fonction
+#define ASML_MEM_NEW    12
+#define ASML_MEM_READ   13
+#define ASML_MEM_WRITE  14
 
 typedef struct asml_exp {
   int type;   // Le type de l'expréssion

@@ -17,3 +17,10 @@ src/BackEnd/parser_asml/champ_de_mine/
 src/BackEnd/parser_asml/foo.asml
 src/BackEnd/parser_asml/src/.backup/
 archive/
+/src/BackEnd/parser_asml/array.asml
+/src/BackEnd/parser_asml/test.asml
+/src/BackEnd/parser_asml/util_array/Makefile
+*.o
+/src/BackEnd/parser_asml/util_array/default.arm
+/src/BackEnd/parser_asml/util_array/default.s
+/src/BackEnd/parser_asml/util_array/libmincaml.s

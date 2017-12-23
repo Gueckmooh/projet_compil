@@ -1,7 +1,7 @@
 	.bss
 	.align	4
 	.type	__min_caml_array, %object
-	.size	__min_caml_array, 4
+	.size	__min_caml_array, 4096
 __min_caml_array:
 	.space	4096
 	.text
@@ -10,7 +10,6 @@ __min_caml_array:
 	.type 	__mem_init, %function
 __mem_init:
 	ldr 	r4, .__min_caml_array_addr
-	ldr 	r4, [r4]
 	mov 	r5, r4
 	bx	lr
 .__min_caml_array_addr:
@@ -23,7 +22,7 @@ __mem_new:
 	add 	fp, sp, #0
 	sub	sp, sp, #12
 	str	r0, [fp, #-8]
-	mov 	r2, r5
+	sub 	r2, r5, r4
 	ldr  	r3, [fp, #-8]
 	add	r2, r2, r3
 	cmp 	r2, #4096

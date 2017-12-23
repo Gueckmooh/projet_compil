@@ -18,6 +18,9 @@ namespace arm {
     static const int SOUSTRACTION = 4;
     static const int CONDITION = 5;
     static const int NEGATION = 6;
+    static const int MEM_CREATE = 7;
+    static const int MEM_WRITE = 8;
+    static const int MEM_READ = 9;
 
     virtual ~arm_instruction (void) {};
 

@@ -177,3 +177,27 @@ __mem_new:
 	sub	sp, fp, #0
 	ldr	fp, [sp], #4
 	bx 	lr
+	.align 	2
+	.global	_min_caml_create_array
+	.type 	_min_caml_create_array, %function
+_min_caml_create_array:
+	stmfd 	sp!, {sp, lr}
+	add 	fp, sp, #4
+	sub 	sp, sp, #12
+	str	r0, [fp, #8]
+	str	r1, [fp, #12]
+	bl	__mem_new
+	str 	r0, [fp, #16]
+	mov	r2, #0
+	ldr 	r1, [fp, #8]
+	ldr 	r3, [fp, #12]
+.M3:
+	str	r3, [r0]
+	add	r0, r0, #4
+	add 	r2, r2, #4
+	cmp 	r2, r1
+	blt	.M3
+	ldr	r0, [fp, #16]
+	sub	sp, fp, #4
+	ldmfd	sp!, {sp, lr}
+	bx 	lr

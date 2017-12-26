@@ -40,9 +40,9 @@ int main (void) {
     cout << endl;
   }
   */
-  //generator = new arm_generator (function);
-  //generator->generate ();
-  asml_gen = new asml_generator (function);
-  asml_gen->generate();
+  generator = new arm_generator (function);
+  generator->generate ();
+  //asml_gen = new asml_generator (function);
+  //asml_gen->generate();
   return 0;
 }

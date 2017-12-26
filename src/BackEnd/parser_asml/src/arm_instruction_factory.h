@@ -16,6 +16,7 @@
 #include "asml_mem_create.h"
 #include "asml_mem_read.h"
 #include "asml_mem_write.h"
+#include "asml_closure.h"
 #include "arm_instruction.h"
 #include "arm_funcall.h"
 #include "arm_affectation.h"
@@ -26,6 +27,7 @@
 #include "arm_mem_create.h"
 #include "arm_mem_read.h"
 #include "arm_mem_write.h"
+#include "arm_closure.h"
 
 using namespace std;
 using namespace asml;
@@ -42,9 +44,10 @@ namespace arm {
     static arm_soustraction* create_soustraction (asml_soustraction*);
     static arm_condition* create_condition (asml_condition*);
     static arm_negation* create_negation (asml_negation*);
-    static arm_mem_create* create_mem_create (asml_mem_create*); //TODO
-    static arm_mem_read* create_mem_read (asml_mem_read*); //TODO
-    static arm_mem_write* create_mem_write (asml_mem_write*); //TODO
+    static arm_mem_create* create_mem_create (asml_mem_create*);
+    static arm_mem_read* create_mem_read (asml_mem_read*);
+    static arm_mem_write* create_mem_write (asml_mem_write*);
+    static arm_closure* create_closure (asml_closure*);
   };
 
 }

@@ -159,7 +159,7 @@ __mem_init:
 	.global	__mem_new
 	.type 	__mem_new, %function
 __mem_new:
-	str 	fp, [sp, #4]!
+	stmfd	sp!, {fp}
 	add 	fp, sp, #0
 	sub	sp, sp, #12
 	str	r0, [fp, #-8]
@@ -175,7 +175,7 @@ __mem_new:
 	mov 	r0, #0
 .M2:
 	sub	sp, fp, #0
-	ldr	fp, [sp], #4
+	ldmfd	sp!, {fp}
 	bx 	lr
 	.align 	2
 	.global	_min_caml_create_array

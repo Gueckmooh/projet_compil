@@ -20,7 +20,6 @@ namespace arm {
     }
     switch (arm_util::type_of (mem_offset)) {
     case arm_util::DIRECT:
-      instruction += "\tadd r0, r0, #" + mem_offset + "\n";
       instruction += "\tldr r1, [r0, #" + mem_offset + "]\n";
       break;
     case arm_util::VARIABLE:

@@ -22,6 +22,8 @@ namespace arm {
       return create_mem_read (dynamic_cast<asml_mem_read*>(instr));
     case asml_instruction::MEM_WRITE:
       return create_mem_write (dynamic_cast<asml_mem_write*>(instr));
+    case asml_instruction::CLOSURE:
+      return create_closure (dynamic_cast<asml_closure*>(instr));
     default:
       return NULL;
     }
@@ -112,6 +114,20 @@ namespace arm {
     mem->set_mem_addr(write->get_mem_addr());
     mem->set_value(write->get_value());
     return mem;
+  }
+
+  arm_closure* arm_instruction_factory::create_closure (asml_closure* clos) {
+    arm_closure* closure = new arm_closure ();
+    closure->set_value (clos->get_value());
+    for (vector<string>::iterator it = clos->begin();
+	 it != clos->end();
+	 it++) {
+      closure->add_param(*it);
+    }
+    if (clos->is_returning()) {
+      closure->set_return (clos->get_retval());
+    }
+    return closure;
   }
 
 }

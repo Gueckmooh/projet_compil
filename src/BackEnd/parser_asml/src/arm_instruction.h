@@ -21,6 +21,7 @@ namespace arm {
     static const int MEM_CREATE = 7;
     static const int MEM_WRITE = 8;
     static const int MEM_READ = 9;
+    static const int CLOSURE = 10;
 
     virtual ~arm_instruction (void) {};
 

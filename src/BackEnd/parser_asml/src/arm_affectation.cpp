@@ -1,4 +1,5 @@
 #include "arm_affectation.h"
+#include "arm_function.h"
 
 namespace arm {
 
@@ -15,6 +16,8 @@ namespace arm {
     case arm_util::VARIABLE:
       instruction += "\tldr r0, [fp, #" + offset->find(op2)->second + "]\n";
       break;
+    case arm_util::LABEL:
+      instruction += "\tldr r0, " + arm_function::add_ref(op2) + "\n";
     default:
       break;
     }

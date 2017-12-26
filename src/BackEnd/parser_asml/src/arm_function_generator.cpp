@@ -3,6 +3,7 @@
 namespace arm {
 
   int arm_function_generator::lien = 0;
+  //  int arm_function_generator::processed_function = "";
 
   arm_function_generator::arm_function_generator (asml_function* fun) {
     output = new stringstream ();
@@ -24,6 +25,8 @@ namespace arm {
   }
 
   void arm_function_generator::generate_function (void) {
+    arm_function::initialize();
+    arm_function::set_processed_function(name);
     fp_offset = 4;
     to_save = "fp, lr";
     pre_process_params();
@@ -45,6 +48,7 @@ namespace arm {
       *output << (*it)->get_instruction();
     }
     *output << epilogue;
+    *output << arm_function::process_refs();
   }
 
   void arm_function_generator::pre_process_params (void) {

@@ -11,6 +11,7 @@ namespace arm {
   public:
     static const int DIRECT = 0;
     static const int VARIABLE = 1;
+    static const int LABEL = 2;
     static int type_of (string);
   };
 

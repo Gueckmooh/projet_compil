@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <map>
+#include <cassert>
 
 #ifndef __ARM_FUNCTION_GENERATOR_H__
 #define __ARM_FUNCTION_GENERATOR_H__
@@ -13,6 +14,7 @@
 #include "asml_integer.h"
 #include "asml_funcall.h"
 #include "arm_funcall.h"
+#include "arm_function.h"
 
 using namespace std;
 using namespace asml;
@@ -20,6 +22,7 @@ using namespace asml;
 namespace arm {
 
   class arm_function_generator {
+    friend class arm_function;
   public:
     arm_function_generator (asml_function*);
     ~arm_function_generator (void);

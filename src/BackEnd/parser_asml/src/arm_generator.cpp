@@ -15,6 +15,7 @@ namespace arm {
 
   arm_generator::~arm_generator (void) {
     output->close();
+    arm_function::initialize();
     delete output;
   }
 

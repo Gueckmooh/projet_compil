@@ -44,6 +44,7 @@ NOP     "nop"
 APPCLO  "apply_closure"
 NIL     "nil"
 CARRAY  "_min_caml_create_array"
+SELF    "%self"
 UNDERSC "_"
 
 %%
@@ -84,6 +85,7 @@ UNDERSC "_"
 {APPCLO}  { /*printf("APPCLO\n");*/ return APPCLO; }
 {CARRAY}  { /*printf("CARRAY\n");*/ return CARRAY; }
 {UNDERSC} { /*printf("UNDERSC\n");*/ return UNDERSC; }
+{SELF}    { return SELF; }
 {UNDERSC}({DIGIT}|{LOWER}|{UPPER}|{UNDERSC})*   {
     char* new_token = malloc (sizeof (char)* (strlen(yytext)+1));
     strncpy(new_token, yytext, strlen(yytext)+1);

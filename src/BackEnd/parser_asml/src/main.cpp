@@ -22,8 +22,10 @@ using namespace arm;
 int main (void) {
   vector<asml_function*>* function;
   asml_factory::initialize();
-  arm_generator* generator;
-  //asml_generator* asml_gen;
+  arm_generator* generator = NULL;
+  asml_generator* asml_gen = NULL;
+  asml_gen = asml_gen;
+  generator = generator;
   asml_parse ();
   function = asml_factory::get_function();
   /*

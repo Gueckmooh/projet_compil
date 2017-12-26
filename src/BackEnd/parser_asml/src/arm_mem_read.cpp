@@ -8,7 +8,16 @@ namespace arm {
 
   string arm_mem_read::get_instruction (void) {
     string instruction;
-    instruction += "\tldr r0, [fp, #" + offset->find(mem_addr)->second + "]\n";
+    switch (arm_util::type_of (mem_addr)) {
+    case arm_util::VARIABLE:
+      instruction += "\tldr r0, [fp, #" + offset->find(mem_addr)->second + "]\n";
+      break;
+    case arm_util::SELF:
+      instruction += "\tmov r0, r6\n";
+      break;
+    default:
+      break;
+    }
     switch (arm_util::type_of (mem_offset)) {
     case arm_util::DIRECT:
       instruction += "\tadd r0, r0, #" + mem_offset + "\n";

@@ -10,6 +10,8 @@ namespace arm {
       return VARIABLE;
     else if (c == '_')
       return LABEL;
+    else if (c == '%')
+      return SELF;
     else
       return -1;
   }

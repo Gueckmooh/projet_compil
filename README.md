@@ -55,7 +55,7 @@ BACK END
 - [X] call to external functions
 - [X] functions (let rec)
 - [X] if-then-else
-- [ ] closures, tuple, arrays
+- [X] closures, tuple, arrays
 
 - [X] ASML Parsing
 - [X] ASML Generation

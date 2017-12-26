@@ -19,6 +19,7 @@
 #define ASML_MEM_NEW    12
 #define ASML_MEM_READ   13
 #define ASML_MEM_WRITE  14
+#define ASML_EXP_CLOSURE    15
 
 typedef struct asml_exp {
   int type;   // Le type de l'expréssion

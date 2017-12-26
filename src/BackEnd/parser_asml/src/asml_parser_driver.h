@@ -21,7 +21,7 @@ extern "C" asml_asmt_t* asml_parser_add_asmt (char* op, asml_exp_t* exp, asml_as
 extern "C" asml_exp_t* asml_parser_create_exp (int type, void* op1, void* op2, void* op3);
 extern "C" asml_formal_arg_t* asml_parser_add_arg (char* op, asml_formal_arg_t* next);
 asml_boolean* asml_parser_create_boolean (asml_exp_t* boolean);
-void asml_parser_set_params (asml_formal_arg_t* args, asml_funcall* funcall);
+void asml_parser_set_params (asml_formal_arg_t* args, asml_instruction* funcall);
 asml_node* asml_parser_create_tree (asml_asmt_t* asmt);
 extern "C" asml_function_t* asml_parser_package_function (char* name, asml_formal_arg_t* args, asml_asmt_t* asmt);
 #else

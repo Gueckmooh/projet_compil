@@ -58,9 +58,9 @@ int asml_error(const char* s);
 %token			ADD
 %token			SUB
 %token			CALL
+%token			CALLCLO
 %token			NEW
 %token			NOP
-%token			APPCLO
 %token			CARRAY
 %token			UNDERSC
 %token	<token_str>	LABEL
@@ -100,6 +100,7 @@ exp: 		LPAREN exp RPAREN                                               { $$ = $2
 	| 	IF cond THEN asmt ELSE asmt                                     { $$ = asml_parser_create_exp (ASML_EXP_IF, $2, $4, $6); }
 	| 	CALL LABEL formal_args                                          { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, $3, NULL); }
 	|	CALL LABEL                                                      { $$ = asml_parser_create_exp (ASML_EXP_CALL, $2, NULL, NULL); }
+	|	CALLCLO IDENT formal_args                                       { $$ = asml_parser_create_exp (ASML_EXP_CLOSURE, $2, $3, NULL); }
 	|	NEW ident_or_imm                                                { $$ = asml_parser_create_exp (ASML_MEM_NEW, $2, NULL, NULL); }
 	| 	MEM LPAREN ident_or_self PLUS ident_or_imm RPAREN               { $$ = asml_parser_create_exp (ASML_MEM_READ, $3, $5, NULL); }
 	| 	MEM LPAREN ident_or_self PLUS ident_or_imm RPAREN ASSIGN IDENT  { $$ = asml_parser_create_exp (ASML_MEM_WRITE, $3, $5, $8); }

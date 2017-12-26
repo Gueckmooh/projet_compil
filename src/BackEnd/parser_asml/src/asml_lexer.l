@@ -41,7 +41,7 @@ SUB     "sub"
 CALL    "call"
 NEW     "new"
 NOP     "nop"
-APPCLO  "apply_closure"
+CALLCLO  "call_closure"
 NIL     "nil"
 CARRAY  "_min_caml_create_array"
 SELF    "%self"
@@ -82,7 +82,7 @@ UNDERSC "_"
 {CALL}    { /*printf("CALL\n");*/ return CALL; }
 {NEW}     { /*printf("NEW\n");*/ return NEW; }
 {NOP}     { /*printf("NOP\n");*/ return NOP; }
-{APPCLO}  { /*printf("APPCLO\n");*/ return APPCLO; }
+{CALLCLO}  { /*printf("APPCLO\n");*/ return CALLCLO; }
 {CARRAY}  { /*printf("CARRAY\n");*/ return CARRAY; }
 {UNDERSC} { /*printf("UNDERSC\n");*/ return UNDERSC; }
 {SELF}    { return SELF; }

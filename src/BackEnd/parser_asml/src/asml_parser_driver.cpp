@@ -86,7 +86,16 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
     dynamic_cast<asml_funcall*>(instruction)->set_funcname (string((char*)asmt->exp->op1));
     if (asmt->op != NULL)
       dynamic_cast<asml_funcall*>(instruction)->set_return (asmt->op);
-    asml_parser_set_params ((asml_formal_arg_t*)asmt->exp->op2, dynamic_cast<asml_funcall*>(instruction));
+    asml_parser_set_params ((asml_formal_arg_t*)asmt->exp->op2, instruction);
+    dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
+    break;
+  case ASML_EXP_CLOSURE   :
+    node = new asml_unary_node ();
+    instruction = new asml_closure ();
+    dynamic_cast<asml_closure*>(instruction)->set_value (string((char*)asmt->exp->op1));
+    if (asmt->op != NULL)
+      dynamic_cast<asml_closure*>(instruction)->set_return (asmt->op);
+    asml_parser_set_params ((asml_formal_arg_t*)asmt->exp->op2, instruction);
     dynamic_cast<asml_unary_node*>(node)->set_instruction (instruction);
     break;
   case ASML_EXP_NEG    :
@@ -145,13 +154,32 @@ asml_boolean* asml_parser_create_boolean (asml_exp_t* boolean) {
   return ret;
 }
 
-void asml_parser_set_params (asml_formal_arg_t* args, asml_funcall* funcall) {
-  while (args != NULL) {
-    if (args->val == NULL) {
-      break;
+void asml_parser_set_params (asml_formal_arg_t* args, asml_instruction* instruction) {
+  asml_funcall* funcall;
+  asml_closure* closure;
+  switch (instruction->get_type()) {
+  case asml_instruction::FUNCALL:
+    funcall = dynamic_cast<asml_funcall*>(instruction);
+    while (args != NULL) {
+      if (args->val == NULL) {
+	break;
+      }
+      funcall->add_param (string(args->val));
+      args = args->next;
     }
-    funcall->add_param (string(args->val));
-    args = args->next;
+    break;
+  case asml_instruction::CLOSURE:
+    closure = dynamic_cast<asml_closure*>(instruction);
+    while (args != NULL) {
+      if (args->val == NULL) {
+	break;
+      }
+      closure->add_param (string(args->val));
+      args = args->next;
+    }
+    break;
+  default:
+    exit(1);
   }
 }
 

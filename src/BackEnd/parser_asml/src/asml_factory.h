@@ -17,6 +17,7 @@
 #include "asml_mem_create.h"
 #include "asml_mem_read.h"
 #include "asml_mem_write.h"
+#include "asml_closure.h"
 
 using namespace std;
 

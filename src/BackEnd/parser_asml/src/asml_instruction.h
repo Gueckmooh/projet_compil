@@ -20,6 +20,7 @@ namespace asml {
     static const int MEM_NEW = 7;
     static const int MEM_READ = 8;
     static const int MEM_WRITE = 9;
+    static const int CLOSURE = 10;
 
     virtual ~asml_instruction (void) {};
 

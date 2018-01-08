@@ -89,4 +89,22 @@ namespace arm {
     return instruction;
   }
 
+  int arm_closure::nb_regs (void) {
+    return 0;
+  }
+
+  list<string>* arm_closure::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (is_returning())
+      l->push_back(return_variable);
+    l->push_back(value);
+    for (vector<string>::iterator it = params.begin();
+	 it != params.end();
+	 it++)
+      if (arm_util::type_of (*it) == arm_util::VARIABLE)
+	l->push_back(*it);
+    l->sort();
+    return l;
+  }
+
 }

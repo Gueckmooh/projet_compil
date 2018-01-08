@@ -41,21 +41,21 @@ namespace arm {
   string arm_condition::get_instruction (void) {
     stringstream ss;
     ss << boolean->get_instruction();
-    for (vector<arm_instruction*>::reverse_iterator it = list_then->rbegin();
-	 it != list_then->rend();
+    for (vector<arm_instruction*>::iterator it = list_then->begin();
+	 it != list_then->end();
 	 it++) {
       ss << (*it)->get_instruction();
     }
     ss << "\tb " << lFin << "\n";
     ss << lFalse << ":\n";
-    for (vector<arm_instruction*>::reverse_iterator it = list_else->rbegin();
-	 it != list_else->rend();
+    for (vector<arm_instruction*>::iterator it = list_else->begin();
+	 it != list_else->end();
 	 it++) {
       ss << (*it)->get_instruction();
     }
     ss << lFin << ":\n";
     if (var.compare("0") != 0) {
-      ss << "\tstr r0, [fp, #", offset->find(var)->second + "]\n";
+      ss << "\tstr r0, [fp, #"+ offset->find(var)->second + "]\n";
     }
     return ss.str();
   }
@@ -84,6 +84,30 @@ namespace arm {
 
   void arm_condition::set_lFin (string l) {
     lFin = l;
+  }
+
+  int arm_condition::nb_regs (void) {
+    return boolean->nb_regs();
+  }
+
+  list<string>* arm_condition::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    list<string>* l2;
+    if (var.compare("0") != 0)
+      l->push_back(var);
+    l2 = boolean->get_op_list();
+    l->merge(*l2);
+    delete l2;
+    l->sort();
+    return l;
+  }
+
+  vector<arm_instruction*>* arm_condition::get_list_then (void) {
+    return list_then;
+  }
+
+  vector<arm_instruction*>* arm_condition::get_list_else (void) {
+    return list_else;
   }
 
 }

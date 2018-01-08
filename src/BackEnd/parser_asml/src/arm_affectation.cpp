@@ -42,4 +42,18 @@ namespace arm {
     return op2;
   }
 
+  int arm_affectation::nb_regs (void) {
+    return 3;
+  }
+
+  list<string>* arm_affectation::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (op1.compare("0") != 0)
+      l->push_back(op1);
+    if (arm_util::type_of (op2) != arm_util::DIRECT)
+    l->push_back(op2);
+    l->sort();
+    return l;
+  }
+
 }

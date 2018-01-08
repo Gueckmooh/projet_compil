@@ -1,5 +1,6 @@
 #include <string>
 #include <map>
+#include <list>
 
 #ifndef __ARM_BOOLEAN_H__
 #define __ARM_BOOLEAN_H__
@@ -35,6 +36,9 @@ namespace arm {
     virtual string get_op2 (void);
 
     virtual int get_type (void);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     map<string, string>* offset;
     string lFalse;

@@ -78,4 +78,25 @@ namespace arm {
     return op2;
   }
 
+  int arm_boolean::nb_regs (void) {
+    switch (arm_util::type_of(op2)) {
+    case arm_util::VARIABLE:
+      return 2;
+    case arm_util::DIRECT:
+      return 3;
+    default:
+      return 0;
+    }
+  }
+
+  list<string>* arm_boolean::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (arm_util::type_of(op1) != arm_util::DIRECT)
+      l->push_back(op1);
+    if (arm_util::type_of(op2) != arm_util::DIRECT)
+      l->push_back(op2);
+    l->sort();
+    return l;
+  }
+
 }

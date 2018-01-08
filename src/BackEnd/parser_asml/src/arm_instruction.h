@@ -27,7 +27,10 @@ namespace arm {
 
     int get_type (void);
 
+    virtual int nb_regs (void) = 0;
+    virtual list<string>* get_op_list (void) = 0;
     virtual string get_instruction (void) = 0;
+
     virtual void set_var_offset (map<string, string>*);
     void add_param (string);
   protected:

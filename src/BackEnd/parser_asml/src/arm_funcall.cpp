@@ -35,14 +35,14 @@ namespace arm {
       var1 = *it;
       while (it != params.rend()) {
 	if (nb > 4) {
-	  if (immediate (*it))
+	  if (arm_util::type_of (*it) == arm_util::DIRECT)
 	    instruction += "\tmov r0, #" + (*it) + "\n";
 	  else
 	    instruction += "\tldr r0, [fp, #" + offset->find(*it)->second + "]\n";
 	  instruction += "\tstr r0, [sp, #" + to_string(-8-(size-nb)*4) + "]\n";
 	  nb--;
 	} else {
-	  if (immediate (*it))
+	  if (arm_util::type_of (*it) == arm_util::DIRECT)
 	    instruction += "\tmov r" + to_string(nb-1) + ", #" + (*it) + "\n";
 	  else
 	    instruction += "\tldr r" + to_string(nb-1) + ", [fp, #" + offset->find(*it)->second + "]\n";
@@ -56,6 +56,23 @@ namespace arm {
       instruction += "\tstr r0, [fp, #" + offset->find(retval)->second + "]\n";
     }
     return instruction;
+  }
+
+  int arm_funcall::nb_regs (void) {
+    return 0;
+  }
+
+  list<string>* arm_funcall::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (is_returning)
+      l->push_back(retval);
+    for (vector<string>::iterator it = params.begin();
+	 it != params.end();
+	 it++)
+      if (arm_util::type_of (*it) == arm_util::VARIABLE)
+	l->push_back(*it);
+    l->sort();
+    return l;
   }
 
 }

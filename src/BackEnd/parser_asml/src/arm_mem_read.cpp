@@ -58,4 +58,20 @@ namespace arm {
     return mem_addr;
   }
 
+  int arm_mem_read::nb_regs (void) {
+    return 2;
+  }
+
+  list<string>* arm_mem_read::get_op_list (void) {
+        list<string>* l = new list<string> ();
+    if (arm_util::type_of (mem_addr) == arm_util::VARIABLE)
+      l->push_back(mem_addr);
+    if (arm_util::type_of (mem_offset) == arm_util::VARIABLE)
+      l->push_back(mem_offset);
+    if (arm_util::type_of (op) == arm_util::VARIABLE)
+      l->push_back(op);
+    l->sort();
+    return l;
+  }
+
 }

@@ -15,6 +15,9 @@
 #include "asml_integer.h"
 #include "asml_funcall.h"
 #include "arm_funcall.h"
+#include "arm_cfg_node.h"
+#include "arm_cfg_util.h"
+#include "arm_cfg_factory.h"
 
 using namespace std;
 using namespace asml;

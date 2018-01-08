@@ -49,4 +49,19 @@ namespace arm {
     op3 = op;
   }
 
+  int arm_soustraction::nb_regs (void) {
+    return 2;
+  }
+
+  list<string>* arm_soustraction::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (op1.compare("0") != 0)
+      l->push_back(op1);
+    l->push_back(op2);
+    if (arm_util::type_of (op3) != arm_util::DIRECT)
+    l->push_back(op3);
+    l->sort();
+    return l;
+  }
+
 }

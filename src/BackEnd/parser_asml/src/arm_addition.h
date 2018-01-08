@@ -24,6 +24,9 @@ namespace arm {
     virtual void set_op1 (string);
     virtual void set_op2 (string);
     virtual void set_op3 (string);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     string op1;
     string op2;

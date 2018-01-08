@@ -28,6 +28,7 @@ namespace arm {
     ~arm_function_generator (void);
     stringstream* generate (void);
     string get_name (void);
+    vector<arm_instruction*>* get_instructions (void) const;
   protected:
     void generate_function (void);
     void pre_process_params (void);
@@ -51,7 +52,7 @@ namespace arm {
     static int lien;
 
     string name;
-    vector<arm_instruction*> instructions;
+    mutable vector<arm_instruction*> instructions;
     map<string, string> var_offsets;
   };
 

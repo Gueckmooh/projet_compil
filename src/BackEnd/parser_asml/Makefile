@@ -72,6 +72,7 @@ INCLUDEFLAGS = $(addprefix -I, $(INCLUDE))
 
 FLAGS = -Wall
 FLAGS += -Werror
+#FLAGS += -Wshadow
 #FLAGS += -D__USE_POSIX
 
 DEBUG =

@@ -31,4 +31,16 @@ namespace arm {
     op2 = op;
   }
 
+  int arm_negation::nb_regs (void) {
+    return 3;
+  }
+
+  list<string>* arm_negation::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    l->push_back(op1);
+    l->push_back(op2);
+    l->sort();
+    return l;
+  }
+
 }

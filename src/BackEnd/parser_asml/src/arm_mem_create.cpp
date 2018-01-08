@@ -35,4 +35,17 @@ namespace arm {
     return size;
   }
 
+  int arm_mem_create::nb_regs (void) {
+    return 0;
+  }
+
+  list<string>* arm_mem_create::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (arm_util::type_of (size) == arm_util::VARIABLE)
+      l->push_back(size);
+    l->push_back(op);
+    l->sort();
+    return l;
+  }
+
 }

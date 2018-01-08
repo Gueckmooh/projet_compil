@@ -27,6 +27,12 @@ namespace arm {
     virtual void set_lFalse (string);
     virtual void set_lFin (string);
     virtual void set_var_offset (map<string, string>*);
+
+    virtual vector<arm_instruction*>* get_list_then (void);
+    virtual vector<arm_instruction*>* get_list_else (void);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     string var;
     arm_boolean* boolean;

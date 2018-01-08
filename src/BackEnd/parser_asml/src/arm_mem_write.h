@@ -25,6 +25,9 @@ namespace arm {
     virtual string get_mem_offset (void);
     virtual string get_mem_addr (void);
     virtual string get_value (void);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     string op;
     string mem_offset;

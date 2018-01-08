@@ -1,5 +1,19 @@
 #include "asml_parser_driver.h"
 
+void set_variables (asml_function* function, asml_asmt_t* asmt) {
+  asml_variable* var;
+  if (asmt != NULL && asmt->op != NULL) {
+    var = new asml_integer ();
+    var->set_name (string(asmt->op));
+    function->add_variable (var);
+    if (asmt->exp->type == ASML_EXP_IF) {
+      set_variables (function, (asml_asmt_t*) asmt->exp->op2);
+      set_variables (function, (asml_asmt_t*) asmt->exp->op3);
+    }
+    set_variables (function, asmt->next);
+  }
+}
+
 extern "C" void asml_parser_create_function (asml_function_t* func) {
   char* name = func->name;
   asml_formal_arg_t* args = func->args;
@@ -16,14 +30,15 @@ extern "C" void asml_parser_create_function (asml_function_t* func) {
     function->add_param (var);
     current_arg = current_arg->next;
   }
-  while (current_asmt != NULL) {
-    if (current_asmt->op != NULL) {
-      var = new asml_integer ();
-      var->set_name (string(current_asmt->op));
-      function->add_variable (var);
-    }
-    current_asmt = current_asmt->next;
-  }
+  // while (current_asmt != NULL) {
+  //   if (current_asmt->op != NULL) {
+  //     var = new asml_integer ();
+  //     var->set_name (string(current_asmt->op));
+  //     function->add_variable (var);
+  //   }
+  //   current_asmt = current_asmt->next;
+  // }
+  set_variables (function, current_asmt);
   tree = asml_parser_create_tree (asmt);
   asml_factory::add_function (function, tree);
 }
@@ -59,6 +74,7 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
   case ASML_EXP_ADD    :
     node = new asml_unary_node ();
     instruction = new asml_addition ();
+    
     dynamic_cast<asml_addition*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     dynamic_cast<asml_addition*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_addition*>(instruction)->set_op3 (string((char*)asmt->exp->op2));

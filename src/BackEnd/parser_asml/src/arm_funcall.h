@@ -17,6 +17,8 @@ namespace arm {
     virtual void set_function_name (string);
     virtual void set_retval (string);
     virtual string get_retval (void);
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
     static bool immediate (string);
   protected:
     string function_name;

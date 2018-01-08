@@ -20,6 +20,9 @@ namespace arm {
 
     virtual string get_op1 (void);
     virtual string get_op2 (void);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     string op1;
     string op2;

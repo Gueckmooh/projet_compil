@@ -25,7 +25,7 @@ namespace asml {
     delete else_list;
   }
 
-  void asml_condition::set_var (string) {
+  void asml_condition::set_var (string var) {
     this->var = var;
   }
 

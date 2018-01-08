@@ -30,6 +30,9 @@ namespace arm {
     virtual vector<string>::iterator end (void);
     virtual int size (void);
     virtual string operator[] (int);
+
+    virtual int nb_regs (void);
+    virtual list<string>* get_op_list (void);
   protected:
     string value;
     string return_variable;

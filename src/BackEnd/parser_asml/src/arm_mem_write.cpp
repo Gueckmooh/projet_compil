@@ -18,6 +18,7 @@ namespace arm {
     default:
       break;
     }
+    /*
     switch (arm_util::type_of (value)) {
     case arm_util::DIRECT:
       instruction += "\tmov r2, #" + value + "\n";
@@ -36,6 +37,23 @@ namespace arm {
       break;
     default:
       break;
+    }
+    */
+    if (arm_util::type_of(mem_offset) == arm_util::VARIABLE) {
+      instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";
+      instruction += "\tadd r0, r0, r1\n";
+    }
+    switch (arm_util::type_of (value)) {
+    case arm_util::DIRECT:
+      instruction += "\tmov r1, #" + value + "\n";
+      break;
+    case arm_util::VARIABLE:
+      instruction += "\tldr r1, [fp, #" + offset->find(value)->second + "]\n";
+    }
+    if (arm_util::type_of(mem_offset) == arm_util::DIRECT) {
+      instruction += "\tstr r1, [r0, #" + mem_offset + "]\n";
+    } else {
+      instruction += "\tstr r1, [r0]\n";
     }
     return instruction;
   }
@@ -70,6 +88,22 @@ namespace arm {
 
   string arm_mem_write::get_value (void) {
     return value;
+  }
+
+  int arm_mem_write::nb_regs (void) {
+    return 2;
+  }
+
+  list<string>* arm_mem_write::get_op_list (void) {
+    list<string>* l = new list<string> ();
+    if (arm_util::type_of (mem_addr) == arm_util::VARIABLE)
+      l->push_back(mem_addr);
+    if (arm_util::type_of (mem_offset) == arm_util::VARIABLE)
+      l->push_back(mem_offset);
+    if (arm_util::type_of (value) == arm_util::VARIABLE)
+      l->push_back(value);
+    l->sort();
+    return l;
   }
 
 }

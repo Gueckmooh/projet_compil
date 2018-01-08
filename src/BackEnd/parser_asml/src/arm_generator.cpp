@@ -44,6 +44,9 @@ namespace arm {
     for (vector<arm_function_generator*>::iterator it = generators.begin();
 	 it != generators.end();
 	 it++) {
+      vector<arm_instruction*>* instrs = (*it)->get_instructions ();
+      arm_cfg_node* root = arm_cfg_factory::generate_cfg(instrs);
+      arm_cfg_util::print_cfg (root);
       ss = (*it)->generate();
       *output << ss->str() << endl;
     }

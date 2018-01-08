@@ -11,7 +11,8 @@ extern "C" {
 #include "env.h"
 #include "knorm.h"
 #include "list.h"
-#include "func.h"
+#include "front_end.h"
+#include "print_and_write.h"
 #include "reduce_nested_let.h"
 #include "type.h"
 #include "utils.h"
@@ -51,7 +52,7 @@ int ASML_PRINTER (int);
 void ASML_PARSER (string, string);
 
 // Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ARM genere. 
+// Cette fonction print dans un fichier l'ARM genere.
 int ARM_caller (int);
 
 int mega_caller (int, std::string, string);

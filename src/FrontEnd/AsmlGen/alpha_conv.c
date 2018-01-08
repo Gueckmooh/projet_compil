@@ -7,10 +7,10 @@
 
 #include <assert.h>
 
-ptree alpha_convert(ptree t, plist env){
+ptree alpha_convert(ptree t, env_node *env){
     assert(t);
-    char *new_varname;
-    plist new_env;
+    char *new_varname, *new_funcname;
+    env_node *new_env, *new_env_with_params;
     listNode *l_node;
     ptree t1, t2;
     switch(t->code){
@@ -20,11 +20,7 @@ ptree alpha_convert(ptree t, plist env){
 
         case T_LET :
             new_varname = gen_varname();
-            new_env = cpy_env(env);
-            add_or_replace(
-                new_env,
-                new_str_to_str(t->params.tlet.v,new_varname)
-            );
+            new_env = gen_env_node(t->params.tlet.v, new_varname, env);
             t1 = alpha_convert(t->params.tlet.t1, env);
             t2 = alpha_convert(t->params.tlet.t2,new_env);
             return ast_let(new_varname, t1, t2);
@@ -49,7 +45,7 @@ ptree alpha_convert(ptree t, plist env){
                 l_node = l_node->next;
             }
             // case -> func_name is not in env -> prefix it with _min_caml_
-            if(!is_in_env(t->params.tapp.t->params.v, env)){
+            if(!is_in_env(env, t->params.tapp.t->params.v)){
                 t->params.tapp.t->params.v =
                     prefix_funcname(t->params.tapp.t->params.v);
 
@@ -64,6 +60,26 @@ ptree alpha_convert(ptree t, plist env){
         case T_NEG :
             t->params.t = alpha_convert(t->params.t, env);
             return t;
+        case T_LETREC :
+            new_funcname = gen_funcname();
+            new_env = gen_env_node(t->params.tletrec.fd->var, new_funcname, env);
+            l_node = t->params.tletrec.fd->args->head;
+            new_env_with_params = new_env;
+            while (l_node != NULL){
+                new_varname = gen_varname();
+                new_env_with_params = gen_env_node((char *) l_node->data,
+                                                    new_varname,
+                                                    new_env_with_params
+                                                );
+                l_node->data = (void *)new_varname;
+                l_node = l_node->next;
+            }
+            alpha_convert(t->params.tletrec.fd->body, new_env_with_params);
+            t->params.tletrec.fd->var = new_funcname;
+            return ast_letrec(
+                t->params.tletrec.fd,
+                alpha_convert(t->params.tletrec.t, new_env)
+            );
         case T_UNIT :
         case T_BOOL :
         case T_FLOAT :
@@ -76,7 +92,6 @@ ptree alpha_convert(ptree t, plist env){
         case T_EQ :
         case T_LE :
         case T_IF :
-        case T_LETREC :
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :

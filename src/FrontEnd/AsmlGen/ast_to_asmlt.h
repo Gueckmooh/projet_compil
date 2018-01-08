@@ -14,6 +14,10 @@ asml_exp_t *to_asml_exp(ptree t);
 
 asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list);
 
+asml_formal_arg_t *string_list_to_asml_args_list(plist str_list);
+
+void send_func_d_to_asml_parser(ptree t);
+
 void print_asml_fun(asml_function_t *t);
 
 void print_asml_asmt(asml_asmt_t *t);

@@ -9,13 +9,14 @@ typedef struct {
     char *src, *dest;
 } str_to_str;
 
-plist cpy_env(plist l);
+typedef struct env_node_t{
+    char *src, *dest;
+    struct env_node_t *next;
+} env_node;
 
-void add_or_replace(plist env, str_to_str *element);
+char *epsilon(env_node *env, char *x);
 
-char *epsilon(plist env, char *x);
+bool is_in_env(env_node *env, char *var_name);
 
-str_to_str *new_str_to_str(char *src, char *dest);
-
-bool is_in_env(char *func_name, plist env);
+env_node *gen_env_node(char *src, char *dest, env_node *next);
 #endif

@@ -3,6 +3,7 @@
 #include "asml_parser_types.h"
 #include "ast_to_asmlt.h"
 #include "utils.h"
+#include "asml_parser_driver.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -45,6 +46,9 @@ asml_asmt_t *to_asml_asmt(ptree t){
                 stderr,
                 "Error : trying to convert a T_BOOL ast -> should not happen\n");
             return NULL;
+        case T_LETREC :
+            send_func_d_to_asml_parser(t);
+            return to_asml_asmt(t->params.tletrec.t);
         case T_FLOAT :
         case T_NOT :
         case T_FNEG :
@@ -55,14 +59,13 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_EQ :
         case T_LE :
         case T_IF :
-        case T_LETREC :
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :
         default :
-            printf("TBI. knorm, t->code = %d\n", t->code);
+            printf("TBI. ast to asmlt, t->code = %d\n", t->code);
             return NULL;
     }
 }
@@ -142,6 +145,7 @@ asml_exp_t *to_asml_exp(ptree t){
     }
 }
 
+// copies a list of ptrees
 asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
     if(ast_args_list == NULL){
         return NULL;
@@ -160,6 +164,36 @@ asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
         ast_node = ast_node->next;
     }
     return result;
+}
+
+// copies a list of char*
+asml_formal_arg_t *string_list_to_asml_args_list(plist str_list){
+    if(str_list == NULL){
+        return NULL;
+    }
+    listNode *ast_node = str_list->head;
+    char *ast_list_elem = (char *) ast_node->data;
+    ast_node = ast_node->next;
+    asml_formal_arg_t *result = malloc(sizeof(asml_formal_arg_t)), *current = result;
+    result->val = ast_list_elem;
+    while(ast_node != NULL){
+        current->next = malloc(sizeof(asml_formal_arg_t));
+        current = current->next;
+        ast_list_elem = (char *) ast_node->data;
+        current->val = ast_list_elem;
+        ast_node = ast_node->next;
+    }
+    return result;
+}
+
+
+void send_func_d_to_asml_parser(ptree t){
+    pfundef fd = t->params.tletrec.fd;
+    asml_function_t *asml_f = malloc(sizeof(asml_function_t));
+    asml_f->name = fd->var;
+    asml_f->args = string_list_to_asml_args_list(fd->args);
+    asml_f->asmt = to_asml_asmt(fd->body);
+    asml_parser_create_function(asml_f);
 }
 
 void print_asml_fun(asml_function_t *t){

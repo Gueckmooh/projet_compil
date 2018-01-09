@@ -114,7 +114,7 @@ ptree alpha_convert(ptree t, env_node *env){
         case T_GET :
         case T_PUT :
         default :
-            printf("TBI : alpha convert, %d needs to be implem\n", t->code);
+            printf("TBI : alpha convert, code %d needs to be implem\n", t->code);
             return NULL;
     }
 

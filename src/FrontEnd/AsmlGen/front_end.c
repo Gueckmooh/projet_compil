@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "ast.h"
 #include "list.h"
 #include "knorm.h"
@@ -8,6 +9,7 @@
 #include "reduce_nested_let.h"
 #include "front_end.h"
 #include "print_and_write.h"
+#include "beta_red.h"
 
 // Global variables
 int varname_counter, funcname_counter;
@@ -67,9 +69,12 @@ ptree ast_transform(ptree t){
         printf("\n\nAfter nested let reduction :\n");
         ptree t4 = reduce_nested_let(t3);
         print_term(t4);
+        printf("\n\nAfter beta reduction :\n");
+        ptree t5 = beta_red(t4, NULL);
+        print_term(t5);
         printf("\n\nAST transformation done\n");
-        return t4;
+        return t5;
     } else {
-        return reduce_nested_let(alpha_convert(knorm(t), NULL));
+        return beta_red(reduce_nested_let(alpha_convert(knorm(t), NULL)), NULL);
     }
 }

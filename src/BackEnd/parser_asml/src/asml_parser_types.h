@@ -1,26 +1,31 @@
 #ifndef __ASML_PARSER_TYPE_H__
 #define __ASML_PARSER_TYPE_H__
 
-#define ASML_EXP_INT    1  // op1 : un char* - la valeur de l'int en str
-#define ASML_EXP_IDENT  2  // op1 : un char* - le nom de la variable
-#define ASML_EXP_LABEL  3  // op1 : un char* - la nom du label (commence par _ )
-#define ASML_EXP_ADD    4  // op1 & op2 : des char* - les valeurs des opérandes
-#define ASML_EXP_SUB    5  // op1 & op2 : des char* - les valeurs des opérandes
-#define ASML_EXP_NEG    6  // op1 : un char* - la valeur de l'opérande
-#define ASML_EXP_IF     7  // op1 : un asml_exp_t* parmi les conds
-                           // op2 : un asml_asmt_t* : l'arbre si op1 vrai
-                           // op3 : un asml_asmt_t* : l'arbre si op1 faux
-#define ASML_COND_EQUAL 8  // op1 & op2 : des char * - les valeurs des opérandes
-#define ASML_COND_LE    9  // op1 & op2 : des char * - les valeurs des opérandes
+#define ASML_EXP_INT     1  // op1 : un char* - la valeur de l'int en str
+#define ASML_EXP_IDENT   2  // op1 : un char* - le nom de la variable
+#define ASML_EXP_LABEL   3  // op1 : un char* - la nom du label (commence par _ )
+#define ASML_EXP_ADD     4  // op1 & op2 : des char* - les valeurs des opérandes
+#define ASML_EXP_SUB     5  // op1 & op2 : des char* - les valeurs des opérandes
+#define ASML_EXP_NEG     6  // op1 : un char* - la valeur de l'opérande
+#define ASML_EXP_IF      7  // op1 : un asml_exp_t* parmi les conds
+                            // op2 : un asml_asmt_t* : l'arbre si op1 vrai
+                            // op3 : un asml_asmt_t* : l'arbre si op1 faux
+#define ASML_COND_EQUAL  8  // op1 & op2 : des char * - les valeurs des opérandes
+#define ASML_COND_LE     9  // op1 & op2 : des char * - les valeurs des opérandes
 // la condition ASML_COND_GE est à priori inutile
-#define ASML_COND_GE    10 // op1 & op2 : des char * - les valeurs des opérandes
-#define ASML_EXP_CALL   11 // op1 : un char* - le nom de la fonction appelée
-                           // op2 : un asml_formal_arg_t* - les arguments à
-                           //       passer à la fonction
-#define ASML_MEM_NEW    12
-#define ASML_MEM_READ   13
-#define ASML_MEM_WRITE  14
-#define ASML_EXP_CLOSURE    15
+#define ASML_COND_GE     10 // op1 & op2 : des char * - les valeurs des opérandes
+#define ASML_EXP_CALL    11 // op1 : un char* - le nom de la fonction appelée
+                            // op2 : un asml_formal_arg_t* - les arguments à
+                            //       passer à la fonction
+#define ASML_MEM_NEW     12 // op1 : un char* - la taille de la mémoire à allouer
+                            // op2 & op3 : NULL
+#define ASML_MEM_READ    13 // op1 : un char* - le pointeur de la mémoire visée
+                            // op2 : un char* - l'offset par rapport au pointeur
+                            // op3 : NULL
+#define ASML_MEM_WRITE   14 // op1 : un char* - le pointeur de la mémoire visée
+                            // op2 : un char* - l'offset par rapport au pointeur
+                            // op3 : un char* - la valeur à écrire
+#define ASML_EXP_CLOSURE 15
 
 typedef struct asml_exp {
   int type;   // Le type de l'expréssion

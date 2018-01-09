@@ -10,8 +10,8 @@
 
 using namespace std;
 
-enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASMLI};
-enum optionType {ENABLE, OTHER};
+enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASMLI,NOTYPECHECK};
+enum optionType {ENABLE, OTHER,DISABLE};
 
 struct Arg: public option::Arg {
   static option::ArgStatus Mandatory(const option::Option& option, bool){
@@ -29,6 +29,7 @@ const option::Descriptor usage[]=
     {PARSER,ENABLE,"p","parser",option::Arg::None,"-p, --parser \t Perform only mincaml parsing. Print AST in output file"},
     {ASML,ENABLE,"a","asml",option::Arg::None,"-a --asml \t Perform only ASML generation"},
     {ASMLI,ENABLE,"i","asmlinput",option::Arg::None,"-i, --asmlinput \t Take ASML input and generate ARM output"},
+    {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck Analysis because sometimes it crashs"},
     {0,0,0,0,0,0}
     // Option supplementaires :
     // ASML Parsing to ARM ?
@@ -168,6 +169,10 @@ if (options[ASMLI]){
   enable(traitement_param,PARAM_ASMLI);
 
 }
+
+  if (options[NOTYPECHECK]){
+    disable(traitement_param,PARAM_TYPECHECK);
+  }
 
   if (options[OUTPUT]){
     mega_caller(traitement_param,inputfilename,outputfilename);

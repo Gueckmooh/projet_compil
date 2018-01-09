@@ -13,6 +13,6 @@
 
 
 #define enable(param, type) do {param|=type;} while (0)
-#define disable(param, type) do {param&=~type} while(0)
+#define disable(param, type) do {param&=~type;} while(0)
 
 #define is_enabled(param, type) param&type

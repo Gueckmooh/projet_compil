@@ -10,6 +10,8 @@ FLEXFILES = lexer.l
 YACCFILES = parser.y
 TARGET = min-ml
 
+OBJWOMAIN = $(shell echo $(OBJ) | sed -e "s/main.o//g" | sed -e "s/print_ast.o//g" | sed -e "s/lexer.o//g" | sed -e "s/parser.o//g")
+
 all: $(TARGET)
 
 lexer.l: parser.h ast.h
@@ -29,7 +31,10 @@ parser.y: ast.h
 %.o: %.cpp
 	$(CXX)  -c -o $@ $< -std=c++11 $(CFLAGS)
 $(TARGET): $(OBJ)
-		$(CXX) -o $@ $(OBJ) $(CFLAGS) -lfl
+	$(CXX) -o $@ $(OBJ) $(CFLAGS) -lfl
+
+lib: $(OBJWOMAIN)
+	ar rcs libtypechecking.a $^
 
 .PHONY: clean cleanest
 clean:

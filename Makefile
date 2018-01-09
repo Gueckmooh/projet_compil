@@ -47,6 +47,7 @@ MAINPATH = src/Main
 BACKENDPATH = src/BackEnd/parser_asml
 FRONTENDPATH1 = src/FrontEnd/AsmlGen
 FRONTENDPATH2 = src/FrontEnd/ast
+FRONTENDPATH3 = src/FrontEnd/TypeChecking
 
 ############################################################
 ##########       CONFIGURATION OF THE FLAGS       ##########
@@ -77,7 +78,7 @@ CFLAGS += -std=c99
 CXXFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CXXFLAGS += -std=c++11
 
-LDFLAGS = -lpthread -L$(FRONTENDPATH1) -L$(FRONTENDPATH2) -L$(BACKENDPATH)/libs -lasml -larm -lAsmlGen -last
+LDFLAGS = -lpthread -L$(FRONTENDPATH1) -L$(FRONTENDPATH2) -L$(FRONTENDPATH3) -L$(BACKENDPATH)/libs -lasml -larm -lAsmlGen -last -ltypechecking
 
 .PHONY: clean mrproper clean_deps clean_logs run directories clean_dirs testdirectories inc test
 
@@ -113,7 +114,7 @@ directories: $(OBJDIR) $(DEPDIR)
 inc: $(INCLUDEDIR)
 	$(QUIET)rm -f include/*
 	$(QUIET)cd $(BACKENDPATH) && $(MAKE) inc
-	$(QUIET)cp $(MAINPATH)/src/*.h $(BACKENDPATH)/include/* $(FRONTENDPATH1)/*.h include/.
+	$(QUIET)cp $(MAINPATH)/src/*.h $(BACKENDPATH)/include/* $(FRONTENDPATH1)/*.h $(FRONTENDPATH3)/*.hpp include/.
 #$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
 #$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 
@@ -154,6 +155,7 @@ lib:
 	$(QUIET)cd $(BACKENDPATH) && $(MAKE) static
 	$(QUIET)cd $(FRONTENDPATH1) && $(MAKE) static
 	$(QUIET)cd $(FRONTENDPATH2) && $(MAKE) static
+	$(QUIET)cd $(FRONTENDPATH3) && $(MAKE) lib
 
 scripts/$(EXEC): $(MAINPATH)/mincamlc.o
 	$(CXX) $^ -o $@ $(LDFLAGS)

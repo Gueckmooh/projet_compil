@@ -14,7 +14,7 @@ namespace arm {
 
   class arm_cfg_node {
     friend class arm_cfg_factory;
-    friend class arm_regster_optimizer;
+    friend class arm_register_optimizer;
   public:
     void add_element (arm_cfg_element*);
     void find_vars (void);
@@ -27,6 +27,7 @@ namespace arm {
     vector<arm_cfg_node*> preds;
     vector<arm_cfg_node*> succs;
     vector<arm_cfg_element*> elements;
+    vector<list<string>*> var_instr;
     list<string> used_variables;
     map<string, string> regs_maps;
     map<string, int> scope;

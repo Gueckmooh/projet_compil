@@ -1,5 +1,6 @@
 #include "arm_dom_node_factory.h"
 #include "arm_generator.h"
+#include "arm_register_optimizer.h"
 
 namespace arm {
 
@@ -49,6 +50,8 @@ namespace arm {
       arm_cfg_node* root = arm_cfg_factory::generate_cfg(instrs);
       arm_cfg_util::print_cfg (root);
       arm_dom_node_factory test(root);
+      arm_register_optimizer r(test.generate());
+      r.optimize();
       test.generate();
       ss = (*it)->generate();
       *output << ss->str() << endl;

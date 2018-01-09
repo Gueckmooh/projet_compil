@@ -41,9 +41,15 @@ namespace arm {
   }
 
   void arm_dom_node::add_succ_vars (list<string>* vars) {
+    if (this->succ_vars == NULL)
+      this->succ_vars = new list<string>();
     this->succ_vars->splice(this->succ_vars->end(), *vars);
     delete vars;
     this->succ_vars->unique();
+  }
+
+  list<string>* arm_dom_node::get_variables_to_reduce (void) const {
+    return variables_to_reduce;
   }
 
 }

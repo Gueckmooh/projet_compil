@@ -51,6 +51,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
                 stderr,
                 "Error : trying to convert a T_BOOL ast -> should not happen\n");
             return NULL;
+
         case T_LETREC :
             send_func_d_to_asml_parser(t);
             return to_asml_asmt(t->params.tletrec.t);
@@ -148,6 +149,11 @@ asml_exp_t *to_asml_exp(ptree t){
                            );
             return new_exp;
 
+        case T_VAR :
+            new_exp->type = ASML_EXP_IDENT;
+            new_exp->op1 = t->params.v;
+            return new_exp;
+            
         case T_UNIT :
         case T_FLOAT :
         case T_NOT :
@@ -163,7 +169,7 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_GET :
         case T_PUT :
         default :
-            printf("TBI. ast_to_asml_asmt, t->code = %d\n", t->code);
+            printf("TBI. ast_to_asml_exp, t->code = %d\n", t->code);
             return NULL;
     }
 }

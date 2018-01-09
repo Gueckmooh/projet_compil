@@ -3,44 +3,46 @@
 #include "AstVisTypeChecking.hpp"
 #include <cassert>
 
-Strategy::Strategy(TAstVisitor typeAstVisitor) :
-typeAstVisitor(typeAstVisitor), strat(S_TRAVERSAL), Env(NULL) {}
+Strategy::Strategy(Visitor typeAstVisitor) :
+typeAstVisitor(typeAstVisitor), strat(S_PREFIX), Env(NULL) {}
 
-Strategy::Strategy(TAstVisitor typeAstVisitor, Environment * Env) :
+Strategy::Strategy(Visitor typeAstVisitor, Environment * Env) :
 typeAstVisitor(typeAstVisitor), Env(Env) {}
 
-Strategy::Strategy(TAstVisitor typeAstVisitor, Strat strat) :
+Strategy::Strategy(Visitor typeAstVisitor, Strat strat) :
 typeAstVisitor(typeAstVisitor), strat(strat), Env(NULL) {}
 
 AstVisitor * Strategy::setupAstVisitor() {
-    AstVisAbstract * prior, * feedback ;
+    AstVisAbstract *prefix, *infix, *postfix ;
     AstVisitor *AstVis ;
     switch(typeAstVisitor) {
         case V_TYPE_CHECKER :
-            prior = new AstVisExplore(Env) ;
-            feedback = new AstVisInfer(Env) ;
+            prefix = new AstVisExplore(Env) ;
+            infix = new AstVisRangeLet(Env) ;
+            postfix = new AstVisInfer(Env) ;
             break ;
         case V_DESTRUCTOR :
-            prior = new AstVisGhost() ;
-            feedback = new AstVisDestruct() ;
+            prefix = new AstVisGhost() ;
+            infix = new AstVisGhost () ;
+            postfix = new AstVisDestruct() ;
             break ;
-        case V_INFERATOR :
-            prior = new AstVisGhost() ;
-            feedback = new AstVisInfer(Env) ;
-            break;
         case V_PRINTER :
             switch(strat) {
-                case S_TRAVERSAL :
-                    prior = new AstVisPrint() ;
-                    feedback = new AstVisGhost() ;
+                case S_PREFIX :
+                    prefix = new AstVisPrint() ;
+                    infix = new AstVisGhost () ;
+                    postfix = new AstVisGhost() ;
                     break ;
-                case S_REVERSAL :
-                    prior = new AstVisGhost() ;
-                    feedback = new AstVisPrint() ;
+                case S_INFIX :
+                    prefix = new AstVisGhost() ;
+                    infix = new AstVisPrint() ;
+                    postfix = new AstVisGhost() ;
                     break ;
-                case S_ROUND_TRIP :
-                    prior = new AstVisPrint() ;
-                    feedback = new AstVisPrint() ;
+                case S_POSTFIX :
+                    prefix = new AstVisGhost () ;
+                    infix = new AstVisGhost () ;
+                    postfix = new AstVisPrint() ;
+                    break ;
                 default :
                     assert(false) ;
             }
@@ -48,12 +50,12 @@ AstVisitor * Strategy::setupAstVisitor() {
         default:
              assert(false) ;
     }       
-    AstVis = new AstVisitor(prior, feedback) ;
-    prior->setAstVis(AstVis) ;
-    feedback->setAstVis(AstVis) ; 
+    AstVis = new AstVisitor(prefix, infix, postfix) ;
+    prefix->setAstVis(AstVis) ;
+    infix->setAstVis(AstVis) ;
+    postfix->setAstVis(AstVis) ; 
     return AstVis ;
 }
 
-Strategy::~Strategy() {
-}
+Strategy::~Strategy() {}
 

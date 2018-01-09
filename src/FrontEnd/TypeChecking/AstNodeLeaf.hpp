@@ -4,15 +4,15 @@
 #include "AstNode.hpp"
 #include "AstVisitor.hpp"
 #include "AstVis.hpp"
-#include <list>
+#include <vector>
 #include <string>
 
 class AstVisAbstract;
 class AstNode ;
 
-class AstNodeLeaf : public virtual AstNode {
+class AstNodeLeaf : public AstNode {
 public:
-    AstNodeLeaf() ;
+    AstNodeLeaf(int class_code) ;
     void traversal(AstVisitor* vis) override;
     virtual ~AstNodeLeaf() = 0 ;
 };
@@ -49,13 +49,12 @@ public:
 
 class AstNodeTuple : public AstNodeLeaf {
 protected:
-    std::list<AstNode *> var_list;
+    std::vector<AstNode *> var_list;
 public:
-    AstNodeTuple(std::list<AstNode *> var_list) ;
-    std::list<AstNode*> getVar_list() const;
+    AstNodeTuple(std::vector<AstNode *> var_list) ;
+    std::vector<AstNode*> getVar_list() const;
     void traversal(AstVisitor* vis) override;
     std::ostream& print(std::ostream& os) ;
-    std::string printType() override;
     void accept(AstVisAbstract* vis) override;
     ~AstNodeTuple() ;
 };
@@ -70,13 +69,9 @@ public:
 class AstNodeVar : public AstNodeLeaf {
 protected:
     std::string var_name ;
-    std::list<TCode> tcval ;
 public:
     AstNodeVar(std::string var_name) ;
-    std::string printType() override;
-    std::string  getVar_name() ;
-    std::list<TCode> getTcval() const;
-    void setTcval(std::list<TCode> tcval);
+    std::string & getVar_name() ;
     std::ostream& print(std::ostream& os) override ;
     void accept(AstVisAbstract* vis) override;
     ~AstNodeVar() ;

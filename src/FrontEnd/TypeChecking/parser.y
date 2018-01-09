@@ -196,6 +196,7 @@ actual_args:
     %prec prec_app
     {
         $$ = append($1, cons($2, empty()));
+        free($1) ;
     }
 | simple_exp
     %prec prec_app

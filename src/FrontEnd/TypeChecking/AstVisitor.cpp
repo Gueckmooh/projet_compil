@@ -2,25 +2,33 @@
 #include "AstNode.hpp"
 #include <iostream>
 
-AstVisitor::AstVisitor(AstVisAbstract * prior, AstVisAbstract * feedback) :
-ind(-1), cpt(0), prior(prior), feedback(feedback) {}
+AstVisitor::AstVisitor(AstVisAbstract *prefix, AstVisAbstract *infix, AstVisAbstract *postfix) :
+ind(-1), cpt(0), prefix(prefix), infix(infix), postfix(postfix) {}
 
-
-AstVisAbstract * AstVisitor::getFeedBack() const {
-    return feedback;
+AstVisAbstract* AstVisitor::GetPrefix() const {
+    return prefix;
 }
 
-AstVisAbstract * AstVisitor::getPrior() const {
-    return prior;
+AstVisAbstract* AstVisitor::GetInfix() const {
+    return infix;
+}
+
+AstVisAbstract* AstVisitor::GetPostfix() const {
+    return postfix;
+}
+
+void AstVisitor::setOs(std::ostream* os) {
+    this->os = os;
 }
 
 std::ostream & AstVisitor::getOs() {
-    return os;
+    return *os;
 }
 
 AstVisitor::~AstVisitor() {
-    delete prior ;
-    delete feedback ;
+    delete prefix ;
+    delete infix ;
+    delete postfix ;
 }
 
 void AstVisitor::indent() {

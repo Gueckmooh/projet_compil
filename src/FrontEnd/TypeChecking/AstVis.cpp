@@ -28,6 +28,7 @@ AstVisGhost::AstVisGhost() :
 AstVisAbstract() {}
 inline void AstVisGhost::visit_node(AstNode* node) {}
 inline void AstVisGhost::visit_node(AstNodeInt* integer) {}
+inline void AstVisGhost::visit_node(AstNodeNeg* neg) {}
 inline void AstVisGhost::visit_node(AstNodeVar* var) {}
 inline void AstVisGhost::visit_node(AstNodeLet* let) {}
 inline void AstVisGhost::visit_node(AstNodeApp* app) {}
@@ -43,6 +44,7 @@ AstVisDestruct::AstVisDestruct() :
 AstVisAbstract() {}
 inline void AstVisDestruct::visit_node(AstNode* node) { delete node ; }
 inline void AstVisDestruct::visit_node(AstNodeInt* integer) { delete integer ; }
+inline void AstVisDestruct::visit_node(AstNodeNeg* neg) { delete neg ; }
 inline void AstVisDestruct::visit_node(AstNodeVar* var) { delete var ; }
 inline void AstVisDestruct::visit_node(AstNodeLet* let) { delete let ; }
 inline void AstVisDestruct::visit_node(AstNodeApp* app) { delete app ; }
@@ -61,6 +63,10 @@ void AstVisPrint::visit_node(AstNode * node) {
 
 void AstVisPrint::visit_node(AstNodeInt * integer) {
     print_node_then_new_line(integer) ;
+}
+
+void AstVisPrint::visit_node(AstNodeNeg * neg) {
+    print_node_then_new_line(neg) ;
 }
 
 void AstVisPrint::visit_node(AstNodeLet * let) {

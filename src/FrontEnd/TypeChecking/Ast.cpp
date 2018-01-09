@@ -9,14 +9,21 @@
 #include "AstVisitor.hpp"
 #include "AstVis.hpp"
 
-Ast::Ast() : root(NULL) {}
+Ast::Ast() : os(&std::cout), root(NULL) {}
 
-Ast::Ast(ptree ast) {
+Ast::Ast(ptree ast) : Ast(ast, &std::cout) {
+}
+
+Ast::Ast(ptree ast, std::ostream * os) : os(os) {
     this->ast = ast ;
     root = build_ast(ast) ;
 }
 
-Ast::Ast(const char* filename) {
+Ast::Ast(const char* filename) : Ast(filename, &std::cout) {
+    
+}
+
+Ast::Ast(const char* filename, std::ostream * os) : os(os) {
     FILE *file = fopen(filename, "r");
     std::string name = filename ;
     if (file == NULL)
@@ -28,6 +35,10 @@ Ast::Ast(const char* filename) {
     //print_term(ast) ;
     this->ast = ast ;
     root = build_ast(ast) ;
+}
+
+std::ostream& Ast::getOs() const {
+    return *os;
 }
 
 AstNode* Ast::build_ast(ptree t){
@@ -93,18 +104,17 @@ AstNode* Ast::build_ast(ptree t){
             return new AstNodeVar(to_cpp_string(t->params.v));
         case T_LETREC :
             return new AstNodeLetRec(new FunDef(to_cpp_string(t->params.tletrec.fd->var),
-                                        t->params.tletrec.fd->t.code,
-                                        to_cpp_str_list(t->params.tletrec.fd->args),    /// TODO <- ici
-                                        build_ast(t->params.tletrec.fd->body)
-                                       ),
-                                        build_ast(t->params.tletrec.t));
+                                                to_cpp_str_list(t->params.tletrec.fd->args),
+                                                build_ast(t->params.tletrec.fd->body)
+                                                ),
+                                         build_ast(t->params.tletrec.t));
         case T_APP :
-            return new AstNodeApp(to_cpp_node_list(t->params.tapp.l),                  /// TODO <- ici
-                                  build_ast(t->params.tapp.t));
+            return new AstNodeApp(to_cpp_node_list(t->params.tapp.l),
+                                  (AstNodeVar*)build_ast(t->params.tapp.t));
         case T_TUPLE :
-            return new AstNodeTuple(to_cpp_node_list(t->params.ttuple.l));             /// TODO <- ici
+            return new AstNodeTuple(to_cpp_node_list(t->params.ttuple.l));
         case T_LETTUPLE :
-            return new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),         /// TODO <- ici
+            return new AstNodeLetTuple(to_cpp_str_list(t->params.lettuple.l),
                                        build_ast(t->params.lettuple.t1),
                                        build_ast(t->params.lettuple.t2));
         default:
@@ -120,11 +130,15 @@ void Ast::visitAst(AstVisitor * vis) {
 
 Ast::~Ast() {
     if (root != NULL) {
-        AstVisitor * destructor = Strategy(Strategy::V_DESTRUCTOR).setupAstVisitor() ;
+        AstVisitor * destructor = Strategy(V_DESTRUCTOR).setupAstVisitor() ;
+        //std::ofstream os ("TypeChecking.dump", std::ios_base::app) ;
+        destructor->setOs(os) ;
         visitAst(destructor) ;
         destructor->getOs() << "Nombre de noeuds détruits : " << destructor->getCounter() << std::endl ;
         destructor->getOs() << "Destruction de l'AST" << std::endl ;
         delete destructor ;
+        if (os != &std::cout)
+            delete os ;
         root = NULL ;
     }
 }

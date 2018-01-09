@@ -54,7 +54,7 @@ comment  \(\*(.|\n)*\*\)
 ";"             { return SEMICOLON; }
 eof             { return TEOF; }
 {lower}({digit}|{lower}|{upper}|"_")*   {
-    char *new_id = (char *) malloc(strlen(yytext));
+    char *new_id = (char *) malloc(strlen(yytext) + 1);
     strcpy(new_id, yytext);
     yylval.tok_id = new_id  ; return IDENT; }
 .               { fprintf(stderr, "Error: lexical error\n"); exit(-1); }

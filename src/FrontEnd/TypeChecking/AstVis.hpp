@@ -6,6 +6,7 @@
 class AstVisitor;
 class AstNode;
 class AstNodeInt;
+class AstNodeNeg;
 class AstNodeVar;
 class AstNodeLet;
 class AstNodeApp;
@@ -20,6 +21,7 @@ public:
     void setAstVis(AstVisitor * AstVis);
     virtual void visit_node(AstNode* node) = 0 ;
     virtual void visit_node(AstNodeInt *integer) = 0 ;
+    virtual void visit_node(AstNodeNeg *neg) = 0 ;
     virtual void visit_node(AstNodeVar *var) = 0 ;
     virtual void visit_node(AstNodeLet *let) = 0 ;
     virtual void visit_node(AstNodeApp *app) = 0 ;
@@ -32,6 +34,7 @@ public:
     AstVisGhost();
     void visit_node(AstNode* node) override;
     void visit_node(AstNodeInt* integer) override;
+    void visit_node(AstNodeNeg* neg) override;
     void visit_node(AstNodeVar* var) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeAdd* add) override;
@@ -44,6 +47,7 @@ public:
     AstVisDestruct();
     void visit_node(AstNode* node) override;
     void visit_node(AstNodeInt* integer) override;
+    void visit_node(AstNodeNeg* neg) override;
     void visit_node(AstNodeVar* var) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeAdd* add) override;
@@ -60,6 +64,7 @@ public:
     AstVisPrint();
     void visit_node(AstNode* node) override;
     void visit_node(AstNodeInt* integer) override;
+    void visit_node(AstNodeNeg* neg) override;
     void visit_node(AstNodeVar* var) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeAdd* add) override;

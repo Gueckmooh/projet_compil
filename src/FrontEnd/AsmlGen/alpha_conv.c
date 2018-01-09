@@ -80,6 +80,25 @@ ptree alpha_convert(ptree t, env_node *env){
                 t->params.tletrec.fd,
                 alpha_convert(t->params.tletrec.t, new_env)
             );
+        case T_IF :
+            return ast_if(
+                alpha_convert(t->params.tternary.t1, env),
+                alpha_convert(t->params.tternary.t2, env),
+                alpha_convert(t->params.tternary.t3, env)
+            );
+
+        case T_EQ :
+            return ast_eq(
+                alpha_convert(t->params.tbinary.t1, env),
+                alpha_convert(t->params.tbinary.t2, env)
+            );
+
+        case T_LE :
+            return ast_le(
+                alpha_convert(t->params.tbinary.t1, env),
+                alpha_convert(t->params.tbinary.t2, env)
+            );
+
         case T_UNIT :
         case T_BOOL :
         case T_FLOAT :
@@ -89,9 +108,6 @@ ptree alpha_convert(ptree t, env_node *env){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_EQ :
-        case T_LE :
-        case T_IF :
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :

@@ -7,7 +7,7 @@
 #define ASML_EXP_ADD    4  // op1 & op2 : des char* - les valeurs des opérandes
 #define ASML_EXP_SUB    5  // op1 & op2 : des char* - les valeurs des opérandes
 #define ASML_EXP_NEG    6  // op1 : un char* - la valeur de l'opérande
-#define ASML_EXP_IF     7  // op1 : un asml_exp_t* un parmis les conds
+#define ASML_EXP_IF     7  // op1 : un asml_exp_t* parmi les conds
                            // op2 : un asml_asmt_t* : l'arbre si op1 vrai
                            // op3 : un asml_asmt_t* : l'arbre si op1 faux
 #define ASML_COND_EQUAL 8  // op1 & op2 : des char * - les valeurs des opérandes

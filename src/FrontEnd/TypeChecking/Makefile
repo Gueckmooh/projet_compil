@@ -1,6 +1,6 @@
 CC=gcc
 CXX=g++
-CFLAGS=-Wfatal-errors -Wall -g
+CFLAGS=-Wfatal-errors -Wall -g -O2
 
 OBJ = lexer.o parser.o type.o list.o ast.o print_ast.o
 TRUC = $(wildcard *.cpp)

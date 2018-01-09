@@ -38,8 +38,11 @@ plist append(plist l1, plist l2) {
     if (is_empty(l1)) {
         return l2;
     } else {
+        void * element = head(l1) ;
         plist tl1 = tail(l1) ;
-        plist res = cons(head(l1), append(tl1, l2));
+        plist res = cons(element, append(tl1, l2));
+        free(l1->head) ;
+        //free(l1) ;
         free(tl1) ;
         return res ;
     }
@@ -70,6 +73,8 @@ plist free_list_node(plist list) {
             free_ast(tmp->data) ;
             free(tmp) ;
         }
+        
+        free(list) ;
     }
     
     return NULL ;
@@ -84,6 +89,8 @@ plist free_list_string (plist list) {
             free(tmp->data) ;
             free(tmp) ;
         }
+        
+        free(list) ;
     }
     
     return NULL ;

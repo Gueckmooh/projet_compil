@@ -29,8 +29,8 @@ namespace arm {
     set<path>* p = find_path(n);
     find_father(n);
     for (auto& e: *p) {
-      for (auto& e: e)
-	cout << e << " : ";
+      for (auto& f: e)
+	cout << f << " : ";
       cout << endl;
     }
     gen (cfg_root);

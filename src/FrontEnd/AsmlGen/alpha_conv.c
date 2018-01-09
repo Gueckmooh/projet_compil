@@ -99,6 +99,29 @@ ptree alpha_convert(ptree t, env_node *env){
                 alpha_convert(t->params.tbinary.t2, env)
             );
 
+        case T_TUPLE :
+            l_node = t->params.ttuple.l->head;
+            while(l_node != NULL){
+                l_node->data = (void *)alpha_convert((ptree)l_node->data, env);
+                l_node = l_node->next;
+            }
+            return t;
+
+        case T_LETTUPLE :
+            l_node = t->params.lettuple.l->head;
+            new_env = env;
+            while(l_node != NULL){
+                new_varname = gen_varname();
+                new_env = gen_env_node((char *)l_node->data, new_varname, new_env);
+                l_node->data = (char *)new_varname;
+                l_node = l_node->next;
+            }
+            return ast_lettuple(
+                t->params.lettuple.l,
+                alpha_convert(t->params.lettuple.t1, env),
+                alpha_convert(t->params.lettuple.t2, new_env)
+            );
+
         case T_UNIT :
         case T_BOOL :
         case T_FLOAT :
@@ -108,8 +131,6 @@ ptree alpha_convert(ptree t, env_node *env){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_TUPLE :
-        case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :

@@ -211,7 +211,6 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
         case T_LE :
         case T_ARRAY :
         case T_GET :
-        case T_LETTUPLE :
             t->params.tbinary.t1 = vis(t->params.tbinary.t1);
             t->params.tbinary.t2 = vis(t->params.tbinary.t2);
             return t;
@@ -239,6 +238,13 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
                 l_node = l_node->next;
             }
             return t;
+            
+        // lettuple
+        case T_LETTUPLE :
+            t->params.lettuple.t1 = vis(t->params.lettuple.t1);
+            t->params.lettuple.t2 = vis(t->params.lettuple.t2);
+            return t;
+
         default :
             printf("Error in apply_vis ; t->code = %d\n", t->code);
             exit(1);

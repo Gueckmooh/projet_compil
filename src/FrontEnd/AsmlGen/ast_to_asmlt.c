@@ -22,6 +22,7 @@ asml_function_t *build_asml_from_ptree(ptree t){
 
 asml_asmt_t *to_asml_asmt(ptree t){
     asml_asmt_t *new_asml_asmt = malloc(sizeof(asml_asmt_t));
+    char *new_varname;
     assert(t);
     switch(t->code){
         case T_LET :
@@ -56,6 +57,10 @@ asml_asmt_t *to_asml_asmt(ptree t){
             send_func_d_to_asml_parser(t);
             return to_asml_asmt(t->params.tletrec.t);
 
+        case T_LETTUPLE :
+
+        case T_TUPLE :
+        
         case T_FLOAT :
         case T_NOT :
         case T_FNEG :
@@ -63,8 +68,6 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_TUPLE :
-        case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :
@@ -153,7 +156,7 @@ asml_exp_t *to_asml_exp(ptree t){
             new_exp->type = ASML_EXP_IDENT;
             new_exp->op1 = t->params.v;
             return new_exp;
-            
+
         case T_UNIT :
         case T_FLOAT :
         case T_NOT :

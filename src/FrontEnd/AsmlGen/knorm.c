@@ -21,8 +21,7 @@ ptree knorm(ptree t){
             );
 
         case T_VAR :
-            new_var1 = cpy_str(t->params.v);
-            return ast_var(new_var1);
+            return t;
 
         case T_ADD :
             // case -> several arithmetic operations in a row
@@ -203,6 +202,21 @@ ptree knorm(ptree t){
                 )
             );
 
+        case T_TUPLE :
+            l_node = t->params.ttuple.l->head;
+            while(l_node != NULL){
+                l_node->data = knorm((ptree)l_node->data);
+                l_node = l_node->next;
+            }
+            return t;
+
+        case T_LETTUPLE :
+            return ast_lettuple(
+                t->params.lettuple.l,
+                knorm(t->params.lettuple.t1),
+                knorm(t->params.lettuple.t2)
+            );
+
         case T_UNIT :
         case T_INT :
         case T_FLOAT :
@@ -214,8 +228,6 @@ ptree knorm(ptree t){
         case T_EQ :
         case T_LE :
         case T_LETREC :
-        case T_TUPLE :
-        case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :

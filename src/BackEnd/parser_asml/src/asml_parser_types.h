@@ -12,6 +12,7 @@
                            // op3 : un asml_asmt_t* : l'arbre si op1 faux
 #define ASML_COND_EQUAL 8  // op1 & op2 : des char * - les valeurs des opérandes
 #define ASML_COND_LE    9  // op1 & op2 : des char * - les valeurs des opérandes
+// la condition ASML_COND_GE est à priori inutile
 #define ASML_COND_GE    10 // op1 & op2 : des char * - les valeurs des opérandes
 #define ASML_EXP_CALL   11 // op1 : un char* - le nom de la fonction appelée
                            // op2 : un asml_formal_arg_t* - les arguments à

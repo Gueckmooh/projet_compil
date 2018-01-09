@@ -41,41 +41,36 @@ void add_or_replace(plist env, str_to_str *new_element){
     env->logicalLength ++;
 }
 
-
-char *epsilon(plist env, char *x){
+char *epsilon(env_node *env, char *x){
 /*
  * Returns epsilon(x)
  */
-    char * res = x;
-    str_to_str *env_element;
-    listNode *l_node = env->head;
-    while(l_node != NULL){
-        env_element = (void *)l_node->data;
-        if (strcmp(x, env_element->src) == 0){
-            res = env_element->dest;
-            break;
-        }
-        l_node = l_node->next;
+    if (env == NULL){
+        return x;
+    } else if (strcmp(x, env->src) == 0){
+        return env->dest;
+    } else {
+        return epsilon(env->next, x);
     }
-    return res;
 }
 
-str_to_str *new_str_to_str(char *src, char *dest){
-    str_to_str *res = malloc(sizeof(str_to_str));
-    res->src = src;
-    res->dest = dest;
-    return res;
+bool is_in_env(env_node *env, char *var_name){
+/*
+ * Returns true iff var_name is inn env already
+ */
+    if (env == NULL) {
+        return false;
+    } else if (strcmp(env->src, var_name) == 0){
+        return true;
+    } else {
+        return is_in_env(env->next, var_name);
+    }
 }
 
-bool is_in_env(char *func_name, plist env){
-    listNode *l_node = env->head;
-    str_to_str *env_element;
-    while (l_node != NULL){
-        env_element = (void *)l_node->data;
-        if (strcmp(env_element->src, func_name) == 0){
-            return true;
-        }
-        l_node = l_node->next;
-    }
-    return false;
+env_node *gen_env_node(char *src, char *dest, env_node *next){
+    env_node *result = malloc(sizeof(env_node));
+    result->src = src;
+    result->dest = dest;
+    result->next = next;
+    return result;
 }

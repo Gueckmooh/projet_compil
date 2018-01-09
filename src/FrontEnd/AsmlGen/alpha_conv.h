@@ -2,8 +2,8 @@
 #define ALPHA_CONV_H
 
 #include "ast.h"
-#include "list.h"
+#include "env.h"
 
-ptree alpha_convert(ptree t, plist env);
+ptree alpha_convert(ptree t, env_node *env);
 
 #endif

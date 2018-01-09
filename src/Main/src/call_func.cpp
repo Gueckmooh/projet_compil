@@ -1,10 +1,11 @@
 #include "call_func.h"
+#include "front_end.h"
 
 // Cette fonction prends en parametre, le fichier d'entree
 // Cette fonction renvois la structure.
 
 int parser_caller (int zboub){
-	
+
   return 0;
 }
 
@@ -25,7 +26,7 @@ int typecheck_caller (int zboub){
 // Cette fonction renvoit la structure front-endee
 int ASML_caller (int zboub){
   return 0;
-}	
+}
 
 //Cette fonction prends en parametre la structure front-endee
 // Cette fonction print dans un fichier l'ASML genere.
@@ -50,7 +51,7 @@ void ASML_PARSER (string i, string s){
 
 
 // Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ARM genere. 
+// Cette fonction print dans un fichier l'ARM genere.
 int ARM_caller (int zboub){
   return 0;
 }
@@ -62,7 +63,7 @@ int mega_caller (int param, string input, string output){
     cout << "OUTPUT OK";
   }*/
   if (is_enabled(param,PARAM_PARSE)){
-	 
+
 	 parsecall(&p,const_cast<char*>(input.c_str()));
     //std::cout << "PARSE OK \n";
     if (!(is_enabled(param,PARAM_TYPECHECK)) && !(is_enabled(param,PARAM_ASMLI))){

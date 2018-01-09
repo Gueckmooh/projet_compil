@@ -5,42 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-plist cpy_env(plist l){
-/*
- * Copy the list l, returns newly created list
- */
-    plist res = empty();
-    listNode *l_node = l->head, *res_node;
-    while(l_node != NULL){
-        // create a new node, copy the content
-        res_node = malloc(sizeof(listNode));
-        res_node->data = l_node->data;
-        res_node->next = res->head;
-        res->logicalLength ++;
-        res->head = res_node;
-        l_node = l_node->next;
-    }
-    return res;
-}
-
-void add_or_replace(plist env, str_to_str *new_element){
-    listNode *l_node = env->head;
-    str_to_str *element;
-    while(l_node != NULL){
-        element = (str_to_str *)l_node->data;
-        if (strcmp(new_element->src, element->src) == 0){
-            l_node->data = new_element;
-            return;
-        }
-        l_node = l_node->next;
-    }
-    listNode *new_node = malloc(sizeof(listNode));
-    new_node->data = new_element;
-    new_node->next = env->head;
-    env->head = new_node;
-    env->logicalLength ++;
-}
-
 char *epsilon(env_node *env, char *x){
 /*
  * Returns epsilon(x)

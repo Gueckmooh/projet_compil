@@ -35,7 +35,7 @@ namespace arm {
     }
     gen (cfg_root);
     //print_dom(dom_root);
-    return cfg_root;
+    return dom_root;
   }
 
   void arm_dom_node_factory::gen (arm_cfg_node* node) {

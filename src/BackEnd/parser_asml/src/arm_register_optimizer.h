@@ -16,7 +16,8 @@ namespace arm {
     void set_dom_root (arm_dom_node*);
 
     void optimize (void);
-    void find_node_variables (arm_dom_node* node = NULL);
+    void find_succs_variables (arm_dom_node* node);
+    void find_preds_variables (arm_dom_node* node);
   protected:
     arm_dom_node* dom_root;
     list<arm_dom_node*> already_visited;

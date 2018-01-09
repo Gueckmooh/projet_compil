@@ -27,7 +27,7 @@ namespace arm {
     list<string>* succ_vars;
     arm_cfg_node* element;
     mutable vector<arm_dom_node*> succs;
-    mutable arm_cfg_node* pred;
+    mutable arm_dom_node* pred;
     list<string>* variables;
   };
 

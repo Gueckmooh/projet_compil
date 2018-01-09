@@ -1,4 +1,4 @@
-#include "arm_regster_optimizer.h"
+#include "arm_register_optimizer.h"
 
 namespace arm {
 
@@ -14,22 +14,22 @@ namespace arm {
     this->dom_root = dom_root;
   }
 
-  void optimize (void) {
-    find_node_variables ();
+  void arm_regster_optimizer::optimize (void) {
+    find_succs_variables (NULL);
   }
 
-  void find_node_variables (arm_dom_node& node = NULL) {
+  void arm_regster_optimizer::find_succs_variables (arm_dom_node* node) {
     list<string>* node_vars;
     if (node == NULL) {
       already_visited.clear();
-      for (auto& node: dom_root->find_leafs()) {
-	node_vars = node.element->get_vars();
-	node.pred->add_succ_vars(node_vars);
+      for (auto& node: *dom_root->find_leafs()) {
+	node_vars = node->element->get_vars();
+	node->pred->add_succ_vars(node_vars);
 	already_visited.push_back(node);
       }
-      for (auto& node: dom_root->find_leafs()) {
-	if (node.pred != NULL)
-	  find_node_variables(node.pred);
+      for (auto& node: *dom_root->find_leafs()) {
+	if (node->pred != NULL)
+	  find_succs_variables(node->pred);
       }
     }
     else {
@@ -37,13 +37,17 @@ namespace arm {
 	  for (auto& e: already_visited)        // if node is not in already_visited
 	    ret |= e == node;
 	  return !ret;}()) {
-	if (node.pred != NULL) {
-	  node_vars = new list<string>* (node.succ_vars);
-	  node_vars->splice(node_vars->end(), node.element->get_vars());
-	  node.pred->add_succ_vars (node_vars);
+	if (node->pred != NULL) {
+	  node_vars = new list<string> (*node->succ_vars);
+	  node_vars->splice(node_vars->end(), *node->element->get_vars());
+	  node->pred->add_succ_vars (node_vars);
 	}
       }
     }
+  }
+
+  void arm_regster_optimizer::find_preds_variables (arm_dom_node* node) {
+
   }
 
 }

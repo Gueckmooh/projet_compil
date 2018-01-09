@@ -1,3 +1,4 @@
+#include "arm_dom_node_factory.h"
 #include "arm_generator.h"
 
 namespace arm {
@@ -47,6 +48,8 @@ namespace arm {
       vector<arm_instruction*>* instrs = (*it)->get_instructions ();
       arm_cfg_node* root = arm_cfg_factory::generate_cfg(instrs);
       arm_cfg_util::print_cfg (root);
+      arm_dom_node_factory test(root);
+      test.generate();
       ss = (*it)->generate();
       *output << ss->str() << endl;
     }

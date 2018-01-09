@@ -89,7 +89,7 @@ CFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CFLAGS += -std=gnu99
 
 CXXFLAGS = $(FLAGS) $(DEBUGFLAGS)
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++14
 
 LDFLAGS = -lpthread
 LDFLAGS += -lfl

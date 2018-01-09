@@ -3,7 +3,6 @@
 namespace arm {
 
   int arm_function_generator::lien = 0;
-  //  int arm_function_generator::processed_function = "";
 
   arm_function_generator::arm_function_generator (asml_function* fun) {
     output = new stringstream ();
@@ -61,7 +60,7 @@ namespace arm {
     nb_params = params->size();
     for (vector<asml_variable*>::reverse_iterator it = params->rbegin();
 	 it != params->rend();
-	 it++) {
+         it++) {
       var_offsets.insert(pair<string, string> ((*it)->get_name(), to_string(off)));
       off-=4;
     }

@@ -14,11 +14,8 @@ namespace arm {
 
   class arm_cfg_node {
     friend class arm_cfg_factory;
+    friend class arm_regster_optimizer;
   public:
-    static const int BEGIN = 0;
-    static const int END = 1;
-    static const int OTHER = 2;
-
     void add_element (arm_cfg_element*);
     void find_vars (void);
     void add_succ (arm_cfg_node*);
@@ -34,7 +31,6 @@ namespace arm {
     map<string, string> regs_maps;
     map<string, int> scope;
     int nb_regs;
-    int type;
   };
 
 }

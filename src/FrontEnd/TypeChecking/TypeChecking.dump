@@ -1,0 +1,18 @@
+    INT 1 : int
+  LET y : int Current Environment : [y : int]
+    PLUS : int -> int -> int
+      VAR y : int
+      INT 5 : int
+    PLUS : int
+  LET y: On retire la variable de l'environnement courant 
+LET x : int Current Environment : [x : int]
+  APP print_int  : int -> unit
+    PLUS : int -> int -> int
+      VAR x : int
+      INT 12 : int
+    PLUS : int
+  APP print_int  : unit
+LET x: On retire la variable de l'environnement courant 
+TYPECHECKING SUCCESS
+Nombre de noeuds détruits : 10
+Destruction de l'AST

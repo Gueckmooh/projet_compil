@@ -1,31 +1,20 @@
 #include "AstNode.hpp"
 #include "AstVisitor.hpp"
 #include "AstVis.hpp"
+#include "Type.hpp"
 #include <assert.h>
 
 AstNode::AstNode(int class_code) :
-class_code(class_code), tc(TY_UNDEFINED) {}
-
-AstNode::AstNode(int class_code, TCode tc) :
-class_code(class_code), tc(tc) {}
-
-TCode AstNode::getType() const {
-    return tc ;
-}
-
-void AstNode::setTc(TCode tc) {
-    this->tc = tc;
-}
+class_code(class_code) {}
 
 void AstNode::apply(AstVisitor * vis) {
     vis->incrCounter() ;
     vis->indent() ;
-    accept(vis->getPrior()) ;
+    accept(vis->GetPrefix()) ;
     traversal(vis) ;
-    accept(vis->getFeedBack()) ;
+    accept(vis->GetPostfix()) ;
     vis->unindent() ;
 }
-
 
 std::string AstNode::class_code_to_string() {
     
@@ -87,35 +76,6 @@ std::string AstNode::class_code_to_string() {
     }
     assert(false) ;
 }
-
-std::string AstNode::TCode_to_string(TCode tc) {
-    switch(tc) {
-        case TY_ARRAY :
-            return "array" ;
-        case TY_BOOL :
-            return "bool" ;
-        case TY_FLOAT :
-            return "float" ;
-        case TY_FUN :
-            return "(" + printType() + ")" ;
-        case TY_INT :
-            return "int" ;
-        case TY_TUPLE :
-            return "(" + printType() + ")" ;
-        case TY_UNDEFINED :
-            return "UNDEFINED" ;
-        case TY_UNIT :
-            return "unit" ;
-        case TY_VAR :
-            return "val : " + printType() ; 
-    }
-    assert(false) ;
-}
-
-std::string AstNode::printType() {
-    return "" ;
-}
-
 
 std::ostream& AstNode::print(std::ostream& os) { return os ; }
 

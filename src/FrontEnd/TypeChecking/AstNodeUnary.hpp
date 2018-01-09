@@ -5,19 +5,22 @@
 
 class AstNode ;
 
-class AstNodeUnary : public virtual AstNode {
+class AstNodeUnary : public AstNode {
 protected:
    AstNode * t1 ;
 public:
-    AstNodeUnary(AstNode *t1);
+    AstNodeUnary(int class_code, AstNode * t1);
     AstNode* getT1() const;
     void traversal(AstVisitor* vis) override;
     virtual ~AstNodeUnary() = 0 ;
 };
 
-class AstNodeApp : public AstNodeTuple, public AstNodeUnary {
+class AstNodeApp : public AstNodeTuple {
+protected :
+    AstNodeVar *var ;
 public:
-    AstNodeApp(std::list<AstNode *> args_list,AstNode *t1) ;
+    AstNodeApp(std::vector<AstNode *> args_list,AstNodeVar *var) ;
+    AstNodeVar* getVar() const;
     void traversal(AstVisitor* vis) override;
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
@@ -45,11 +48,12 @@ public:
     ~AstNodeNot() ;
 };
 
-class FunDef : public AstNodeVar, public AstNodeUnary {
+class FunDef : public AstNodeUnary {
 protected:
-    std::list<std::string> args_list ;
+    AstNodeVar var ;
+    std::vector<std::string> args_list ;
 public:
-    FunDef(std::string var_name, TCode tc, std::list<std::string> args_list, AstNode *body);
+    FunDef(std::string var_name, std::vector<std::string> args_list, AstNode *body);
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
     void traversal(AstVisitor* vis) override;

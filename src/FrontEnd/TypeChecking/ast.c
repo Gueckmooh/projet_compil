@@ -15,7 +15,7 @@ id id_gen() {
     buffer_ast[0] = '?';
     buffer_ast[1] = 'v';
     static int cnt = 0;
-    snprintf(buffer_ast+2, MAX_ID-1, "%d", cnt);
+    snprintf(buffer_ast+2, sizeof(cnt), "%d", cnt);
     char *res = (char *)malloc(sizeof(buffer_ast));
     strncpy(res, buffer_ast, MAX_ID-1);
     cnt++;
@@ -301,7 +301,7 @@ id copy_id(id original_id){
  *      the exact copy of original_id.
  */
     assert(original_id);
-    char * id_cpy = (char *)malloc(sizeof(MAX_ID));
+    char * id_cpy = (char *)malloc(MAX_ID);
     strncpy(id_cpy, original_id, MAX_ID-1);
     return id_cpy;
 }
@@ -372,13 +372,12 @@ ptree free_ast(ptree t) {
             free(t->params.tlet.v) ;
             break ;
         case T_VAR :
-            //free(t->params.v) ;
+            free(t->params.v) ;
             break ;
         case T_LETREC :
             free_ast(t->params.tletrec.fd->body) ;
             t->params.tletrec.fd->args = free_list_string(t->params.tletrec.fd->args) ;
             free(t->params.tletrec.fd->var) ;
-            free(t->params.tletrec.fd->t.params.var) ;
             free(t->params.tletrec.fd) ;
             free_ast(t->params.tletrec.t) ;
             break ;

@@ -6,11 +6,11 @@
 class AstNode ;
 class FunDef ;
 
-class AstNodeBinary : public virtual AstNode {
+class AstNodeBinary : public AstNode {
 protected:
     AstNode * t1, * t2 ;
 public:
-    AstNodeBinary(AstNode *t1, AstNode *t2);
+    AstNodeBinary(int class_code, AstNode *t1, AstNode *t2);
     AstNode* getT1() const;
     AstNode* getT2() const;
     void traversal(AstVisitor* vis) override;
@@ -80,13 +80,11 @@ public:
     ~AstNodeLe();
 };
 
-class AstNodeLet : public AstNodeVar, public AstNodeBinary {
-protected:
-    std::string value ;
+class AstNodeLet : public AstNodeBinary {
+    AstNodeVar var ;
 public:
     AstNodeLet(AstNode *t1, AstNode *t2, std::string var_name);
-    std::string getValue() const;
-    void setValue(std::string value);
+    AstNodeVar getVar() const;
     void traversal(AstVisitor* vis) override;
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
@@ -95,9 +93,9 @@ public:
 
 class AstNodeLetTuple : public AstNodeBinary {
 protected:
-    std::list<std::string> var_list ;
+    std::vector<std::string> var_list ;
 public:
-    AstNodeLetTuple(std::list<std::string> var_list, AstNode *t1, AstNode *t2);
+    AstNodeLetTuple(std::vector<std::string> var_list, AstNode *t1, AstNode *t2);
     void traversal(AstVisitor* vis) override;
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;

@@ -1,15 +1,30 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+type classe mere: simple -> classe fille ou complexe_fleche ou complexe_croix classes fille
+si simple : int, float , ...
+si complexe : *type1, *type2 (represente type1 -> type2)
 
-/* 
- * File:   Environment.cpp
- * Author: bap
- * 
- * Created on 20 décembre 2017, 17:54
- */
+print_cplex(type T){
+    print"("
+    print_type(T->type1)
+    print") -> ("
+    print_type(t->type2)
+    print")"
+}
+f (type g) -> (type h)
+f x y z t
+X->(Y->(Z->T))
+ 
+ 
+mke_type(list args ){
+    if (len args == 1){
+	return type(args[1]) // constructeur Type(Type T)
+    }
+    type 1 = args[1]; // constructuer Type(Type T)
+    args -> eneleve 1er element
+    type2 = mke_type(args);
+    return type(type1, type2) // constructeur (Type t1, Type T2)
+}
+*/
 
 #include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
@@ -17,22 +32,62 @@
 #include "AstNodeBinary.hpp"
 #include "AstVisTypeChecking.hpp"
 #include "Strategy.hpp"
-#include <sstream>
 #include <cassert>
+#include <iostream>
 
+Environment::Environment() : os(NULL) {
+}
 
-Environment::Environment() {}
+void Environment::setOs(std::ostream* os) {
+    this->os = os;
+}
 
 EnvironmentMap Environment::getCurrent() const {
-    return CE ;
+    return CM ;
 }
 
 EnvironmentMap Environment::getGlobal() const {
-    return EM ;
+    return GM ;
+}
+
+Type* Environment::getVarType(string key) {
+    EnvironmentMap::iterator it = CM.find(key) ;
+    if (it != CM.end())
+        return it->second ;
+    it = GM.find(key) ;
+    if (it != GM.end())
+        return it->second ;
+    assert(false) ;
+}
+
+void Environment::addVar(string & key, Type* value) {
+    CM[key] = value ;
+}
+
+void Environment::removeVar(string & key) {
+    EnvironmentMap::iterator it = CM.find(key) ;
+    //delete it->second ;
+    Type::deleteTypeRec(it->second, NULL) ;
+    CM.erase(it) ;
+}
+
+Environment::~Environment() {
+    for (auto pair : GM)
+        Type::deleteTypeRec(pair.second, NULL) ;
 }
 
 
-Environment::~Environment() {
+void Environment::printCurrent() {
+    *os << "Current Environment : [" ;
+    EnvironmentMap::iterator it = CM.begin() ;
+    if (it != CM.end()) {
+        *os << it->first << " : " << *it->second ;
+        it++ ;
+    }
+    
+    for (; it != CM.end() ; it++)
+        *os << ", " << it->first << " : " << *it->second ;
+    *os << "]" ;
 }
 
 AstVisExplore::AstVisExplore(Environment * Env) : 
@@ -43,147 +98,169 @@ void AstVisExplore::print(AstNode* node) {
     getAstVis()->getOs() << " : Rien à ajouter dans l'environnement\n" ;
 }
 
-void AstVisExplore::print(AstNodeLet* let) {
-    getAstVis()->getOs() << " : On ajoute la variable " << *let << " dans l'environnement courant : " ;
-    getAstVis()->getOs() << let->TCode_to_string(let->getType()) << " = " << let->getValue() << std::endl ;
-}
-
 void AstVisExplore::visit_node(AstNode* node) {
     AstVisPrint::print(node) ;
     print(node) ;
 }
 
-void AstVisExplore::visit_node(AstNodeInt* integer) {
-    AstVisPrint::print(integer) ;
-    print(integer) ;
+void AstVisExplore::visit_node(AstNodeInt* integer) {}
+
+void AstVisExplore::visit_node(AstNodeNeg* neg) {
+    AstVisPrint::print(neg) ;
+    getAstVis()->getOs() << ": "  << *Env->getVarType("~-") << std::endl ;
 }
 
 void AstVisExplore::visit_node(AstNodeVar* var) {
-    AstVisPrint::print(var) ;
-    print(var) ;
-    /*EnvironmentMap::iterator it = Env->getCurrent().find(var->getVar_name()) ;
-    getAstVis()->getOs() << it->first + "\n" ;
-    if (it != Env->getCurrent().end()) {
-        getAstVis()->getOs() << string(" : la variable " + var->getVar_name() + " est présente dans l'environnement courant : ")  ;
-        var->setTcval(it->second);
+    //getAstVis()->getOs() << " : On cherche la variable " + var->getVar_name() + " dans l'environnement :\n"  ;
+    EnvironmentMap::iterator itC = Env->getCurrent().find(var->getVar_name()) ;
+    EnvironmentMap::iterator itG = Env->getGlobal().find(var->getVar_name()) ;
+    if (itC != Env->getCurrent().end()) {
+        //getAstVis()->getOs() << string("la variable " + var->getVar_name() + " est présente dans l'environnement courant\n")  ;
     }
-    it = Env->getGlobal().find(var->getVar_name()) ;
-    if (it != Env->getGlobal().end()) {
-        getAstVis()->getOs() << string(" : la variable " + var->getVar_name() + " est présente dans l'environnement courant : ")  ;
-        var->setTcval(it->second) ;
+
+    else if (itG != Env->getGlobal().end()) {
+        //getAstVis()->getOs() << string("la variable " + var->getVar_name() + " est présente dans l'environnement global\n")  ;
     }
-    else
-        assert(false) ;*/
+    else throw false ;
     
 }
 
-void AstVisExplore::visit_node(AstNodeLet* let) {
-    getAstVis()->getOs() << "On infère la valeur de " << let->getVar_name() << " : \n" ;
-    let->setTc(TY_VAR) ;
-    AstVisitor * TypeChecker = Strategy(Strategy::V_TYPE_CHECKER).setupAstVisitor() ;
-    let->getT1()->apply(TypeChecker) ;
-    AstVisInfer * vis = (AstVisInfer *)TypeChecker->getFeedBack() ;
-    let->setTcval(vis->getInfer()) ;
-    let->setValue(vis->getValue()) ;
-    delete TypeChecker ;
-    AstVisPrint::print(let) ;
-    print(let) ;
-    /*std::pair<string,std::list<TCode>> p = std::pair<string,std::list<TCode>>(let->getVar_name(), let->getTcval()) ;
-    getAstVis()->getOs() << "Variable insérée : " << (Env->getCurrent().insert(p)).first->first << "\n";
-    getAstVis()->getOs() << Env->getCurrent().find(let->getVar_name())->first << "\n" ;*/
-}
+void AstVisExplore::visit_node(AstNodeLet* let) {}
 
 void AstVisExplore::visit_node(AstNodeApp* app) {
-    getAstVis()->getOs() << "On infère la valeur de l'application " << *app << " : \n" ;
-    app->setTc(TY_VAR) ;
-    AstVisitor * TypeChecker = Strategy(Strategy::V_TYPE_CHECKER).setupAstVisitor() ;
-    app->getT1()->apply(TypeChecker) ;
-    for (auto node : app->getVar_list()) {
-        node->apply(TypeChecker) ;
-    }
-
-    //AstVisInfer * vis = (AstVisInfer *)inferator->getFeedBack() ;
-    //app->setTcval(vis->getInfer()) ;
-    //app->setValue(vis->getValue()) ;
-    delete TypeChecker ;
     AstVisPrint::print(app) ;
-    print(app) ;
+    getAstVis()->getOs() << ": " << *Env->getVarType(app->getVar()->getVar_name()) << std::endl ;
 }
 
 void AstVisExplore::visit_node(AstNodeAdd* add) {
-    /*getAstVis()->getOs() << "On infère la valeur de l'application " << *app << " : \n" ;
-    app->setTc(TY_VAR) ;
-    AstVisitor * inferator = Strategy(Strategy::V_INFERATOR, Env).setupAstVisitor() ;
-    app->apply(inferator) ;*/
     AstVisPrint::print(add) ;
-    print(add) ;
+    getAstVis()->getOs() << ": "  << *Env->getVarType("+") << std::endl ;
 }
 
 
 AstVisExplore::~AstVisExplore() {
 }
 
+void AstVisRangeLet::visit_node(AstNode* node) {}
+void AstVisRangeLet::visit_node(AstNodeInt* integer) {}
+void AstVisRangeLet::visit_node(AstNodeNeg* neg) {}
+void AstVisRangeLet::visit_node(AstNodeVar* var) {}
+void AstVisRangeLet::visit_node(AstNodeApp* app) {}
+void AstVisRangeLet::visit_node(AstNodeAdd* add) {}
+
+void AstVisRangeLet::visit_node(AstNodeLet* let) {
+    AstVisPrint::print(let) ;
+    AstVisInfer * infer = (AstVisInfer*) getAstVis()->GetPostfix() ;
+    getAstVis()->getOs() << " : " << *infer->getType() << " " ;
+    Env->addVar(let->getVar().getVar_name(), infer->getType()) ;
+    infer->eraseType(infer->getType()) ;
+    Env->printCurrent() ;
+    getAstVis()->getOs() << std::endl ;
+    infer->setType(NULL) ;
+}
+
+AstVisRangeLet::~AstVisRangeLet() {}
+
 AstVisInfer::AstVisInfer(Environment * Env) :
-AstVisPrint(), Env(Env), value(string())  {
+AstVisPrint(), Env(Env), node(NULL), type(NULL) {
 }
 
-string AstVisInfer::getValue() const {
-    return value;
+AstNode* AstVisInfer::getNode() const {
+    return node ;
 }
 
-void AstVisInfer::setValue(string value) {
-    this->value = value;
+void AstVisInfer::setNode(AstNode* node) {
+    this->node = node;
 }
 
-std::list<TCode> AstVisInfer::getInfer() const {
-    return infer ;
+Type* AstVisInfer::getType() const {
+    return type;
 }
 
-AstVisInfer::~AstVisInfer() {}
-
-void AstVisInfer::print(AstNode* node) {
-    getAstVis()->getOs() << string(" - : ") << node->TCode_to_string(node->getType()) << string(" = ") << *node << std::endl ; 
+void AstVisInfer::setType(Type* type) {
+    this->type = type;
 }
 
-void AstVisInfer::print(AstNodeLet* let) {
-    getAstVis()->getOs() << string(": On retire la variable de l'environnement courant : ") << let->TCode_to_string(let->getType()) << std::endl ;
+void AstVisInfer::eraseType(Type *type) {
+    std::set<Type*>::iterator it ;
+    if ((it = TM.find(type)) != TM.end()) {
+        TM.erase(it) ;
+    }
+}
+
+void AstVisInfer::removeType(Type *type) {
+    std::set<Type*>::iterator it ;
+    if ((it = TM.find(type)) != TM.end()) {
+        Type::deleteType(type) ;
+        TM.erase(it) ;
+    }
+}
+
+AstVisInfer::~AstVisInfer() { Type::deleteTypeRec(type, NULL) ; }
+
+void AstVisInfer::print(Type *type, AstNode* node) {
+    getAstVis()->getOs() << " : " << *type << std::endl ; 
 }
 
 void AstVisInfer::visit_node(AstNode* node) {
     AstVisPrint::print(node) ;
-    print(node) ; 
 }
 
 void AstVisInfer::visit_node(AstNodeInt* integer) {
     AstVisPrint::print(integer) ;
-    print(integer) ;
-    infer.push_back(integer->getType()) ;
-    std::stringstream ss ;
-    ss << *integer ;
-    value = ss.str()  ;
+    Type * typeInt = TypeSimpleFactory(INT).create() ;
+    TM.insert(typeInt) ;
+    print(typeInt, integer) ;
+    node = integer ;
+    typeInt->setNext(type) ;
+    type = typeInt ;
+}
+
+void AstVisInfer::visit_node(AstNodeNeg* neg) {
+    AstVisPrint::print(neg) ;
+    Type * appNeg = TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create() ;
+    type = Type::Unification(appNeg, type, *this) ;
+    Type::deleteTypeRec(appNeg, type) ;
+    TM.insert(type) ;
+    getAstVis()->getOs() << ": " << *type << std::endl ;
 }
 
 void AstVisInfer::visit_node(AstNodeVar* var) {
     AstVisPrint::print(var) ;
-    print(var) ;
+    Type *VarType = Env->getVarType(var->getVar_name()) ;
+    getAstVis()->getOs() << " : " << *VarType << std::endl ;
+    node = var ;
+    VarType->setNext(type) ;
+    type = VarType ;
 }
 
 void AstVisInfer::visit_node(AstNodeLet* let) {
     AstVisPrint::print(let) ;
-    print(let) ;
-    //Env->getCurrent().erase(let->getVar_name()) ;  
+    getAstVis()->getOs() << ": On retire la variable de l'environnement courant " << std::endl ;
+    Env->removeVar(let->getVar().getVar_name()) ;
 }
 
 void AstVisInfer::visit_node(AstNodeApp* app) {
+    Type *application = !app->getVar()->getVar_name().compare("print_int") ?
+        TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(UNIT).create()}).create() :
+        Env->getVarType(app->getVar()->getVar_name()) ;
+    
+    type = Type::Unification(application, type, *this) ;
+    if (!app->getVar()->getVar_name().compare("print_int"))
+        Type::deleteTypeRec(application, type) ;    
     AstVisPrint::print(app) ;
-    print(app) ;
+    getAstVis()->getOs() << ": " << *type << std::endl ;
 }
 
 void AstVisInfer::visit_node(AstNodeAdd* add) {
     AstVisPrint::print(add) ;
-    print(add) ;
+    Type * appAdd = TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create() ;
+    type = Type::Unification(appAdd, type, *this) ;
+    Type::deleteTypeRec(appAdd, type) ;
+    TM.insert(type) ;
+    getAstVis()->getOs() << ": " << *type << std::endl ;
 }
 
-bool AstVisInfer::isCorrectlyTyped(AstNode* node) {
-    return true ;
+bool AstVisInfer::isWholeProgramCorrectlyTyped() {
+    return type->GetType() == Simple && type->GetTypeSimple()->getType() == UNIT ;
 }

@@ -11,22 +11,20 @@
 #include "AstVisitor.hpp"
 
 class Environment;
-
-
 class AstVisitor;
 
+enum Visitor {V_PRINTER, V_DESTRUCTOR, V_TYPE_CHECKER} ;
+enum Strat {S_PREFIX, S_INFIX, S_POSTFIX} ;
+
 class Strategy {
-public:
-    enum TAstVisitor {V_PRINTER, V_DESTRUCTOR, V_INFERATOR, V_TYPE_CHECKER} ;
-    enum Strat {S_TRAVERSAL, S_REVERSAL, S_ROUND_TRIP} ;
 protected:
-    TAstVisitor typeAstVisitor ;
+    Visitor typeAstVisitor ;
     Strat strat ;
     Environment *Env ;
 public:
-    Strategy(TAstVisitor typeAstVisitor);
-    Strategy(TAstVisitor typeAstVisitor, Environment * Env);
-    Strategy(TAstVisitor typeAstVisitor, Strat strat);
+    Strategy(Visitor typeAstVisitor);
+    Strategy(Visitor typeAstVisitor, Environment * Env);
+    Strategy(Visitor typeAstVisitor, Strat strat);
     AstVisitor * setupAstVisitor () ;
     virtual ~Strategy();
 };

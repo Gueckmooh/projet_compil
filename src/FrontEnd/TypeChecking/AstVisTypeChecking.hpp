@@ -16,8 +16,10 @@
 
 #include "AstVisitor.hpp"
 #include "AstVis.hpp"
-#include "type.h"
+#include "Type.hpp"
+#include "TypeFactory.hpp"
 #include <map>
+#include <set>
 #include <list>
 
 class AstVisPrint;
@@ -25,21 +27,27 @@ class AstVisPrint;
 using std::string ;
 using std::pair ;
 
-typedef std::map<string, std::list<TCode>> EnvironmentMap ;
+typedef std::map<string, Type*> EnvironmentMap ;
 
 class Environment {
-protected:
-    EnvironmentMap EM = {
-        {"print_int", {TY_INT, TY_UNIT}}
+private:
+    std::ostream * os ;
+    EnvironmentMap CM ;
+    EnvironmentMap GM = {
+        {"print_int", TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(UNIT).create()}).create()},
+        {"+",  TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create()},
+        {"~-", TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create()}
     } ;
-    EnvironmentMap CE ;
 public:
     Environment();
+    void setOs(std::ostream* os);
     EnvironmentMap getCurrent() const ;
     EnvironmentMap getGlobal() const ;
+    Type * getVarType(string key) ;
+    void addVar(string & key, Type * value) ;
+    void removeVar(string & key) ;
+    void printCurrent() ;
     virtual ~Environment();
-private:
-
 };
 
 
@@ -47,11 +55,11 @@ class AstVisExplore : public AstVisPrint {
 protected:
     Environment * Env ;
     void print(AstNode* node) ;
-    void print(AstNodeLet* let) ;
 public:
     AstVisExplore(Environment * Env);
     void visit_node(AstNode* node) override;
     void visit_node(AstNodeInt* integer) override ;
+    void visit_node(AstNodeNeg* neg) override;
     void visit_node(AstNodeVar* var) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeApp* app) override;
@@ -59,26 +67,42 @@ public:
     virtual ~AstVisExplore();
 };
 
+class AstVisRangeLet : public AstVisExplore {
+    using AstVisExplore::AstVisExplore;
+    void visit_node(AstNode* node) override;
+    void visit_node(AstNodeInt* integer) override ;
+    void visit_node(AstNodeNeg* neg) override;
+    void visit_node(AstNodeVar* var) override;
+    void visit_node(AstNodeLet* let) override;
+    void visit_node(AstNodeApp* app) override;
+    void visit_node(AstNodeAdd* add) override;
+    ~AstVisRangeLet();
+};
+
 class AstVisInfer : public AstVisPrint {
 protected:
+    std::set<Type*> TM ;
     Environment * Env ;
-    std::list<TCode> infer ;
-    string value ;
+    AstNode * node ;
+    Type * type ;
 public:
     AstVisInfer(Environment * Env);
     virtual ~AstVisInfer() ;
-    std::list<TCode> getInfer() const;
-    string getValue() const;
-    void setValue(string value);
-    void print(AstNode* node) ;
-    void print(AstNodeLet* let) ;
+    AstNode * getNode() const;
+    void setNode(AstNode* node);
+    Type* getType() const;
+    void setType(Type* type);
+    void eraseType(Type *type);
+    void removeType(Type *type);
+    bool isWholeProgramCorrectlyTyped() ;
+    void print(Type *type, AstNode* node) ;
     void visit_node(AstNode* node) override;
     void visit_node(AstNodeInt* integer) override;
+    void visit_node(AstNodeNeg* neg) override;
     void visit_node(AstNodeVar* var) override;
     void visit_node(AstNodeLet* let) override ;
     void visit_node(AstNodeAdd* add) override;
     void visit_node(AstNodeApp* app) override;
-    bool isCorrectlyTyped (AstNode* node) ;
 };
 
 #endif /* ASTVISTYPECHECKING_HPP */

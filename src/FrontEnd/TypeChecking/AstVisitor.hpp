@@ -16,14 +16,15 @@ private:
     int ind ;
     int cpt ;
 protected:
-    AstVisAbstract *prior,  *feedback ;
-    //std::ofstream os = std::ofstream("/dev/null") ;
-    std::ostream & os = std::cout ;
+    AstVisAbstract *prefix, *infix, *postfix ;
+    std::ostream * os ;
 public:
     const std::string INDENT = "  " ;
-    AstVisitor(AstVisAbstract * prior, AstVisAbstract * feedback);
-    AstVisAbstract * getPrior() const;
-    AstVisAbstract * getFeedBack() const;
+    AstVisitor(AstVisAbstract *prefix, AstVisAbstract *infix, AstVisAbstract *postfix);
+    AstVisAbstract * GetPrefix() const;
+    AstVisAbstract* GetInfix() const;
+    AstVisAbstract * GetPostfix() const;
+    void setOs(std::ostream* os);
     std::ostream & getOs() ;
     void indent ();
     void unindent ();

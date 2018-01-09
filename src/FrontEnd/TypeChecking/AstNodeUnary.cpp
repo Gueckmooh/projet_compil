@@ -1,10 +1,11 @@
 #include "AstNode.hpp"
+#include "AstNodeLeaf.hpp"
 #include "AstNodeUnary.hpp"
 #include "AstVisitor.hpp"
 #include "utils.h"
-#include "AstNodeLeaf.hpp"
+#include "TypeFactory.hpp"
 
-AstNodeUnary::AstNodeUnary(AstNode * t1) :
+AstNodeUnary::AstNodeUnary(int class_code, AstNode * t1) :
 AstNode(class_code), t1(t1) {}
 
 AstNode* AstNodeUnary::getT1() const {
@@ -17,15 +18,20 @@ void AstNodeUnary::traversal(AstVisitor *vis) {
 
 AstNodeUnary::~AstNodeUnary() {}
 
-AstNodeApp::AstNodeApp(std::list<AstNode *> args_list, AstNode * t1) :
-AstNode(C_APP), AstNodeTuple(args_list), AstNodeUnary(t1) {}
+AstNodeApp::AstNodeApp(std::vector<AstNode *> args_list, AstNodeVar *var) :
+AstNodeTuple(args_list), var(var) { class_code = C_APP ; }
+
+AstNodeVar* AstNodeApp::getVar() const {
+    return var;
+}
 
 std::ostream& AstNodeApp::print(std::ostream& os) {
-    return AstNode::print(os) ;
+    os << *var << " " ;
+    AstNodeTuple::print(os) ;
+    return os ;
 }
 
 void AstNodeApp::traversal(AstVisitor * vis) {
-    AstNodeUnary::traversal(vis) ;
     AstNodeTuple::traversal(vis) ;
 }
 
@@ -33,11 +39,10 @@ void AstNodeApp::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
 }
 
-AstNodeApp::~AstNodeApp() {}
+AstNodeApp::~AstNodeApp() { delete var ; }
 
 AstNodeFneg::AstNodeFneg(AstNode * t1) :
-AstNode(C_FNEG), AstNodeUnary(t1) {
-}
+AstNodeUnary(C_FNEG, t1) {}
 
 void AstNodeFneg::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -46,8 +51,7 @@ void AstNodeFneg::accept(AstVisAbstract* vis) {
 AstNodeFneg::~AstNodeFneg() {}
 
 AstNodeNeg::AstNodeNeg(AstNode * t1) :
-AstNode(C_NEG), AstNodeUnary(t1) {
-}
+AstNodeUnary(C_NEG, t1) {}
 
 void AstNodeNeg::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -56,8 +60,7 @@ void AstNodeNeg::accept(AstVisAbstract* vis) {
 AstNodeNeg::~AstNodeNeg() {}
 
 AstNodeNot::AstNodeNot(AstNode * t1) :
-AstNode(C_NOT), AstNodeUnary(t1) {
-}
+AstNodeUnary(C_NOT, t1) {}
 
 void AstNodeNot::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -67,12 +70,11 @@ AstNodeNot::~AstNodeNot() {}
 
 // FunDef
 
-FunDef::FunDef(std::string var_name, TCode tc, std::list<std::string> args_list, AstNode * body) :
-AstNode(C_FUNDEF, TY_FUN), AstNodeVar(var_name), AstNodeUnary(body), args_list(args_list) {}
+FunDef::FunDef(std::string var_name, std::vector<std::string> args_list, AstNode * body) :
+AstNodeUnary(C_FUNDEF, body), var(AstNodeVar(var_name)), args_list(args_list) {}
 
 std::ostream& FunDef::print(std::ostream& os) {
-    AstNodeVar::print(os) ;
-    os << std::string(" ") ;
+    os << var << " " ;
     print_str_list(os, args_list);
     return os ;
 }
@@ -90,7 +92,7 @@ FunDef::~FunDef() {}
 // Let Rec
 
 AstNodeLetRec::AstNodeLetRec(FunDef* fun_def, AstNode * t1) :
-AstNode(C_LETREC), AstNodeUnary(t1), fun_def(fun_def) {}
+AstNodeUnary(C_LETREC, t1), fun_def(fun_def) {}
 
 void AstNodeLetRec::traversal(AstVisitor* vis) {
     fun_def->apply(vis) ;

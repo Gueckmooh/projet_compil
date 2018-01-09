@@ -30,6 +30,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
             new_asml_asmt->exp = to_asml_exp(t->params.tlet.t1);
             new_asml_asmt->next = to_asml_asmt(t->params.tlet.t2);
             return new_asml_asmt;
+
         case T_ADD :
         case T_SUB :
         case T_APP :
@@ -37,10 +38,14 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_INT :
         case T_NEG :
         case T_VAR :
+        case T_IF : // rare case -> all program is a 'if'
+        case T_EQ :
+        case T_LE :
             new_asml_asmt->op = NULL;
             new_asml_asmt->exp = to_asml_exp(t);
             new_asml_asmt->next = NULL;
             return new_asml_asmt;
+
         case T_BOOL :
             fprintf(
                 stderr,
@@ -49,6 +54,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_LETREC :
             send_func_d_to_asml_parser(t);
             return to_asml_asmt(t->params.tletrec.t);
+
         case T_FLOAT :
         case T_NOT :
         case T_FNEG :
@@ -56,9 +62,6 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_EQ :
-        case T_LE :
-        case T_IF :
         case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :
@@ -113,14 +116,37 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_BOOL :
             fprintf(
                 stderr,
-                "Error -> T_BOOL present in ast to asml_asmlt convert.\n");
-                return NULL;
+                "Error -> T_BOOL present in ast to asml_asmlt convert.\
+                This should not happen.\n"
+            );
+            return NULL;
 
         case T_NEG :
-                assert(t->params.t->code == T_VAR);
-                new_exp->type = ASML_EXP_NEG;
-                new_exp->op1 = t->params.t->params.v;
-                return new_exp;
+            assert(t->params.t->code == T_VAR);
+            new_exp->type = ASML_EXP_NEG;
+            new_exp->op1 = t->params.t->params.v;
+            return new_exp;
+
+        case T_IF :
+            new_exp->type = ASML_EXP_IF;
+            new_exp->op1 = to_asml_exp(t->params.tternary.t1);
+            new_exp->op2 = (asml_asmt_t *)to_asml_asmt(t->params.tternary.t2);
+            new_exp->op3 = (asml_asmt_t *)to_asml_asmt(t->params.tternary.t3);
+            return new_exp;
+
+        case T_EQ :
+        case T_LE :
+            assert((t->params.tbinary.t1->code == T_VAR) &&
+                   ((t->params.tbinary.t2->code == T_VAR) ||
+                    (t->params.tbinary.t2->code == T_INT))
+                  );
+            new_exp->type = (t->code == T_EQ ? ASML_COND_EQUAL : ASML_COND_LE);
+            new_exp->op1 = t->params.tbinary.t1->params.v;
+            new_exp->op2 = (t->params.tbinary.t2->code == T_VAR ?
+                            t->params.tbinary.t1->params.v :
+                            int_to_str(t->params.tbinary.t1->params.i)
+                           );
+            return new_exp;
 
         case T_UNIT :
         case T_FLOAT :
@@ -130,9 +156,6 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_EQ :
-        case T_LE :
-        case T_IF :
         case T_LETREC :
         case T_TUPLE :
         case T_LETTUPLE :

@@ -13,7 +13,7 @@ ptree knorm(ptree t){
     assert(t);
     switch(t->code){
         case T_LET :
-            new_var1 = cpy_str(t->params.tlet.v);;
+            new_var1 = cpy_str(t->params.tlet.v);
             return ast_let(
                 new_var1,
                 knorm(t->params.tlet.t1),
@@ -119,6 +119,7 @@ ptree knorm(ptree t){
             } else {
                 return t;
             }
+
         case T_BOOL :
             // transforms a boolean in an int of {0,1}
             return ast_integ((t->params.b == true ? 1 : 0));
@@ -149,17 +150,62 @@ ptree knorm(ptree t){
                 new_var1 = gen_varname();
                 return ast_let(
                     new_var1,
-                    t->params.t,
+                    knorm(t->params.t),
                     ast_neg(ast_var(new_var1))
                 );
             } else {
                 return t;
             }
 
+        case T_NOT :
+            return knorm(ast_sub(ast_integ(1), t->params.t));
+
+        case T_IF :
+            // case -> trivial (if true or if false)
+            if (t->params.tternary.t1->code == T_BOOL){
+                if (t->params.tternary.t1->params.b){
+                    return knorm(t->params.tternary.t2);
+                } else {
+                    return knorm(t->params.tternary.t3);
+                }
+            }
+            // case -> the condition is a comparison A op B
+            if ((t->params.tternary.t1->code == T_EQ) ||
+                (t->params.tternary.t1->code == T_LE)){
+                new_var1 = gen_varname();
+                new_var2 = gen_varname();
+                return ast_let(
+                    new_var1,
+                    knorm(t->params.tternary.t1->params.tbinary.t1),
+                    ast_let(
+                        new_var2,
+                        knorm(t->params.tternary.t1->params.tbinary.t2),
+                        ast_if(
+                            (t->params.tternary.t1->code == T_EQ ?
+                             ast_eq(ast_var(new_var1), ast_var(new_var2)) :
+                             ast_le(ast_var(new_var1), ast_var(new_var2))
+                            ),
+                            knorm(t->params.tternary.t2),
+                            knorm(t->params.tternary.t3)
+                        )
+                    )
+                );
+            }
+            // case -> the condition is neither a bool, nor a comparison
+            new_var1 = gen_varname();
+            return ast_let(
+                new_var1,
+                knorm(t->params.tternary.t1),
+                ast_if(
+                    ast_eq(ast_var(new_var1), ast_integ(0)),
+                    knorm(t->params.tternary.t3),
+                    knorm(t->params.tternary.t2)
+                )
+            );
+
         case T_UNIT :
         case T_INT :
         case T_FLOAT :
-        case T_NOT :
         case T_FNEG :
         case T_FADD :
         case T_FSUB :
@@ -167,7 +213,6 @@ ptree knorm(ptree t){
         case T_FDIV :
         case T_EQ :
         case T_LE :
-        case T_IF :
         case T_LETREC :
         case T_TUPLE :
         case T_LETTUPLE :
@@ -175,9 +220,8 @@ ptree knorm(ptree t){
         case T_GET :
         case T_PUT :
             return apply_vis(t, knorm);
-            break;
         default :
-            printf("TBI. knorm, t->code = %d\n", t->code);
+            printf("Error : knorm, node code not recognized (%d)\n", t->code);
             return NULL;
     }
 }

@@ -1,6 +1,7 @@
 #include "call_func.h"
 #include "front_end.h"
 
+
 // Cette fonction prends en parametre, le fichier d'entree
 // Cette fonction renvois la structure.
 
@@ -71,12 +72,11 @@ int mega_caller (int param, string input, string output){
       parseprint(p,const_cast<char*>(output.c_str()));
     }
   }
-// TYPECHECK NOT YET IMPLEMENTED
-/*
+
   if (is_enabled(param, PARAM_TYPECHECK)){
     std::cout << "ON FAIT LE TYPECHECK \n";
-
-  }*/
+    std::cout << "Retour du typecheck est de :" << init_tc(p) << "\n";
+  }
 asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){
     ptree p2 = ast_transform(p);

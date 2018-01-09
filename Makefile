@@ -114,7 +114,7 @@ directories: $(OBJDIR) $(DEPDIR)
 inc: $(INCLUDEDIR)
 	$(QUIET)rm -f include/*
 	$(QUIET)cd $(BACKENDPATH) && $(MAKE) inc
-	$(QUIET)cp $(MAINPATH)/src/*.h $(BACKENDPATH)/include/* $(FRONTENDPATH1)/*.h $(FRONTENDPATH3)/*.hpp include/.
+	$(QUIET)cp $(MAINPATH)/src/*.h $(BACKENDPATH)/include/* $(FRONTENDPATH1)/*.h $(FRONTENDPATH3)/*.hpp  include/.
 #$(QUIET)for file in $(INCFILES); do if test ! -e $(SRCDIR)/$$file; then $(RM) $(INCLUDEDIR)/$$file; fi; done
 #$(QUIET)for file in $(SRCDIR)/*.h; do cp -u $$file $(INCLUDEDIR)/. 2> /dev/null | :; done
 

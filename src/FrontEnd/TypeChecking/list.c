@@ -4,14 +4,14 @@
 #include "print_ast.h"
 
 plist empty() {
-  plist l = (plist) malloc(sizeof(list));
+  plist l = (plist) malloc(sizeof(struct listouille));
   l->logicalLength = 0;
   l->head = NULL;
   return l;
 }
 
 plist cons(void *element, plist l) {
-  plist new_list = (plist) malloc(sizeof(list));
+  plist new_list = (plist) malloc(sizeof(struct listouille));
   listNode *node = (listNode *) malloc(sizeof(listNode));
   node->data = element;
   node->next = l->head;
@@ -28,7 +28,7 @@ void *head(plist l) {
 
 plist tail(plist l) {
   assert(l->head != NULL);
-  plist new_list = (plist) malloc(sizeof(list));
+  plist new_list = (plist) malloc(sizeof(struct listouille));
   new_list->head = l->head->next;
   new_list->logicalLength = l->logicalLength - 1;
   return new_list;
@@ -49,13 +49,13 @@ plist append(plist l1, plist l2) {
 }
 
 
-int list_size(list *list)
+int list_size(struct listouille *list)
 {
   return list->logicalLength;
 }
 
 
-bool is_empty(list *list) {
+bool is_empty(struct listouille *list) {
     return (list_size(list) == 0);
 }
 

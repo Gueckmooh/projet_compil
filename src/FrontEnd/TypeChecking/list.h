@@ -8,12 +8,12 @@ typedef struct _listNode {
   struct _listNode *next;
 } listNode;
 
-typedef struct {
+struct listouille {
   int logicalLength;
   listNode *head;
-} list;
+};
 
-typedef list *plist;
+typedef struct listouille *plist;
 
 plist empty();
 

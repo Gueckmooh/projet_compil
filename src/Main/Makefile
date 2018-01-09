@@ -51,7 +51,7 @@ DEBUGFLAGS = -O0
 
 INCLUDE = $(INCLUDEDIR)
 
-INCLUDEFLAGS = $(addprefix -I, $(INCLUDE)) -I../BackEnd/parser_asml/src -I../FrontEnd/AsmlGen
+INCLUDEFLAGS = $(addprefix -I, $(INCLUDE)) -I../BackEnd/parser_asml/src -I../FrontEnd/AsmlGen -I../FrontEnd/TypeChecking
 
 FLAGS = -Wall
 FLAGS += -Werror

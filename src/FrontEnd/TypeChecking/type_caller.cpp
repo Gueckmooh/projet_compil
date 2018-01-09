@@ -1,8 +1,11 @@
-#include "Ast.hpp"
+
+
 #include "AstNode.hpp"
 #include "AstVisTypeChecking.hpp"
 #include "Type.hpp"
 #include "TypeFactory.hpp"
+
+#include "type_caller.h"
 #include <iostream>
 #include <fstream>
 
@@ -46,7 +49,7 @@ int typeChecking (Ast & ast) {
         ast.visitAst(TypeChecker) ;
     } catch (bool & exception) {
         delete TypeChecker ;
-        free_ast(ast.ast) ;
+        //free_ast(ast.ast) ;
         return TYPECHECKING_FAILURE ;
     }
 
@@ -64,7 +67,7 @@ int typeChecking (Ast & ast) {
         << std::endl ;
     
     delete TypeChecker ;
-    free_ast(ast.ast) ;
+    //free_ast(ast.ast) ;
 
     return TypeChecking ;
 }
@@ -114,25 +117,22 @@ int typeChecking (Ast & ast) {
     
 }*/
 
-int main(int argc, char **argv) {
-    if (argc != 2) {
-        printf("usage: %s filename\n", argv[0]);
-        return EXIT_FAILURE ;
-    }
+int init_tc(ptree ptree_ast) {
+
     
     try {
 
         /* Création de l'arbre syntaxique abstrait à partir d'un fichier */
         //Ast * ast = new Ast(argv[1]);
-        Ast * ast = new Ast(argv[1], new std::ofstream("TypeChecking.dump")) ;
+        //Ast * ast = new Ast(argv[1], new std::ofstream("TypeChecking.dump")) ;
         
         /* Création de l'arbre syntaxique abstrait à partir d'un ptree */
 
-        //Ast * ast = Ast(ptree_ast) ;
-        //Ast * ast = new Ast(ptree_ast, new std::ofstream("TypeChecking.dump")) ;
+        Ast * ast = new Ast(ptree_ast) ;
+        //Ast * ast_second = new Ast(ptree_ast, new std::ofstream("TypeChecking.dump")) ;
         
         int TypeChecking = typeChecking(*ast) ;
-        delete ast ;
+        //delete ast ;
         return TypeChecking ;
         
         

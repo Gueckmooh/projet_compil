@@ -78,6 +78,29 @@ def exec_asml(nom_fich) :
 		print("Echec du test de "+nom_fich)
 	return 0
 
+def gen_asml(nom_fich) :
+	print ("Je genere l'asml de "+nom_fich)
+	try :
+		output=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
+		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
+		output3 = subprocess.check_output(['./../../scripts/asml','../../tmp/'+nom_fich+'.asml'])
+		output4 = subprocess.check_output(['./../../tmp/base_'+nom_fich+'.out'])
+
+
+	except subprocess.CalledProcessError as e :
+		output3 = e.output
+		output4 = ''
+	try :
+		os.remove(nom_fich.split('.')[0]+'.cmi')
+		os.remove(nom_fich.split('.')[0]+'.cmo')
+	except OSError :
+		pass
+	if output3 == output4 :
+		print("test de "+nom_fich+" reussi")
+	else :
+		print("Echec du test de "+nom_fich)
+	return 0
+
 
 def exec_typecheck(nom_fich,typee) :
 	print ("je test typecheck de "+nom_fich)
@@ -114,6 +137,8 @@ def test_Exec(path) :
 		b = exec_arm
 	elif path == "asml_to_arm" :
 		b = exec_asml
+	elif path == "gen-asml" :
+		b = gen_asml
 	for i in a :
 		b(i)
 

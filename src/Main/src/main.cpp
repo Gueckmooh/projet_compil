@@ -10,7 +10,7 @@
 
 using namespace std;
 
-enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASMLI,NOTYPECHECK};
+enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASML2,ASMLI,NOTYPECHECK};
 enum optionType {ENABLE, OTHER,DISABLE};
 
 struct Arg: public option::Arg {
@@ -27,7 +27,8 @@ const option::Descriptor usage[]=
     {VERSION,OTHER,"v","version",option::Arg::None,"-v, --version \t Print version and exit"},
     {TYPECHECK,ENABLE,"t","typecheck",option::Arg::None,"-t, --typecheck \t Perform only Typecheck analysis. Return ErrorCode if incorrect typing [TODO]"},
     {PARSER,ENABLE,"p","parser",option::Arg::None,"-p, --parser \t Perform only mincaml parsing. Print AST in output file"},
-    {ASML,ENABLE,"a","asml",option::Arg::None,"-a --asml \t Perform only ASML generation"},
+    {ASML,ENABLE,"a","asml",option::Arg::None,"-a, --asml \t Perform only ASML generation"},
+    {ASML2,ENABLE,"asml","asmlgen",option::Arg::None,"-asml, --asmlGen \t Perform only ASML generation"},
     {ASMLI,ENABLE,"i","asmlinput",option::Arg::None,"-i, --asmlinput \t Take ASML input and generate ARM output"},
     {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck Analysis because sometimes it crashs"},
     {0,0,0,0,0,0}
@@ -158,7 +159,7 @@ int main(int argc, char *argv[]) {
     // return 0;
   }
 
-  if (options[ASML]){
+  if (options[ASML] || options[ASML2]){
     //std::cout << "On fait la generation ASML : TODO \n";
     enable(traitement_param,TOTAL_ASML);
     // return 0;

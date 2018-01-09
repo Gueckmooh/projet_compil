@@ -24,3 +24,6 @@ archive/
 /src/BackEnd/parser_asml/util_array/default.arm
 /src/BackEnd/parser_asml/util_array/default.s
 /src/BackEnd/parser_asml/util_array/libmincaml.s
+*.a
+*.cmi
+*.cmo

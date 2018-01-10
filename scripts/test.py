@@ -4,7 +4,15 @@
 import os
 import subprocess
 
-
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 def get_folder (path) :
 	liste_dossier = []
@@ -22,65 +30,65 @@ def get_file(path) :
 	return liste_fichier 
 
 def arm_to_exec (outputf) :
-	print ("je lance la genereation d'executable ")
 	try : 
 		output = subprocess.check_output(['arm-none-eabi-as', '../../src/lib_arm/libmincaml.S', '-o', '../../tmp/libmincaml.o'])
 		output = subprocess.check_output(['arm-none-eabi-as', '../../tmp/'+outputf+'.s' , '-o', '../../tmp/'+outputf+'.o'])
 		output = subprocess.check_output(['arm-none-eabi-ld', '../../tmp/'+outputf+'.o', '../../tmp/libmincaml.o', '-o', '../../tmp/'+outputf+'.out'])
 	except subprocess.CalledProcessError as e :
 		output = e.output
+		printf(bcolors.FAIL + "--- Echec generation executable" + bcolors.ENDC)
 	return 0
 
 
 def exec_arm(nom_fich) :
-	print ("j'execute "+nom_fich)
+	#print ("j'execute "+nom_fich)
 	try : 
 
 		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-o','../../tmp/'+nom_fich+'.s'])
 		arm_to_exec (nom_fich)
 		#output = subprocess.check_output(['cat',nom_fich])
-		print(output)
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
-		print(output2)
 		output3 = subprocess.check_output(['./../../tmp/'+nom_fich+'.out'])
 		output4 = subprocess.check_output(['./../../tmp/base_'+nom_fich+'.out'])
 
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
 		output4 = ''
+		print(bcolors.FAIL +"--- Probleme fonctionnement du Test de "+nom_fich+ bcolors.ENDC)
+		return 0
 	try :
 		os.remove(nom_fich.split('.')[0]+'.cmi')
 		os.remove(nom_fich.split('.')[0]+'.cmo')
 	except OSError :
 		pass
 	if output3 == output4 :
-		print("test de "+nom_fich+" reussi")
+		print(bcolors.OKGREEN +"--- Test de "+nom_fich+" reussi"+ bcolors.ENDC)
 		#return 1
 	else :
-		print("Echec du test de "+nom_fich)
+		print(bcolors.WARNING + "--- Echec du test de "+nom_fich+ bcolors.ENDC)
 	return 0
 
 
 def exec_asml(nom_fich) :
-	print ( "j'execute "+nom_fich)
+	#print ( "j'execute "+nom_fich)
 	try : 
 		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-i','-o','../../tmp/'+nom_fich+'.s'])
 		arm_to_exec(nom_fich)
-		print(output)
 		output2 = subprocess.check_output(['./../../scripts/asml',nom_fich])
-		print(output2)
 		output3 = subprocess.check_output(['./../../tmp/'+nom_fich+'.out'])
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
 		output2 = ''
+		print(bcolors.FAIL +"--- Probleme fonctionnement du Test de "+nom_fich+ bcolors.ENDC)
+		return 0
 	if output2 == output3 :
-		print("test de "+nom_fich+" reussi")
+		print(bcolors.OKGREEN +"--- Test de "+nom_fich+" reussi"+ bcolors.ENDC)
 	else :
-		print("Echec du test de "+nom_fich)
+		print(bcolors.WARNING +"--- Echec du test de "+nom_fich+ bcolors.ENDC)
 	return 0
 
 def gen_asml(nom_fich) :
-	print ("Je genere l'asml de "+nom_fich)
+	#print ("Je genere l'asml de "+nom_fich)
 	try :
 		output=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
@@ -91,20 +99,22 @@ def gen_asml(nom_fich) :
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
 		output4 = ''
+		print(bcolors.FAIL +"--- Probleme fonctionnement du Test de "+nom_fich + bcolors.ENDC)
+		return 0
 	try :
 		os.remove(nom_fich.split('.')[0]+'.cmi')
 		os.remove(nom_fich.split('.')[0]+'.cmo')
 	except OSError :
 		pass
 	if output3 == output4 :
-		print("test de "+nom_fich+" reussi")
+		print(bcolors.OKGREEN +"--- Test de "+nom_fich+" reussi"+ bcolors.ENDC)
 	else :
-		print("Echec du test de "+nom_fich)
+		print(bcolors.WARNING +"--- Echec du test de "+nom_fich+ bcolors.ENDC)
 	return 0
 
 
 def exec_typecheck(nom_fich,typee) :
-	print ("je test typecheck de "+nom_fich)
+	#print ("je test typecheck de "+nom_fich)
 	noerr = True 
 	try : 
 		#output = subprocess.check_output(['ls'])
@@ -112,11 +122,11 @@ def exec_typecheck(nom_fich,typee) :
 		#print(output.decode())
 	except subprocess.CalledProcessError as e :
 		output = e.output
-		noerr = False 
+		noerr = False 	
 	if (noerr and typee == 'valid') or (not(noerr) and typee == 'invalid'):
-		print ("TEST typecheck CORRECT") 
+		print (bcolors.OKGREEN +"--- Test typecheck Correct pour "+ nom_fich + bcolors.ENDC) 
 	else :
-		print ("Test Typecheck Incorrect")
+		print (bcolors.FAIL +"--- Test Typecheck Incorrect pour "+ nom_fich + bcolors.ENDC)
 	return 0
 
 
@@ -155,7 +165,6 @@ def test_VI(path) :
 	if os.path.isdir(rootdir+'/invalid') :
 		inval = get_file(rootdir+'/invalid')
 	if path == "typechecking" :
-		print("On fait typechecking")
 		b = exec_typecheck
 	if val :
 		for i in val :
@@ -175,39 +184,16 @@ def main() :
 
 
 
-	print("Bienvenue dans le Testeur de notre programme ")
-	print("Organisation: Tests/Dossier/fichier_test ou Tests/Dossier/Valid/fichier_test : \n")
+	print(bcolors.HEADER + "Bienvenue dans le Testeur de notre programme " + bcolors.ENDC)
+	print(bcolors.HEADER + "Organisation: Tests/Dossier/fichier_test ou Tests/Dossier/Valid/fichier_test : \n"+ bcolors.ENDC)
 	for i in liste_dossier_test :
-		print("execution des tests de " + i )
+		print(bcolors.HEADER +" \n Execution des tests de " + i + "\n" + bcolors.ENDC )
 		os.chdir(repo+'/'+i)
 		liste_dossier = get_folder(os.getcwd())
 		if liste_dossier :
 			test_VI(i)
 		else :
 			test_Exec(i)
-
-
-	
-	'''
-	chemin = []
-	doss = []
-	fich = []
-	for (dirpath,dirname,nomfich) in os.walk(repo) :
-		print("Directory : ")
-		print(dirpath)
-		chemin.append(dirpath)
-		print(" Nomdir : ")
-		print(dirname)
-		doss.append(dirname)
-		print(" Nomfich : ")
-		print(nomfich)
-		fich.append(nomfich)
-		print("\n")
-
-'''
-
-	
-
 
 
 if __name__ == "__main__":

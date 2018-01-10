@@ -181,6 +181,7 @@ mrproper:  clean clean_deps clean_logs clean_dirs
 	$(QUIET)cd $(BACKENDPATH) && make mrproper
 	$(QUIET)cd $(FRONTENDPATH1) && make clean
 	$(QUIET)cd $(FRONTENDPATH2) && make clean
+	$(QUIET)cd $(FRONTENDPATH3) && make clean
 	$(QUIET)cd $(MAINPATH) && make mrproper
 
 include $(wildcard .deps/*)

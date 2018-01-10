@@ -1,21 +1,12 @@
-    PLUS : int -> int -> int
-      INT 3 : int
-      INT 5 : int
-    PLUS : int
-  LET y : int Current Environment : [y : int]
-    PLUS : int -> int -> int
-      VAR y : int
-      VAR y : int
-    PLUS : int
-  LET y: On retire la variable de l'environnement courant 
+  INT 3 : int
 LET x : int Current Environment : [x : int]
-  APP print_int  : int -> unit
-    PLUS : int -> int -> int
-      VAR x : int
-      INT 2 : int
-    PLUS : int
-  APP print_int  : unit
+    VAR x : int
+  LET y : int Current Environment : [x : int, y : int]
+    APP print_int y : int -> unit
+      VAR y : int
+    APP print_int y : unit
+  LET y: On retire la variable de l'environnement courant 
 LET x: On retire la variable de l'environnement courant 
 TYPECHECKING SUCCESS
-Nombre de noeuds détruits : 12
+Nombre de noeuds détruits : 6
 Destruction de l'AST

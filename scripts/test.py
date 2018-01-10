@@ -72,6 +72,7 @@ def exec_asml(nom_fich) :
 		output3 = subprocess.check_output(['./../../tmp/'+nom_fich+'.out'])
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
+		output2 = ''
 	if output2 == output3 :
 		print("test de "+nom_fich+" reussi")
 	else :

@@ -17,7 +17,7 @@ asml_function_t *build_asml_from_ptree(ptree t){
     strcpy(result->name, "main");
     result->args = NULL;
     result->asmt = to_asml_asmt(t);
-    print_asml_fun(result);
+    // print_asml_fun(result);
     return result;
 }
 
@@ -294,7 +294,6 @@ asml_asmt_t *tuple_to_asml_asmt(ptree t){
     first->exp->op2 = NULL; first->exp->op3 = NULL;
     current = first;
     while(l_node != NULL){
-        printf("passe ici \n");
         current->next = malloc(sizeof(asml_asmt_t));
         new_varname = gen_varname();
         current->next->op = new_varname;

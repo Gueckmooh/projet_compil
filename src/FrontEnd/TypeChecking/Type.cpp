@@ -15,6 +15,10 @@ bool TypeSimple::isCorrectlyTyped(TypeSimple *typeSimple) {
     return ts == typeSimple->ts ;
 }
 
+TypeSimple* TypeSimple::copyTypeSimple(TypeSimple* typeSimple) {
+    return new TypeSimple(typeSimple->ts) ;
+}
+
 std::ostream& operator<<(std::ostream& os, TypeSimple& typeSimple) {
     std::string type_str ;
     switch(typeSimple.ts) {
@@ -119,6 +123,30 @@ void TypeTuple::print(std::ostream& os, TypeComposed& typeComposed) {
     }
 }
 
+TypeTuple* TypeTuple::copyTypeTuple(TypeTuple* typeTuple) {
+    if (typeTuple->l == 1) {
+        switch (typeTuple->t) {
+            case Simple :
+                return new TypeTuple(TypeSimple::copyTypeSimple(typeTuple->ts)) ;
+            case Tuple :
+                return new TypeTuple(copyTypeTuple(typeTuple->tt)) ;
+            case Application :
+                assert(false) ;
+        }
+    }
+    TypeTuple * next = copyTypeTuple((TypeTuple *)typeTuple->tc) ;
+    switch (typeTuple->t) {
+        case Simple :
+            return new TypeTuple(TypeSimple::copyTypeSimple(typeTuple->ts), next) ;
+        case Tuple :
+            return new TypeTuple(copyTypeTuple(typeTuple->tt), next) ;
+        case Application :
+            return new TypeTuple(TypeApp::copyTypeApp(typeTuple->ta), next) ;
+        default :
+            assert(false) ;
+    }
+}
+
 
 std::ostream& operator<<(std::ostream& os, TypeTuple& typeTuple) {
     typeTuple.print(os, typeTuple) ;
@@ -148,6 +176,29 @@ void TypeApp::print(std::ostream& os, TypeComposed& typeComposed) {
     }
 }
 
+TypeApp* TypeApp::copyTypeApp(TypeApp* typeApp) {
+    if (typeApp->l == 1)
+        switch (typeApp->t) {
+            case Simple :
+                return new TypeApp(TypeSimple::copyTypeSimple(typeApp->ts)) ;
+            case Tuple :
+                return new TypeApp(TypeTuple::copyTypeTuple(typeApp->tt)) ;
+            case Application :
+                assert(false) ;
+        }
+    TypeApp * next = copyTypeApp((TypeApp*)typeApp->tc) ;
+    switch (typeApp->t) {
+        case Simple :
+            return new TypeApp(TypeSimple::copyTypeSimple(typeApp->ts), next) ;
+        case Tuple :
+            return new TypeApp(TypeTuple::copyTypeTuple(typeApp->tt), next) ;
+        case Application :
+            return new TypeApp(copyTypeApp(typeApp->ta), next) ;
+        default :
+            assert(false) ;
+    }
+}
+
 
 std::ostream& operator<<(std::ostream& os, TypeApp& typeApp) {
     typeApp.print(os, typeApp) ;
@@ -162,19 +213,6 @@ Type::Type(TypeSimple* ts) : t(Simple), ts(ts), next(NULL) {}
 Type::Type(TypeTuple* tt) : t(Tuple), tc(tt), next(NULL) {}
 
 Type::Type(TypeApp* ta) : t(Application), tc(ta), next(NULL) {}
-
-Type::Type(Type *orig) : t(orig->t), next(orig->next) {
-    switch (t) {
-        case Simple :
-            ts = orig->ts ;
-            break ;
-        case Tuple : case Application :
-            tc = orig->tc ;
-            break ;
-        default :
-            assert(false) ;
-    }
-}
 
 typeComposed Type::GetType() const {
     return t;
@@ -192,7 +230,7 @@ void Type::setNext(Type* next) {
     this->next = next;
 }
 
-Type* Type::Unification(Type *type1, Type *type2, AstVisInfer & infer) {
+Type* Type::Unification(Type *type1, Type *type2) {
     
     if (type1 == type2)
         return type1 ;
@@ -215,8 +253,8 @@ Type* Type::Unification(Type *type1, Type *type2, AstVisInfer & infer) {
         if(!AC1)
             throw false ;
         AC2 = AC2->next ;
-        infer.removeType(tmp1) ;
-        infer.removeType(tmp2) ;
+        Type::deleteType(tmp1) ;
+        Type::deleteType(tmp2) ;
     }
     return AC1 ;
 }
@@ -254,11 +292,27 @@ std::ostream& operator<<(std::ostream& os, const Type& type) {
     return os;
 }
 
-void Type::deleteLink(Type* type) {
-    if (type) {
-        deleteLink(type->next) ;
-        delete type ;
+Type* Type::copyType(Type* orig) {
+    switch (orig->t) {
+        case Simple :
+            return new Type(TypeSimple::copyTypeSimple(orig->ts)) ;
+        case Tuple :
+            return new Type(TypeTuple::copyTypeTuple((TypeTuple *) orig->tc)) ;
+        case Application :
+            return new Type(TypeApp::copyTypeApp((TypeApp *) orig->tc)) ;
+        default :
+            assert(false) ;
     }
+}
+
+Type* Type::copyTypeRec(Type* orig) {
+    if (!orig->getNext())
+        return copyType(orig) ;
+    Type * next = copyTypeRec(orig->getNext()) ;
+    Type * copy = copyType(orig) ;
+    copy->setNext(next) ;
+    return copy ;
+         
 }
 
 void Type::deleteType(Type* type) {
@@ -276,9 +330,9 @@ void Type::deleteType(Type* type) {
     }
 }
 
-void Type::deleteTypeRec(Type* type, Type* fin) {
-    if (type != fin) {
-        deleteTypeRec(type->next, fin) ;
+void Type::deleteTypeRec(Type* type) {
+    if (type) {
+        deleteTypeRec(type->next) ;
         deleteType(type) ;
     }
 }

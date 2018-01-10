@@ -20,7 +20,6 @@
 #include "TypeFactory.hpp"
 #include <map>
 #include <set>
-#include <list>
 
 class AstVisPrint;
 
@@ -81,10 +80,10 @@ class AstVisRangeLet : public AstVisExplore {
 
 class AstVisInfer : public AstVisPrint {
 protected:
-    std::set<Type*> TM ;
     Environment * Env ;
     AstNode * node ;
     Type * type ;
+    void UnificationNode (AstNode *node, Type *type) ;
 public:
     AstVisInfer(Environment * Env);
     virtual ~AstVisInfer() ;
@@ -92,8 +91,6 @@ public:
     void setNode(AstNode* node);
     Type* getType() const;
     void setType(Type* type);
-    void eraseType(Type *type);
-    void removeType(Type *type);
     bool isWholeProgramCorrectlyTyped() ;
     void print(Type *type, AstNode* node) ;
     void visit_node(AstNode* node) override;

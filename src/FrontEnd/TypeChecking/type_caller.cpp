@@ -49,7 +49,6 @@ int typeChecking (Ast & ast) {
         ast.visitAst(TypeChecker) ;
     } catch (bool & exception) {
         delete TypeChecker ;
-        //free_ast(ast.ast) ;
         return TYPECHECKING_FAILURE ;
     }
 
@@ -67,72 +66,21 @@ int typeChecking (Ast & ast) {
         << std::endl ;
     
     delete TypeChecker ;
-    //free_ast(ast.ast) ;
-
     return TypeChecking ;
 }
-
-// Test de la fabrique de types simples, applications et tuples
-
-/*static void test_types() {
-    Type * types[4] ;
-    types[0] = TypeSimpleFactory(FLOAT).create() ;
-    std::cout << *types[0] << std::endl ;
-    types[1] = new Type(TypeTupleFactory({{Simple,FLOAT},{Simple,INT},{Simple,FLOAT},{Simple,UNIT}}).create()) ;
-    types[2] = new Type(TypeAppFactory({{Simple,FLOAT},{Simple,INT},{Simple,FLOAT},{Simple,UNIT}}).create()) ;
-    std::cout << *types[1] << std::endl ;
-    std::cout << *types[2] << std::endl ;
-    std::cout << (Type::isCorrectlyTyped(types[1], types[2]) ? "true" : "false")  << std::endl ;
-    std::cout << (Type::isCorrectlyTyped(types[1], types[0]) ? "true" : "false")  << std::endl ;
-    std::cout << (Type::isCorrectlyTyped(types[1], types[1]) ? "true" : "false")  << std::endl ;
-    std::cout << (Type::isCorrectlyTyped(types[2], types[2]) ? "true" : "false")  << std::endl ;
-    types[3] = new Type(TypeAppFactory(
-    {{Simple,FLOAT},
-    {Tuple, TypeTupleFactory({
-        {Simple,FLOAT},
-        {Simple,INT},
-        {Simple,BOOL},
-        {Simple,UNIT}
-    }).create()},
-    {Application, TypeAppFactory({
-        {Simple,FLOAT},
-        {Simple,INT},
-        {Simple,BOOL},
-        {Simple,UNIT}
-    }).create()},
-    {Simple, UNIT}}
-    ).create()) ;
-    types[3] = TypeFactory({types[0],types[1],types[2],types[3], TypeSimpleFactory(UNIT).create()}).create() ;
-    std::cout << *types[3] << std::endl ;
-    std::cout << (Type::isCorrectlyTyped(types[3], types[3]) ? "true" : "false")  << std::endl ;
-    Type::deleteType(types[3]) ;
-}*/
-
-/*void test_print_ast () {
-
-    AstVisitor * Printer = Strategy(V_PRINTER).setupAstVisitor() ;
-    ast.visitAst(Printer) ;
-    delete Printer ;
-    std::cout << "\nTypeChecking :\n\n" ;
-    
-}*/
 
 int init_tc(ptree ptree_ast) {
 
     
     try {
 
-        /* Création de l'arbre syntaxique abstrait à partir d'un fichier */
-        //Ast * ast = new Ast(argv[1]);
-        //Ast * ast = new Ast(argv[1], new std::ofstream("TypeChecking.dump")) ;
-        
         /* Création de l'arbre syntaxique abstrait à partir d'un ptree */
 
-        Ast * ast = new Ast(ptree_ast) ;
-        //Ast * ast_second = new Ast(ptree_ast, new std::ofstream("TypeChecking.dump")) ;
+        //Ast * ast = new Ast(ptree_ast) ;
+        Ast * ast = new Ast(ptree_ast, new std::ofstream("tests/typechecking/TypeChecking.dump")) ;
         
         int TypeChecking = typeChecking(*ast) ;
-        //delete ast ;
+        delete ast ;
         return TypeChecking ;
         
         

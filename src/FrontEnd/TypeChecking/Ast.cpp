@@ -32,7 +32,6 @@ Ast::Ast(const char* filename, std::ostream * os) : os(os) {
     yyin = file;
     if (yyparse(&ast))
         throw std::string("parse error\n") ;
-    //print_term(ast) ;
     this->ast = ast ;
     root = build_ast(ast) ;
 }
@@ -131,7 +130,6 @@ void Ast::visitAst(AstVisitor * vis) {
 Ast::~Ast() {
     if (root != NULL) {
         AstVisitor * destructor = Strategy(V_DESTRUCTOR).setupAstVisitor() ;
-        //std::ofstream os ("TypeChecking.dump", std::ios_base::app) ;
         destructor->setOs(os) ;
         visitAst(destructor) ;
         destructor->getOs() << "Nombre de noeuds détruits : " << destructor->getCounter() << std::endl ;

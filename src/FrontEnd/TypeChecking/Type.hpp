@@ -16,6 +16,7 @@ public:
     TypeSimple(typeSimple ts);
     typeSimple getType() const;
     bool isCorrectlyTyped (TypeSimple *typeSimple) ;
+    static TypeSimple * copyTypeSimple(TypeSimple *typeSimple);
     friend std::ostream& operator<<(std::ostream& os, TypeSimple& ts) ;
     virtual ~TypeSimple();
 protected:
@@ -28,7 +29,6 @@ class AstVisInfer;
 
 class TypeComposed {
 public:
-    TypeComposed();
     TypeComposed(TypeSimple *ts) ;
     TypeComposed(TypeSimple *ts, TypeComposed *tc) ;
     TypeComposed(TypeTuple  *tt) ;
@@ -37,7 +37,6 @@ public:
     TypeComposed(TypeApp    *ta, TypeComposed *tc) ;
     bool isCorrectlyTyped (TypeComposed *typeComposed) ;
     virtual void print(std::ostream& os, TypeComposed& typeComposed) = 0 ;
-    //static void copyTypeComposed(TypeComposed* copy, TypeComposed* orig) ;
     static void deleteType (TypeComposed *typeComposed) ;
     virtual ~TypeComposed() = 0 ;
 protected:
@@ -54,6 +53,7 @@ class TypeTuple : public TypeComposed {
 public:
     using TypeComposed::TypeComposed ;
     void print(std::ostream& os, TypeComposed& typeComposed) override;
+    static TypeTuple * copyTypeTuple(TypeTuple* typeTuple);
     friend std::ostream& operator<<(std::ostream& os, TypeTuple& typeTuple) ;
     ~TypeTuple() ;
 };
@@ -62,6 +62,7 @@ class TypeApp : public TypeComposed {
 public:
     using TypeComposed::TypeComposed ;
     void print(std::ostream& os, TypeComposed& typeComposed) override;
+    static TypeApp* copyTypeApp(TypeApp* typeApp);
     friend std::ostream& operator<<(std::ostream& os, TypeApp& typeApp) ;
     ~TypeApp();
 };
@@ -71,16 +72,16 @@ public:
     Type(TypeSimple *ts);
     Type(TypeTuple  *tt);
     Type(TypeApp    *ta);
-    Type(Type * orig);
     typeComposed GetType() const;
     TypeSimple* GetTypeSimple() const;
     Type* getNext() const;
     void setNext(Type* next);
-    static Type* Unification (Type *type1, Type *type2, AstVisInfer & infer) ;
+    static Type* Unification (Type *type1, Type *type2) ;
     friend std::ostream& operator<<(std::ostream& os, const Type& type);
-    static void deleteLink(Type *type);
+    static Type* copyType(Type* orig) ;
+    static Type* copyTypeRec(Type* orig) ;
     static void deleteType(Type *type);
-    static void deleteTypeRec(Type* type, Type* fin);
+    static void deleteTypeRec(Type* type);
     ~Type();
 private:
     typeComposed t ;

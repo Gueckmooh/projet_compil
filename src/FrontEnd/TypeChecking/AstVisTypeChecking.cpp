@@ -66,14 +66,15 @@ void Environment::addVar(string & key, Type* value) {
 
 void Environment::removeVar(string & key) {
     EnvironmentMap::iterator it = CM.find(key) ;
-    //delete it->second ;
-    Type::deleteTypeRec(it->second, NULL) ;
+    Type::deleteTypeRec(it->second) ;
     CM.erase(it) ;
 }
 
 Environment::~Environment() {
+    for (auto pair : CM)
+        Type::deleteTypeRec(pair.second) ;
     for (auto pair : GM)
-        Type::deleteTypeRec(pair.second, NULL) ;
+        Type::deleteTypeRec(pair.second) ;
 }
 
 
@@ -153,7 +154,6 @@ void AstVisRangeLet::visit_node(AstNodeLet* let) {
     AstVisInfer * infer = (AstVisInfer*) getAstVis()->GetPostfix() ;
     getAstVis()->getOs() << " : " << *infer->getType() << " " ;
     Env->addVar(let->getVar().getVar_name(), infer->getType()) ;
-    infer->eraseType(infer->getType()) ;
     Env->printCurrent() ;
     getAstVis()->getOs() << std::endl ;
     infer->setType(NULL) ;
@@ -181,35 +181,19 @@ void AstVisInfer::setType(Type* type) {
     this->type = type;
 }
 
-void AstVisInfer::eraseType(Type *type) {
-    std::set<Type*>::iterator it ;
-    if ((it = TM.find(type)) != TM.end()) {
-        TM.erase(it) ;
-    }
-}
-
-void AstVisInfer::removeType(Type *type) {
-    std::set<Type*>::iterator it ;
-    if ((it = TM.find(type)) != TM.end()) {
-        Type::deleteType(type) ;
-        TM.erase(it) ;
-    }
-}
-
-AstVisInfer::~AstVisInfer() { Type::deleteTypeRec(type, NULL) ; }
+AstVisInfer::~AstVisInfer() { Type::deleteTypeRec(type) ; }
 
 void AstVisInfer::print(Type *type, AstNode* node) {
     getAstVis()->getOs() << " : " << *type << std::endl ; 
 }
 
 void AstVisInfer::visit_node(AstNode* node) {
-    AstVisPrint::print(node) ;
+    AstVisPrint::print(node) ; 
 }
 
 void AstVisInfer::visit_node(AstNodeInt* integer) {
     AstVisPrint::print(integer) ;
     Type * typeInt = TypeSimpleFactory(INT).create() ;
-    TM.insert(typeInt) ;
     print(typeInt, integer) ;
     node = integer ;
     typeInt->setNext(type) ;
@@ -217,17 +201,12 @@ void AstVisInfer::visit_node(AstNodeInt* integer) {
 }
 
 void AstVisInfer::visit_node(AstNodeNeg* neg) {
-    AstVisPrint::print(neg) ;
-    Type * appNeg = TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create() ;
-    type = Type::Unification(appNeg, type, *this) ;
-    Type::deleteTypeRec(appNeg, type) ;
-    TM.insert(type) ;
-    getAstVis()->getOs() << ": " << *type << std::endl ;
+    UnificationNode(neg, Type::copyTypeRec(Env->getVarType("~-"))) ;
 }
 
 void AstVisInfer::visit_node(AstNodeVar* var) {
     AstVisPrint::print(var) ;
-    Type *VarType = Env->getVarType(var->getVar_name()) ;
+    Type *VarType = Type::copyTypeRec(Env->getVarType(var->getVar_name())) ;
     getAstVis()->getOs() << " : " << *VarType << std::endl ;
     node = var ;
     VarType->setNext(type) ;
@@ -241,26 +220,24 @@ void AstVisInfer::visit_node(AstNodeLet* let) {
 }
 
 void AstVisInfer::visit_node(AstNodeApp* app) {
-    Type *application = !app->getVar()->getVar_name().compare("print_int") ?
-        TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(UNIT).create()}).create() :
-        Env->getVarType(app->getVar()->getVar_name()) ;
-    
-    type = Type::Unification(application, type, *this) ;
-    if (!app->getVar()->getVar_name().compare("print_int"))
-        Type::deleteTypeRec(application, type) ;    
-    AstVisPrint::print(app) ;
-    getAstVis()->getOs() << ": " << *type << std::endl ;
+    UnificationNode(app, Type::copyTypeRec(Env->getVarType(app->getVar()->getVar_name()))) ;
 }
 
 void AstVisInfer::visit_node(AstNodeAdd* add) {
-    AstVisPrint::print(add) ;
-    Type * appAdd = TypeFactory({TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create(), TypeSimpleFactory(INT).create()}).create() ;
-    type = Type::Unification(appAdd, type, *this) ;
-    Type::deleteTypeRec(appAdd, type) ;
-    TM.insert(type) ;
-    getAstVis()->getOs() << ": " << *type << std::endl ;
+    UnificationNode(add, Type::copyTypeRec(Env->getVarType("+"))) ;
 }
 
 bool AstVisInfer::isWholeProgramCorrectlyTyped() {
     return type->GetType() == Simple && type->GetTypeSimple()->getType() == UNIT ;
+}
+
+void AstVisInfer::UnificationNode (AstNode *node, Type *typeNode) {
+    AstVisPrint::print(node) ;
+    try {
+        type = Type::Unification(typeNode, type) ;
+    } catch (bool res) {
+        Type::deleteTypeRec(typeNode) ;
+        throw res ;
+    }
+    getAstVis()->getOs() << ": " << *type << std::endl ;
 }

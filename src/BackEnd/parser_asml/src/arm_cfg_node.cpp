@@ -5,6 +5,7 @@ namespace arm {
   void arm_cfg_node::add_element (arm_cfg_element* elt) {
     elements.push_back(elt);
     regs_maps.push_back(map<string,string>());
+    scope.push_back(map<string, int>());
   }
 
   list<string>* arm_cfg_node::get_vars (void) {

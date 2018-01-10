@@ -30,7 +30,7 @@ namespace arm {
     vector<list<string>*> var_instr;
     list<string> used_variables;
     vector<map<string, string>> regs_maps;
-    map<string, int> scope;
+    vector<map<string, int>> scope;
     int nb_regs;
   };
 

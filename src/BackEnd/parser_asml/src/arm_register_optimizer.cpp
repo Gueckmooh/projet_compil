@@ -17,13 +17,26 @@ namespace arm {
   }
 
   void arm_register_optimizer::optimize (void) {
+#ifdef __DEBUG
+    function<void(arm_dom_node*)> pscope = [&](arm_dom_node* node)->void{
+      for (auto& e: node->element->scope) {
+	cout << endl;
+	for (auto& f: e)
+	  cout << f.first << " : " << f.second << endl;
+      }
+    };
+#endif
     find_succs_variables (NULL);
     find_preds_variables (dom_root);
     find_variables (dom_root);
     find_variables_to_reduce (dom_root);
+#ifdef __DEBUG
     auto print = [&](list<string>* l){for (auto& e: *l) cout << e << " "; cout << endl;};
     function<void(arm_dom_node*)> test = [&](arm_dom_node* node){print(node->get_variables_to_reduce()); for (auto& e: *node->get_succs()) test(e);};
     test(dom_root);
+#endif
+    find_scope (dom_root);
+    pscope (dom_root);
     optimize_node (dom_root);
   }
 
@@ -77,10 +90,12 @@ namespace arm {
 
   void arm_register_optimizer::find_variables_to_reduce (arm_dom_node* node) {
     node->variables_to_reduce = new list<string> ();
-    auto in_leaf = [&](){bool ret = false;
-			 for (auto& e: *dom_root->find_leafs())
-			   ret |= e == node;
-			 return ret;};
+    auto in_leaf = [&](){
+      bool ret = false;
+      for (auto& e: *dom_root->find_leafs())
+	ret |= e == node;
+      return ret;
+    };
     for (auto& elt: *node->variables)
       if ([&](){bool ret = false;
 	  if (!in_leaf())
@@ -92,49 +107,63 @@ namespace arm {
       find_variables_to_reduce(e);
   }
 
-  /*
-  void arm_register_optimizer::optimize_node (arm_dom_node* node) {
-    int idx = 0;
-    string reg;
-    cout << node << " : ";
-    auto in = [&](){
+  void arm_register_optimizer::find_scope (arm_dom_node* node) {
+    map<string, int> current;
+    auto var = node->element->var_instr.rbegin();
+    auto scope = node->element->scope.rbegin();
+    function<bool(string)> valid = [&](string var)->bool{
       bool ret = false;
       for (auto& e: *node->variables_to_reduce)
-	ret |= e == f;
-      return ret;};
-    auto next_free = [&](){
-      for (int i = 0; i < 5; i++)
-	if ([&](){bool ret = false;
-		  string str = "r" + string(i);
-		  for (auto& e: node->element->regs_maps[idx])
-		    ret |= e.first == str;
-		  return !ret;})
-	  return "r" + string(i);
-      return "0";};
-    for (auto& e: *node->variables_to_reduce)
-      cout << e << " ";
-    cout << endl;
-    for (auto& e: node->element->var_instr) {
-      for (auto& f: *e)
-	cout << f << " ";
-      cout << endl;
-    }
-    for (auto& e: node->element->var_instr) {
-      for (auto& f: *e) {
-	if (in()) {
-	  reg = next_free();
-	  if (reg != "0")
-	    node->element->regs_maps[idx].insert(pair<string, string> (reg, f));
-	}
+	ret |= var == e;
+      return ret;
+    };
+    function<bool(string)> in_current = [&current](string var)->bool{
+      return current.find(var)->first == var;
+    };
+    function<void(string)> inc = [&](string var) {
+      int val = current.find(var)->second;
+      current.erase(current.find(var));
+      cout << val << endl;
+      current.insert(pair<string, int>(var, val+1));
+    };
+    function<int(string)> process = [&](string var)->int{
+      int val;
+      if (in_current(var)) {
+	inc(var);
+	val = current.find(var)->second;
+      } else {
+	current.insert(pair<string, int>(var, 0));
+	val = 0;
       }
-      idx++;
+      return val;
+    };
+    while (var != node->element->var_instr.rend()) {
+      for (auto& e: **var)
+	if (valid(e))
+	  scope->insert(pair<string, int>(e, process(e)));
+      var++;
+      scope++;
     }
+    for (auto& e: node->succs)
+      find_scope(e);
   }
-  */
 
   void arm_register_optimizer::optimize_node (arm_dom_node* node) {
     int idx = 0;
     string reg;
+    function<bool(int)> f = [&](int i)->bool{
+      bool ret = false;
+      string str = "r" + to_string(i);
+      for (auto& e: node->element->regs_maps[idx])
+	ret |= e.first == str;
+      return !ret;
+    };
+    function<string(void)> fref = [&](void)->string{
+      for (int i = 0; i < 5; i++)
+	if (f(i))
+	  return "r" + to_string(i);
+      return string("0");
+    };
 #ifdef __DEBUG
     cout << "in arm::arm_register_optimizer::optimize_node" << endl;
 #endif
@@ -147,21 +176,13 @@ namespace arm {
 #ifdef __DEBUG
 	  cout << f << endl;
 #endif
-	  reg = [&](){
-	    auto f = [&](int i){
-	      bool ret = false;
-	      string str = "r" + to_string(i);
-	      for (auto& e: node->element->regs_maps[idx])
-		ret |= e.first == str;
-	      return !ret;};
-	    for (int i = 0; i < 5; i++)
-	      if (f(i))
-		return "r" + to_string(i);
-	    return string("0");}();
+	  reg = fref();
+	  node->element->regs_maps[idx].insert(pair<string, string> (reg, f));
+	  for (int i = 0; i < node->element->scope[idx].find(reg)->second; i++)
+	    node->element->regs_maps[idx+i].insert(pair<string, string> (reg, f));
 #ifdef __DEBUG
 	  cout << reg << endl;
 #endif
-	  node->element->regs_maps[idx].insert(pair<string, string> (reg, f));
 	}
       }
       idx++;

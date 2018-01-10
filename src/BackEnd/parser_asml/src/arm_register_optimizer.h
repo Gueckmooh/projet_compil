@@ -1,3 +1,5 @@
+#include <functional>
+
 #ifndef __ARM_REGISTER_OPTIMIZER_H__
 #define __ARM_REGISTER_OPTIMIZER_H__
 
@@ -20,6 +22,7 @@ namespace arm {
     void find_preds_variables (arm_dom_node*);
     void find_variables (arm_dom_node*);
     void find_variables_to_reduce (arm_dom_node*);
+    void find_scope (arm_dom_node*);
     void optimize_node (arm_dom_node*);
   protected:
     arm_dom_node* dom_root;

@@ -12,11 +12,13 @@ using namespace std;
 namespace arm {
 
   class arm_cfg_element {
+    friend class arm_cfg_node;
   public:
     arm_cfg_element (arm_instruction*);
     list<string>::iterator vars_begin (void);
     list<string>::iterator vars_end (void);
     list<string>* get_vars (void);
+    int get_nbregs (void);
   protected:
     map<string, string> regs_maps;
     list<string> used_variables;

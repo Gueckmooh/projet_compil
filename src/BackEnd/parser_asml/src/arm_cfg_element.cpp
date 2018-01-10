@@ -23,4 +23,9 @@ namespace arm {
     return new list<string> (used_variables);
   }
 
+  int arm_cfg_element::get_nbregs (void) {
+    nb_regs = instruction->nb_regs();
+    return nb_regs;
+  }
+
 }

@@ -20,9 +20,9 @@ namespace arm {
 #ifdef __DEBUG
     function<void(arm_dom_node*)> pscope = [&](arm_dom_node* node)->void{
       for (auto& e: node->element->scope) {
-	cout << endl;
-	for (auto& f: e)
-	  cout << f.first << " : " << f.second << endl;
+        cout << endl;
+        for (auto& f: e)
+          cout << f.first << " : " << f.second << endl;
       }
     };
 #endif
@@ -36,7 +36,9 @@ namespace arm {
     test(dom_root);
 #endif
     find_scope (dom_root);
+#ifdef __DEBUG
     pscope (dom_root);
+#endif
     optimize_node (dom_root);
   }
 
@@ -51,28 +53,28 @@ namespace arm {
     if (node == NULL) {
       already_visited.clear();
       for (auto& node: *dom_root->find_leafs()) {
-	node_vars = node->element->get_vars();
-	if (node->pred != NULL)
-	  node->pred->add_succ_vars(node_vars);
-	already_visited.push_back(node);
+        node_vars = node->element->get_vars();
+        if (node->pred != NULL)
+          node->pred->add_succ_vars(node_vars);
+        already_visited.push_back(node);
       }
       for (auto& node: *dom_root->find_leafs()) {
-	if (node->pred != NULL)
-	  find_succs_variables(node->pred);
+        if (node->pred != NULL)
+          find_succs_variables(node->pred);
       }
     }
     else {
       if ([&](){bool ret = false;
-	  for (auto& e: already_visited)        // if node is not in already_visited
-	    ret |= e == node;
-	  return !ret;}()) {
-	if (node->pred != NULL) {
-	  node_vars = new list<string> (*node->succ_vars);
-	  node_vars->splice(node_vars->end(), *node->element->get_vars());
-	  node->succ_vars = node_vars;
-	  already_visited.push_back(node);
-	  node->pred->add_succ_vars (node_vars);
-	}
+          for (auto& e: already_visited)        // if node is not in already_visited
+            ret |= e == node;
+          return !ret;}()) {
+        if (node->pred != NULL) {
+          node_vars = new list<string> (*node->succ_vars);
+          node_vars->splice(node_vars->end(), *node->element->get_vars());
+          node->succ_vars = node_vars;
+          already_visited.push_back(node);
+          node->pred->add_succ_vars (node_vars);
+        }
       }
     }
   }
@@ -93,16 +95,16 @@ namespace arm {
     auto in_leaf = [&](){
       bool ret = false;
       for (auto& e: *dom_root->find_leafs())
-	ret |= e == node;
+        ret |= e == node;
       return ret;
     };
     for (auto& elt: *node->variables)
       if ([&](){bool ret = false;
-	  if (!in_leaf())
-	    for (auto& e: *node->succ_vars) ret |= e == elt;
-	  if (node != dom_root)
-	    for (auto& e: *node->pred_vars) ret |= e == elt;
-	  return !ret;}()) node->variables_to_reduce->push_back (elt);
+          if (!in_leaf())
+            for (auto& e: *node->succ_vars) ret |= e == elt;
+          if (node != dom_root)
+            for (auto& e: *node->pred_vars) ret |= e == elt;
+          return !ret;}()) node->variables_to_reduce->push_back (elt);
     for (auto& e: node->succs)
       find_variables_to_reduce(e);
   }
@@ -114,7 +116,7 @@ namespace arm {
     function<bool(string)> valid = [&](string var)->bool{
       bool ret = false;
       for (auto& e: *node->variables_to_reduce)
-	ret |= var == e;
+        ret |= var == e;
       return ret;
     };
     function<bool(string)> in_current = [&current](string var)->bool{
@@ -129,18 +131,18 @@ namespace arm {
     function<int(string)> process = [&](string var)->int{
       int val;
       if (in_current(var)) {
-	inc(var);
-	val = current.find(var)->second;
+        inc(var);
+        val = current.find(var)->second;
       } else {
-	current.insert(pair<string, int>(var, 0));
-	val = 0;
+        current.insert(pair<string, int>(var, 0));
+        val = 0;
       }
       return val;
     };
     while (var != node->element->var_instr.rend()) {
       for (auto& e: **var)
-	if (valid(e))
-	  scope->insert(pair<string, int>(e, process(e)));
+        if (valid(e))
+          scope->insert(pair<string, int>(e, process(e)));
       var++;
       scope++;
     }
@@ -155,13 +157,28 @@ namespace arm {
       bool ret = false;
       string str = "r" + to_string(i);
       for (auto& e: node->element->regs_maps[idx])
-	ret |= e.first == str;
+        ret |= e.first == str;
       return !ret;
     };
-    function<string(void)> fref = [&](void)->string{
+    function<string(string)> g = [&](string var)->string{
+      auto e = node->element->regs_maps[idx].begin();
+      while ((e)->second != var && e != node->element->regs_maps[idx].end())
+        e++;
+      if ((e)->second == var)
+        return e->first;
+      return "0";
+    };
+    function<bool(string)> h = [&](string var)->bool{
+      //auto e = node->element->nb_regs[idx];
+      return false;
+      //int s = node->element->
+    };
+    function<string(string)> fref = [&](string var)->string{
+      if (g(var).compare("0") != 0)
+        return g(var);
       for (int i = 0; i < 5; i++)
-	if (f(i))
-	  return "r" + to_string(i);
+        if (f(i))
+          return "r" + to_string(i);
       return string("0");
     };
 #ifdef __DEBUG
@@ -169,21 +186,21 @@ namespace arm {
 #endif
     for (auto& e: node->element->var_instr) {
       for (auto& f: *e) {
-	if ([&](){bool ret = false;
-	    for (auto& e: *node->variables_to_reduce)  // if we have to opimize var
-	      ret |= e == f;
-	    return ret;}()) {
+        if ([&](){bool ret = false;
+            for (auto& e: *node->variables_to_reduce)  // if we have to opimize var
+              ret |= e == f;
+            return ret;}()) {
 #ifdef __DEBUG
-	  cout << f << endl;
+          cout << f << endl;
 #endif
-	  reg = fref();
-	  node->element->regs_maps[idx].insert(pair<string, string> (reg, f));
-	  for (int i = 0; i < node->element->scope[idx].find(reg)->second; i++)
-	    node->element->regs_maps[idx+i].insert(pair<string, string> (reg, f));
+          reg = fref(f);
+          node->element->regs_maps[idx].insert(pair<string, string> (reg, f));
+          for (int i = 0; i <= node->element->scope[idx].find(f)->second; i++)
+            node->element->regs_maps[idx+i].insert(pair<string, string> (reg, f));
 #ifdef __DEBUG
-	  cout << reg << endl;
+          cout << reg << endl;
 #endif
-	}
+        }
       }
       idx++;
     }

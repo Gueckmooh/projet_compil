@@ -6,6 +6,7 @@ namespace arm {
     elements.push_back(elt);
     regs_maps.push_back(map<string,string>());
     scope.push_back(map<string, int>());
+    nb_regs.push_back(elt->get_nbregs());
   }
 
   list<string>* arm_cfg_node::get_vars (void) {

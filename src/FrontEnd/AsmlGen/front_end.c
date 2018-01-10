@@ -58,7 +58,7 @@ ptree ast_transform(ptree t){
     varname_counter = 0;
     funcname_counter = 0;
     if (PRINT_AST_STEP_BY_STEP){
-        printf("AST transformation\nOriginal ast :\n");
+        printf("\nAST transformation\nOriginal ast :\n");
         print_term(t);
         printf("\n\nAfter Knormalisation :\n");
         ptree t2 = knorm(t);

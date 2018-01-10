@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wfatal-errors -Wall -g -I../../BackEnd/parser_asml/src
+CFLAGS= -Wall -Wshadow -g -I../../BackEnd/parser_asml/src
 
 OBJ = lexer.o parser.o type.o list.o ast.o knorm.o env.o alpha_conv.o utils.o reduce_nested_let.o ast_to_asmlt.o front_end.o print_and_write.o beta_red.o
 OBJWOMAIN:=$(shell echo $(OBJ) | sed -e "s/main.o//g")

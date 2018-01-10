@@ -16,6 +16,8 @@ typedef struct env_node_t{
 
 char *epsilon(env_node *env, char *x);
 
+char *epsilon_rec(env_node *env, char *x);
+
 bool is_in_env(env_node *env, char *var_name);
 
 env_node *gen_env_node(char *src, char *dest, env_node *next);

@@ -17,16 +17,21 @@ asml_function_t *build_asml_from_ptree(ptree t){
     strcpy(result->name, "main");
     result->args = NULL;
     result->asmt = to_asml_asmt(t);
+    print_asml_fun(result);
     return result;
 }
 
 asml_asmt_t *to_asml_asmt(ptree t){
     asml_asmt_t *new_asml_asmt = malloc(sizeof(asml_asmt_t));
-    char *new_varname;
     assert(t);
     switch(t->code){
         case T_LET :
             assert(t->params.tlet.t1->code != T_LET);
+            // case : let tup = (M1, ...,, Mn) in N -> special care :)
+            if (t->params.tlet.t1->code == T_TUPLE){
+                return tuple_to_asml_asmt(t);
+            }
+            // non tuple case
             new_asml_asmt->op = t->params.tlet.v;
             new_asml_asmt->exp = to_asml_exp(t->params.tlet.t1);
             new_asml_asmt->next = to_asml_asmt(t->params.tlet.t2);
@@ -48,9 +53,11 @@ asml_asmt_t *to_asml_asmt(ptree t){
             return new_asml_asmt;
 
         case T_BOOL :
+        case T_NOT :
             fprintf(
                 stderr,
-                "Error : trying to convert a T_BOOL ast -> should not happen\n");
+                "Error : trying to convert a T_BOOL or a T_NOT ast -> should "
+                "not happen(code %d)\n", t->code);
             return NULL;
 
         case T_LETREC :
@@ -58,11 +65,13 @@ asml_asmt_t *to_asml_asmt(ptree t){
             return to_asml_asmt(t->params.tletrec.t);
 
         case T_LETTUPLE :
+            assert(t->params.lettuple.t1->code == T_VAR);
+            return lettuple_to_asmlt(t);
 
         case T_TUPLE :
-        
+
+
         case T_FLOAT :
-        case T_NOT :
         case T_FNEG :
         case T_FADD :
         case T_FSUB :
@@ -82,7 +91,8 @@ asml_exp_t *to_asml_exp(ptree t){
     assert(t);
     switch(t->code){
         case T_LET :
-            printf("Error : convert let node in asml exp(nested let)\n");
+            printf("Error : trying to convert let node in asml exp(nested let)"
+            "in to_asml_exp\n");
             return NULL;
         case T_ADD :
         case T_SUB :
@@ -157,6 +167,11 @@ asml_exp_t *to_asml_exp(ptree t){
             new_exp->op1 = t->params.v;
             return new_exp;
 
+        case T_TUPLE :
+            printf("Error : trying to convert a T_TUPLE ast in asml_exp\n"
+            "this souhld never happen\n");
+            return NULL;
+
         case T_UNIT :
         case T_FLOAT :
         case T_NOT :
@@ -166,7 +181,6 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_FMUL :
         case T_FDIV :
         case T_LETREC :
-        case T_TUPLE :
         case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
@@ -195,6 +209,7 @@ asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list){
         current->val = ast_list_elem->params.v;
         ast_node = ast_node->next;
     }
+    current->next = NULL;
     return result;
 }
 
@@ -215,6 +230,7 @@ asml_formal_arg_t *string_list_to_asml_args_list(plist str_list){
         current->val = ast_list_elem;
         ast_node = ast_node->next;
     }
+    current->next = NULL;
     return result;
 }
 
@@ -227,6 +243,74 @@ void send_func_d_to_asml_parser(ptree t){
     asml_f->asmt = to_asml_asmt(fd->body);
     asml_parser_create_function(asml_f);
 }
+
+asml_asmt_t *lettuple_to_asmlt(ptree t){
+/*
+ * transforms let (x1 ,..., xn) = y in N
+ * into       let x1 = mem(y) in
+ *            ...
+ *            let xn = mem(y + 4*n) in N
+ */
+    int i = 0;
+    listNode *l_node = t->params.lettuple.l->head;
+    asml_asmt_t *first, *current;
+    first = malloc(sizeof(asml_asmt_t));
+    first->op = (char *)l_node->data;
+    first->exp = malloc(sizeof(asml_exp_t));
+    first->exp->type = ASML_MEM_READ;
+    first->exp->op1 = t->params.lettuple.t1->params.v;
+    first->exp->op2 = int_to_str(0);
+    first->exp->op3 = NULL;
+    current = first;
+    l_node = l_node->next;
+    while (l_node != NULL){
+        i += WORD_SIZE;
+        current->next = malloc(sizeof(asml_asmt_t));
+        current->next->op = (char *)l_node->data;
+        current->next->exp = malloc(sizeof(asml_exp_t));
+        current->next->exp->type = ASML_MEM_READ;
+        current->next->exp->op1 = t->params.lettuple.t1->params.v;
+        current->next->exp->op2 = int_to_str(i);
+        current->next->exp->op3 = NULL;
+        current = current->next;
+        l_node = l_node->next;
+    }
+    current->next = to_asml_asmt(t->params.lettuple.t2);
+    print_asml_asmt(first);
+    return first;
+}
+
+asml_asmt_t *tuple_to_asml_asmt(ptree t){
+    asml_asmt_t *first, *current;
+    char * new_varname;
+    listNode *l_node = t->params.tlet.t1->params.ttuple.l->head;
+    int i = 0;
+    first = malloc(sizeof(asml_asmt_t));
+    first->op = t->params.tlet.v;
+    first->exp = malloc(sizeof(asml_exp_t));
+    first->exp->type = ASML_MEM_NEW;
+    first->exp->op1 =
+        int_to_str(4 * (t->params.tlet.t1->params.ttuple.l->logicalLength));
+    first->exp->op2 = NULL; first->exp->op3 = NULL;
+    current = first;
+    while(l_node != NULL){
+        printf("passe ici \n");
+        current->next = malloc(sizeof(asml_asmt_t));
+        new_varname = gen_varname();
+        current->next->op = new_varname;
+        current->next->exp = malloc(sizeof(asml_exp_t));
+        current->next->exp->type = ASML_MEM_WRITE;
+        current->next->exp->op1 = t->params.tlet.v;
+        current->next->exp->op2 = int_to_str(i);
+        current->next->exp->op3 = ((ptree)l_node->data)->params.v;
+        current = current->next;
+        l_node = l_node->next;
+        i += WORD_SIZE;
+    }
+    current->next = to_asml_asmt(t->params.tlet.t2);
+    return first;
+}
+
 
 void print_asml_fun(asml_function_t *t){
     if(t == NULL){

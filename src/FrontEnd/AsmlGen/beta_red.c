@@ -4,7 +4,7 @@
 
 #include "ast.h"
 #include "env.h"
-
+#include "list.h"
 
 ptree beta_red(ptree t, env_node *env){
     assert(t);
@@ -31,13 +31,13 @@ ptree beta_red(ptree t, env_node *env){
         case T_ADD :
             return ast_add(
                 beta_red(t->params.tbinary.t1, env),
-                beta_red(t->params.tbinary.t1, env)
+                beta_red(t->params.tbinary.t2, env)
             );
 
         case T_SUB :
             return ast_sub(
                 beta_red(t->params.tbinary.t1, env),
-                beta_red(t->params.tbinary.t1, env)
+                beta_red(t->params.tbinary.t2, env)
             );
 
         case T_APP :
@@ -81,6 +81,21 @@ ptree beta_red(ptree t, env_node *env){
                     beta_red(t->params.tbinary.t2, env)
             );
 
+        case T_TUPLE :
+            l_node = t->params.ttuple.l->head;
+            while(l_node != NULL){
+                l_node->data = (void *)epsilon(env, (char *)l_node->data);
+                l_node = l_node->next;
+            }
+            return t;
+
+        case T_LETTUPLE :
+            return ast_lettuple(
+                t->params.lettuple.l,
+                beta_red(t->params.lettuple.t1, env),
+                beta_red(t->params.lettuple.t2, env)
+            );
+
         case T_UNIT :
         case T_BOOL :
         case T_FLOAT :
@@ -90,8 +105,6 @@ ptree beta_red(ptree t, env_node *env){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_TUPLE :
-        case T_LETTUPLE :
         case T_ARRAY :
         case T_GET :
         case T_PUT :

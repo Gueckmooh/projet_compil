@@ -23,7 +23,6 @@ ptree reduce_nested_let(ptree t){
             return t;
         }
     } else {
-        printf("applying vis, code = %d\n", t->code);
         return apply_vis(t, reduce_nested_let);
     }
 }

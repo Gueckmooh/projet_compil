@@ -29,7 +29,7 @@ namespace arm {
     vector<arm_cfg_element*> elements;
     vector<list<string>*> var_instr;
     list<string> used_variables;
-    map<string, string> regs_maps;
+    vector<map<string, string>> regs_maps;
     map<string, int> scope;
     int nb_regs;
   };

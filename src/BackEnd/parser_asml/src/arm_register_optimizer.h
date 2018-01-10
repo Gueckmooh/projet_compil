@@ -20,6 +20,7 @@ namespace arm {
     void find_preds_variables (arm_dom_node*);
     void find_variables (arm_dom_node*);
     void find_variables_to_reduce (arm_dom_node*);
+    void optimize_node (arm_dom_node*);
   protected:
     arm_dom_node* dom_root;
     list<arm_dom_node*> already_visited;

@@ -4,6 +4,7 @@ namespace arm {
 
   void arm_cfg_node::add_element (arm_cfg_element* elt) {
     elements.push_back(elt);
+    regs_maps.push_back(map<string,string>());
   }
 
   list<string>* arm_cfg_node::get_vars (void) {
@@ -25,7 +26,7 @@ namespace arm {
       var_instr.push_back(e->get_vars());
     }
   }
-  
+
   void arm_cfg_node::add_succ (arm_cfg_node* succ) {
     succs.push_back(succ);
     succ->add_pred(this);

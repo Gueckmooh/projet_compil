@@ -46,6 +46,7 @@ namespace arm {
     for (vector<arm_function_generator*>::iterator it = generators.begin();
 	 it != generators.end();
 	 it++) {
+#ifdef __DEBUG
       vector<arm_instruction*>* instrs = (*it)->get_instructions ();
       arm_cfg_node* root = arm_cfg_factory::generate_cfg(instrs);
       arm_cfg_util::print_cfg (root);
@@ -53,6 +54,7 @@ namespace arm {
       arm_register_optimizer r(test.generate());
       r.optimize();
       test.generate();
+#endif
       ss = (*it)->generate();
       *output << ss->str() << endl;
     }

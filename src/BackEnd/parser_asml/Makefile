@@ -81,6 +81,7 @@ DEBUGFLAGS =
 ifneq ("$(DEBUG)", "")
 DEBUGFLAGS += -O0
 DEBUGFLAGS += -gdwarf-2
+DEBUGFLAGS += -D__DEBUG
 else
 DEBUGFLAGS = -O2
 endif

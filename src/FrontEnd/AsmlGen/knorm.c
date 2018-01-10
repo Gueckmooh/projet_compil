@@ -13,9 +13,46 @@ ptree knorm(ptree t){
     assert(t);
     switch(t->code){
         case T_LET :
-            new_var1 = cpy_str(t->params.tlet.v);
+            // case : let tup = (M1, ..., Mn) in N
+            // if Mi is not a var, then we transform in
+            // let v = Mi in let tup = (M1, ..., Mn) in N
+            if (t->params.tlet.t1->code == T_TUPLE){
+                l_node = t->params.tlet.t1->params.ttuple.l->head;
+                while(l_node != NULL){
+                    tmp = (ptree)(l_node->data);
+                    if (tmp->code != T_VAR){
+                        new_var1 = gen_varname();
+                        l_node->data = (void *)ast_var(new_var1);
+                        return knorm(
+                            ast_let(
+                                new_var1,
+                                tmp,
+                                t
+                            )
+                        );
+                    }
+                    l_node = l_node->next;
+                }
+            }
+            // case : let x = M in (N1, ...,Nn)
+            // replace with let x = M in let tup = (N1, ..., Nn) in tup
+            if (t->params.tlet.t2->code == T_TUPLE){
+                new_var1 = gen_varname();
+                return ast_let(
+                    t->params.tlet.v,
+                    t->params.tlet.t1, // no need to knorm t1, it should be done already
+                    knorm(
+                        ast_let(
+                            new_var1,
+                            t->params.tlet.t2,
+                            ast_var(new_var1)
+                        )
+                    )
+                );
+            }
+            // normal case -> appply knorm recursively
             return ast_let(
-                new_var1,
+                t->params.tlet.v,
                 knorm(t->params.tlet.t1),
                 knorm(t->params.tlet.t2)
             );
@@ -208,13 +245,26 @@ ptree knorm(ptree t){
                 l_node->data = knorm((ptree)l_node->data);
                 l_node = l_node->next;
             }
-            return t;
+            new_var1 = gen_varname();
+            return ast_let(
+                new_var1,
+                t,
+                ast_var(new_var1)
+            );
 
         case T_LETTUPLE :
-            return ast_lettuple(
-                t->params.lettuple.l,
+            // replace let (x1, ..., xn) = M in N
+            // into    let y = M in
+            //         let (x1, ..., xn) = y in N
+            new_var1 = gen_varname();
+            return ast_let(
+                new_var1,
                 knorm(t->params.lettuple.t1),
-                knorm(t->params.lettuple.t2)
+                ast_lettuple(
+                    t->params.lettuple.l,
+                    ast_var(new_var1),
+                    knorm(t->params.lettuple.t2)
+                )
             );
 
         case T_UNIT :

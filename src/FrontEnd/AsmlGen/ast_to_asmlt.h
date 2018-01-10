@@ -1,10 +1,10 @@
-
-
 #ifndef AST_TO_ASMLT_H
 #define AST_TO_ASMLT_H
 
 #include "asml_parser_types.h"
 #include "ast.h"
+
+#define WORD_SIZE 4
 
 asml_function_t *build_asml_from_ptree(ptree t);
 
@@ -17,6 +17,10 @@ asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list);
 asml_formal_arg_t *string_list_to_asml_args_list(plist str_list);
 
 void send_func_d_to_asml_parser(ptree t);
+
+asml_asmt_t *lettuple_to_asmlt(ptree t);
+
+asml_asmt_t *tuple_to_asml_asmt(ptree t);
 
 void print_asml_fun(asml_function_t *t);
 

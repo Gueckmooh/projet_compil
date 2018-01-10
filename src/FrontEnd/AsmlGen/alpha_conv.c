@@ -9,6 +9,7 @@
 
 ptree alpha_convert(ptree t, env_node *env){
     assert(t);
+    ptree debug;
     char *new_varname, *new_funcname;
     env_node *new_env, *new_env_with_params;
     listNode *l_node;
@@ -22,9 +23,9 @@ ptree alpha_convert(ptree t, env_node *env){
             new_varname = gen_varname();
             new_env = gen_env_node(t->params.tlet.v, new_varname, env);
             t1 = alpha_convert(t->params.tlet.t1, env);
-            t2 = alpha_convert(t->params.tlet.t2,new_env);
-            return ast_let(new_varname, t1, t2);
-
+            t2 = alpha_convert(t->params.tlet.t2, new_env);
+            debug = ast_let(new_varname, t1, t2);
+            return debug;
         case T_ADD :
             return ast_add(
                 alpha_convert(t->params.tbinary.t1, env),
@@ -74,7 +75,8 @@ ptree alpha_convert(ptree t, env_node *env){
                 l_node->data = (void *)new_varname;
                 l_node = l_node->next;
             }
-            alpha_convert(t->params.tletrec.fd->body, new_env_with_params);
+            t->params.tletrec.fd->body =
+                alpha_convert(t->params.tletrec.fd->body, new_env_with_params);
             t->params.tletrec.fd->var = new_funcname;
             return ast_letrec(
                 t->params.tletrec.fd,

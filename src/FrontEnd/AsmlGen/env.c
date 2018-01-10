@@ -6,6 +6,19 @@
 #include <string.h>
 
 char *epsilon(env_node *env, char *x){
+    char *new_x;
+    while(1){
+        new_x = epsilon_rec(env, x);
+        if (strcmp(new_x, x) == 0){
+            return x;
+        } else {
+            x = new_x;
+        }
+    }
+}
+
+
+char *epsilon_rec(env_node *env, char *x){
 /*
  * Returns epsilon(x)
  */

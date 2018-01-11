@@ -84,8 +84,11 @@ LDFLAGS = -lpthread -L$(FRONTENDPATH1) -L$(FRONTENDPATH2) -L$(FRONTENDPATH3) -L$
 
 all: directories lib inc $(MAINPATH)/$(EXEC).o scripts/$(EXEC)
 
-test: 
+oldtest: 
 	./test_script.sh
+
+test:
+	./scripts/test.py
 
 run: all
 	./scripts/$(EXEC)

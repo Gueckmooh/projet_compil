@@ -44,7 +44,7 @@ def exec_arm(nom_fich) :
 	#print ("j'execute "+nom_fich)
 	try : 
 
-		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-o','../../tmp/'+nom_fich+'.s'])
+		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-n','-o','../../tmp/'+nom_fich+'.s'])
 		arm_to_exec (nom_fich)
 		#output = subprocess.check_output(['cat',nom_fich])
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
@@ -66,6 +66,21 @@ def exec_arm(nom_fich) :
 		#return 1
 	else :
 		print(bcolors.WARNING + "--- Echec du test de "+nom_fich+ bcolors.ENDC)
+		print(bcolors.WARNING + "    Output programme : " + output3.decode() + "\n    Output du programme etalon : " + output4.decode() + bcolors.ENDC)
+		try : 
+			outputmin = subprocess.check_output(['cat',nom_fich])
+			print (bcolors.WARNING +"    Lecture du fichier minml originel \n" + outputmin.decode() + bcolors.ENDC)
+		except subprocess.CalledProcessError as e :
+			outputmin = e.output
+			print(bcolors.FAIL+"    Echec ouverture fichier minml"+bcolors.ENDC)
+		try :
+			output5=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
+			output6 = subprocess.check_output(['cat','../../tmp/'+nom_fich+'.asml'])
+			print(bcolors.WARNING + "    Generation du fichier ASML \n " + output6.decode() + bcolors.ENDC)
+		except subprocess.CalledProcessError as e :
+			output5 = e.output
+			print (bcolors.FAIL+ "    Echec generation du fichier ASML pour verifier difference output pour "+nom_fich+bcolors.ENDC)
+
 	return 0
 
 
@@ -85,6 +100,8 @@ def exec_asml(nom_fich) :
 		print(bcolors.OKGREEN +"--- Test de "+nom_fich+" reussi"+ bcolors.ENDC)
 	else :
 		print(bcolors.WARNING +"--- Echec du test de "+nom_fich+ bcolors.ENDC)
+		print(bcolors.WARNING + "    Output programme : " + output3.decode() + "\n    Output du programme etalon : " + output2.decode() + bcolors.ENDC)
+
 	return 0
 
 def gen_asml(nom_fich) :
@@ -110,6 +127,8 @@ def gen_asml(nom_fich) :
 		print(bcolors.OKGREEN +"--- Test de "+nom_fich+" reussi"+ bcolors.ENDC)
 	else :
 		print(bcolors.WARNING +"--- Echec du test de "+nom_fich+ bcolors.ENDC)
+		print(bcolors.WARNING + "    Output programme : " + output3.decode() + "\n    Output du programme etalon : " + output4.decode() + bcolors.ENDC)
+
 	return 0
 
 

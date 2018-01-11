@@ -1,0 +1,167 @@
+/*! \mainpage INDEX
+ * AAAAAA
+ * BBBBBB
+ * CCCCCC
+\section my-intro Presentation du projet
+\htmlinclude readmecontent.html
+ */
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Coucou</title>
+  </head>
+  <body>
+
+<div class="cl-preview-section"><h1 id="projet-compilation--the-c-team">Projet Compilation : The C Team</h1>
+</div><div class="cl-preview-section"><p>A Compiler from Mincaml to ARM, that also generates ASML a pseudo-code between mincaml and Assembly language.</p>
+</div><div class="cl-preview-section"><p>Group Member : Baptiste BLEUZE, Enzo BRIGNON, Florian MARCO, Maxime RAYNAL</p>
+</div><div class="cl-preview-section"><h1 id="usage">USAGE</h1>
+</div><div class="cl-preview-section"><p>USAGE mincamlc input_file options</p>
+</div><div class="cl-preview-section"><div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>PARAMETER</th>
+<th>FUNCTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-h, --help</td>
+<td>Print usage.</td>
+</tr>
+<tr>
+<td>-o, --output output_file</td>
+<td>You must specifiy an output filename.</td>
+</tr>
+<tr>
+<td>-v, --version</td>
+<td>Print version.</td>
+</tr>
+<tr>
+<td>-t, --typecheck</td>
+<td>Perform only Typecheck analysis. Return ErrorCode if incorrect typing.</td>
+</tr>
+<tr>
+<td>-p, --parser</td>
+<td>Perform only mincaml parsing. Print AST in output file</td>
+</tr>
+<tr>
+<td>-a --asml</td>
+<td>Perform only ASML generation. Print ASML in output file.</td>
+</tr>
+<tr>
+<td>-i, --asmlinput</td>
+<td>Take ASML input and generate ARM output. Print ARM in output file.</td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="cl-preview-section"><h1 id="todo-list">TODO LIST</h1>
+</div><div class="cl-preview-section"><h2 id="front-end">FRONT END</h2>
+</div><div class="cl-preview-section"><ul>
+<li>
+<p>[ ] Typechecking</p>
+</li>
+<li>
+<p>[X] K-Normalization</p>
+</li>
+<li>
+<p>[X] alpha-conversion</p>
+</li>
+<li>
+<p>[X] reduction of nested-let</p>
+</li>
+<li>
+<p>[ ] closure conversion</p>
+</li>
+<li>
+<p>[ ] ASML generation</p>
+</li>
+<li>
+<p>[ ] beta-reduction</p>
+</li>
+<li>
+<p>[ ] inline expansion</p>
+</li>
+<li>
+<p>[ ] constant folding</p>
+</li>
+<li>
+<p>[ ] elimination of unnecessary definitions</p>
+</li>
+<li>
+<p>[X] Contact with backend structure</p>
+</li>
+</ul>
+</div><div class="cl-preview-section"><h2 id="back-end">BACK END</h2>
+</div><div class="cl-preview-section"><ul>
+<li>
+<p>[X] simple arithmetic expression</p>
+</li>
+<li>
+<p>[X] call to external functions</p>
+</li>
+<li>
+<p>[X] functions (let rec)</p>
+</li>
+<li>
+<p>[X] if-then-else</p>
+</li>
+<li>
+<p>[X] closures, tuple, arrays</p>
+</li>
+<li>
+<p>[X] ASML Parsing</p>
+</li>
+<li>
+<p>[X] ASML Generation</p>
+</li>
+<li>
+<p>[X] ARM Generation</p>
+</li>
+<li>
+<p>[X] Basic Register Allocation</p>
+</li>
+<li>
+<p>[ ] Smart Register Allocation : dominance tree</p>
+</li>
+<li>
+<p>[ ] Garbage Collector</p>
+</li>
+</ul>
+</div><div class="cl-preview-section"><h2 id="general">GENERAL</h2>
+</div><div class="cl-preview-section"><ul>
+<li>
+<p>[X] Command Line Options</p>
+</li>
+<li>
+<p>[X] Full MAKEFILE</p>
+</li>
+<li>
+<p>[X] Libraries integration</p>
+</li>
+<li>
+<p>[ ] Full Integration</p>
+</li>
+<li>
+<p>[X] Test files</p>
+</li>
+<li>
+<p>[X] Make Test (basic BASH)</p>
+</li>
+<li>
+<p>[ ] Make Test (python)</p>
+</li>
+</ul>
+</div><div class="cl-preview-section"><h1 id="notes">NOTES</h1>
+</div><div class="cl-preview-section"><p>S’il vous plait laisser le main dans un fichier main.c ou main.cpp
+N’utiliser que les extensions .c, .cpp et .h
+Les .o se trouvent dans le répertoire .obj
+Les tests devons être dans le dossier test et devrons contennir chacun leur
+main. (A négocier si vous voulez)</p>
+</div><div class="cl-preview-section"><p>Ne pas modifier le mon joli Makefile, il a pour vocation de fonctionner de
+manière générique. Il pourra être amélioré par la suite :)</p>
+</div>
+
+ </body>
+</html>

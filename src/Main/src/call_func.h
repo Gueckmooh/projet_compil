@@ -1,6 +1,16 @@
 #ifndef __CALL_FUNC_H__
 #define __CALL_FUNC_H__
 
+
+
+
+
+/*!
+ * \file call_func.h
+ * \brief Caller of various configuration functions
+ * \author THE C TEAM
+ * \version 0.1337
+ */
 #include "param.h"
 #include "asml.h"
 #include "arm.h"
@@ -47,7 +57,13 @@ int ASML_caller (int);
 //Cette fonction prends en parametre la structure front-endee
 // Cette fonction print dans un fichier l'ASML genere.
 int ASML_PRINTER (int);
-
+/*!
+ *  \brief ASML Parser 
+ *
+ *  This function take an ASML file, parse it, and generate an ARM output.
+ *	\param string input : The ASML input file
+ *	\param string output : The ASML output file
+ */
 //Cette fonction prends en parametre un fichier ASML
 //Cette fonction genere de l'ARM dans un fichier output.s
 void ASML_PARSER (string, string);
@@ -55,7 +71,15 @@ void ASML_PARSER (string, string);
 // Cette fonction prends en parametre la structure front-endee
 // Cette fonction print dans un fichier l'ARM genere.
 int ARM_caller (int);
-
+/*!
+ *  \brief Mega Caller
+ *
+ *  This function calls all compilation function
+ *	\param int param : List of active parameters
+ *	\param string input : The input files
+ *	\param string output : The output files
+ *	\return 0 if everything goes well, 1 if there is a mistake
+ */
 int mega_caller (int, std::string, string);
 
 #endif //__CALL_FUNC_H__

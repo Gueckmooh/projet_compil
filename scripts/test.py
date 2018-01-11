@@ -13,6 +13,13 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def extension_checker (file) :
+
+	e_f_t = ['.ml','.asml']
+	for i in e_f_t :
+		if i in file :
+			return True
+	return False
 
 def get_folder (path) :
 	liste_dossier = []
@@ -170,7 +177,10 @@ def test_Exec(path) :
 	elif path == "gen-asml" :
 		b = gen_asml
 	for i in a :
-		b(i)
+		if extension_checker(i) :
+			b(i)
+		else :
+			print (bcolors.OKBLUE+"Le fichier test "+i+" est d'une extension non supportee" + bcolors.ENDC)
 
 	return 0
 
@@ -187,20 +197,33 @@ def test_VI(path) :
 		b = exec_typecheck
 	if val :
 		for i in val :
-			b(i,'valid')
+			if extension_checker(i) :
+				b(i,'valid')
+			else :
+				print (bcolors.OKBLUE+"Le fichier test "+i+" est d'une extension non supportee" + bcolors.ENDC)
 	if inval :
 		for j in inval :
-			b(j,'invalid')
+			if extension_checker(j) :
+				b(j,'invalid')
+			else :
+				print (bcolors.OKBLUE+"Le fichier test "+j+" est d'une extension non supportee" + bcolors.ENDC)
 	return 0
 
 def main() : 
-	if not os.path.exists('tmp') :
+	repo = os.getcwd()
+	if os.path.exists('tmp') :
+		os.chdir(repo+'/tmp')
+		file_list=get_file(repo+'/tmp')
+		for z in file_list :
+			os.remove(z)
+		os.chdir(repo)
+
+	else :
 		os.makedirs('tmp')
 	#repo = os.path.abspath(os.path.join(os.getcwd(),os.pardir)) +'/tests'
-	repo = os.getcwd()+'/tests'
+	repo = repo+'/tests'
 	os.chdir(repo)
 	liste_dossier_test = get_folder(repo)
-
 
 
 	print(bcolors.HEADER + "Bienvenue dans le Testeur de notre programme " + bcolors.ENDC)

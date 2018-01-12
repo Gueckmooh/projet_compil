@@ -153,6 +153,11 @@ def exec_typecheck(nom_fich,typee) :
 		print (bcolors.OKGREEN +"--- Test typecheck Correct pour "+ nom_fich + bcolors.ENDC) 
 	else :
 		print (bcolors.FAIL +"--- Test Typecheck Incorrect pour "+ nom_fich + bcolors.ENDC)
+		try :
+			output2 = subprocess.check_output(['./../../scripts/mincamlc',typee+'/'+nom_fich,'-d', '-t'])
+		except subprocess.CalledProcessError as e:
+			output2 = e.output
+		print (bcolors.WARNING+"   Output du typechecking en mode debug : \n"+output2.decode()+bcolors.ENDC)
 	return 0
 
 

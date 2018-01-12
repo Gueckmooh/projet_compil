@@ -28,7 +28,7 @@ const option::Descriptor usage[]=
     {TYPECHECK,ENABLE,"t","typecheck",option::Arg::None,"-t, --typecheck \t Perform only Typecheck analysis. Return ErrorCode if incorrect typing [TODO]"},
     {PARSER,ENABLE,"p","parser",option::Arg::None,"-p, --parser \t Perform only mincaml parsing. Print AST in output file"},
     {ASML,ENABLE,"a","asml",option::Arg::None,"-a, --asml \t Perform only ASML generation"},
-    {ASML2,ENABLE,"asml","asmlgen",option::Arg::None,"-asml, --asmlGen \t Perform only ASML generation"},
+    {ASML2,ENABLE,"asml","asmlgen",option::Arg::None,""},
     {ASMLI,ENABLE,"i","asmlinput",option::Arg::None,"-i, --asmlinput \t Take ASML input and generate ARM output"},
     {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck Analysis because sometimes it crashs"},
     {0,0,0,0,0,0}
@@ -49,19 +49,31 @@ int main(int argc, char *argv[]) {
     //std::cout << "test : " << filename;
     is_inputfile = true;
   }
-
-
   // cas ou le nom du fichier n'est pas au debut.
   if (!is_inputfile){
     for (int i=0; i < argc; i++) {
       if(strstr(argv[i], ".ml") ){
-	inputfilename = argv[i];
-	is_inputfile = true;
+         inputfilename = argv[i];
+         is_inputfile = true;
+         //std::cout << "ZBOOB \n";
+         for (int j = i; j < argc; j++){
+          argv[j]=argv[j+1];         }
+         argc -=(argc>0); 
+    }
+  }
+  }
+/*
+  //Cas ou on veut generer un fichier .asml 
+  if (!is_inputfile){
+    for (int i=0; i < argc; i++) {
+      if(strstr(argv[i], ".asml") ){
+        inputfilename = argv[i];
+        std::cout << "AFFICHAGE DU NOMFICHIER ENTREE" << inputfilename ;;
+        is_inputfile = true;
       }
     }
 
-  }
-
+  }*/
 
   option::Stats  stats(usage, argc, argv);
   std::vector<option::Option> options(stats.options_max);
@@ -143,7 +155,8 @@ int main(int argc, char *argv[]) {
       enable(traitement_param,TOTAL_ARM);}
   }
   else if (!options[HELP] && !options[VERSION] && !options[TYPECHECK]){
-    std::cerr <<"Erreur : aucun fichier output specifie \n";
+    //std::cout << "Fichier output : " << outputfilename;
+    std::cerr <<"Erreur : aucun fichier output specifie \n" ;
     return 1;
   }
 

@@ -1,0 +1,24 @@
+#! /usr/bin/env python3
+# coding: utf-8
+
+import subprocess
+import sys
+
+def arm_to_exec (outputf) :
+	try : 
+		output = subprocess.check_output(['arm-none-eabi-as', 'src/lib_arm/libmincaml.S', '-o', 'tmp/libmincaml.o'])
+		output = subprocess.check_output(['arm-none-eabi-as', outputf+'.s' , '-o', 'tmp/'+outputf+'.o'])
+		output = subprocess.check_output(['arm-none-eabi-ld', 'tmp/'+outputf+'.o', 'tmp/libmincaml.o', '-o', outputf])
+	except subprocess.CalledProcessError as e :
+		output = e.output
+		printf(bcolors.FAIL + "--- Echec generation executable" + bcolors.ENDC)
+	return 0
+
+def main() :
+	print(sys.argv[1])
+	outputf=sys.argv[1].split('.')[0]
+	print(outputf)
+	arm_to_exec(outputf)
+
+if __name__ == "__main__":
+    main()

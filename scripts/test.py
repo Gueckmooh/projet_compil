@@ -55,7 +55,7 @@ def exec_arm(nom_fich) :
 		arm_to_exec (nom_fich)
 		#output = subprocess.check_output(['cat',nom_fich])
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
-		output3 = subprocess.check_output(['./../../tmp/'+nom_fich+'.out'])
+		output3 = subprocess.check_output(['qemu-arm','../../tmp/'+nom_fich+'.out'])
 		output4 = subprocess.check_output(['./../../tmp/base_'+nom_fich+'.out'])
 
 	except subprocess.CalledProcessError as e :
@@ -97,7 +97,7 @@ def exec_asml(nom_fich) :
 		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-i','-o','../../tmp/'+nom_fich+'.s'])
 		arm_to_exec(nom_fich)
 		output2 = subprocess.check_output(['./../../scripts/asml',nom_fich])
-		output3 = subprocess.check_output(['./../../tmp/'+nom_fich+'.out'])
+		output3 = subprocess.check_output(['qemu-arm','../../tmp/'+nom_fich+'.out'])
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
 		output2 = ''
@@ -116,7 +116,7 @@ def gen_asml(nom_fich) :
 	try :
 		output=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
-		output3 = subprocess.check_output(['./../../scripts/asml','../../tmp/'+nom_fich+'.asml'])
+		output3 = subprocess.check_output(['qemu-arm','../../scripts/asml','../../tmp/'+nom_fich+'.asml'])
 		output4 = subprocess.check_output(['./../../tmp/base_'+nom_fich+'.out'])
 
 

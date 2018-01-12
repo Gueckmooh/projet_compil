@@ -162,6 +162,7 @@ __mem_new:
 	stmfd	sp!, {fp}
 	add 	fp, sp, #0
 	sub	sp, sp, #12
+	lsl 	r0, r0, #2
 	str	r0, [fp, #-8]
 	sub 	r2, r5, r4
 	ldr  	r3, [fp, #-8]

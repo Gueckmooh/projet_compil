@@ -21,6 +21,7 @@ namespace arm {
     switch (arm_util::type_of (mem_offset)) {
     case arm_util::DIRECT:
       instruction += "\tldr r1, [r0, #" + mem_offset + "]\n";
+      instruction += "\tlsl r1, r1, #2\n";
       break;
     case arm_util::VARIABLE:
       instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";

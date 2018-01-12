@@ -41,6 +41,7 @@ namespace arm {
     */
     if (arm_util::type_of(mem_offset) == arm_util::VARIABLE) {
       instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";
+      instruction += "\tlsl r1, r1, #2\n";
       instruction += "\tadd r0, r0, r1\n";
     }
     switch (arm_util::type_of (value)) {

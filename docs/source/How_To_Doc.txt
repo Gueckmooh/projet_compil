@@ -1,0 +1,117 @@
+Pour generer la doc : taper doxygen a la racine (la ou il y a le fichier doxyfile)
+Pour y accéder : docs/html/index.html ET BIM !
+
+
+POUR CHAQUE FICHIER : METTRE TOUT EN HAUT
+
+/**
+ * \file      nom_du_fiche.extension
+ * \author    The C Team - prenom
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Description breve du fichier
+ *
+ * \details    Description detaillee du fichier (non obligee)
+ */
+
+
+POUR CHAQUE FONCTION, METTRE AVANT ( DANS LE .H CEST GOOD)
+
+/**
+ * \brief     Description breve de la fonction
+ * \details   Description detaillee de la fonction 
+ * \param     nom_param Parametre de la fonction        
+ * \return    Ce qui est retourne (si quelque chose est retourne)
+ */
+
+POUR LES TYPEDEF 
+
+/**
+ * \struct Nom_structure
+ * \brief     Description breve du typedef
+ * \details   Description detaillee du TYPEDEF
+ */
+typedef enum
+{
+   ELEMENT2,               /*!< Description element1              */
+   ELEMENT1,      /*!< Description Element2  */
+}
+
+POUR LES CLASSES
+
+/*! \namespace nom_name_space
+ * 
+ * \brief description
+ */
+namespace nom_name_space
+{
+  /*! \class nom_classe
+   * \brief ..
+   */
+  class nom_classe
+  {
+  private:
+    std::list<string> objet; /*!< Description objet*/
+ 
+ // BON CA CEST LES EXEMPLES VOILAAAAAAAAAAAAAAA
+  public:
+    /*!
+     *  \brief Constructeur
+     *
+     *  Constructeur de la classe CPlayer
+     *
+     *  \param listSongs : liste initial des morceaux
+     */
+    CPlayer(std::list<string> listSongs);
+ 
+    /*!
+     *  \brief Destructeur
+     *
+     *  Destructeur de la classe CPlayer
+     */
+    virtual ~CPlayer();
+ 
+  public:
+    /*!
+     *  \brief Ajout d'un morceau
+     *
+     *  Methode qui permet d'ajouter un morceau a liste de
+     *  lecture
+     *
+     *  \param strSong : le morceau a ajouter
+     *  \return true si morceau deja present dans la liste,
+     *  false sinon
+     */
+    bool add(std::string strSong);
+ 
+    /*!
+     *  \brief Morceau suivant
+     *
+     *  Passage au morceau suivant
+     */
+    void next();
+ 
+    /*!
+     *  \brief Morceau precedent
+     *
+     *  Passage au morceau precedent
+     */
+    void previous();
+ 
+    /*!
+     *  \brief Lecture 
+     *
+     *  Lance la lecture de la liste
+     */
+    void play();
+ 
+    /*!
+     *  \brief Arret
+     *
+     *  Arrete la lecture
+     */
+    void stop();
+  };
+};
+ 
+#endif

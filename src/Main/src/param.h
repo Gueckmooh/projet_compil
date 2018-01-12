@@ -5,6 +5,7 @@
 
 #define PARAM_OUTPUT 	0b0001<<4
 #define PARAM_ASMLI 	0b0010<<4
+#define PARAM_DEBUG   0b0100<<4
 
 #define TOTAL_PARSE 0b00001
 #define TOTAL_TYPECHECK 0b00011

@@ -89,3 +89,24 @@ int init_tc(ptree ptree_ast) {
         return EXIT_FAILURE ;
     }
 }
+
+int init_tc_debug(ptree ptree_ast) {
+
+    
+    try {
+
+        /* Création de l'arbre syntaxique abstrait à partir d'un ptree */
+
+        Ast * ast = new Ast(ptree_ast) ;
+        //Ast * ast = new Ast(ptree_ast, new std::ofstream("tests/typechecking/TypeChecking.dump")) ;
+        
+        int TypeChecking = typeChecking(*ast) ;
+        delete ast ;
+        return TypeChecking ;
+        
+        
+    } catch (std::string const & message) {
+        std::cout << message ;
+        return EXIT_FAILURE ;
+    }
+}

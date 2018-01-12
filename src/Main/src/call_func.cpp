@@ -58,6 +58,7 @@ int ARM_caller (int zboub){
 }
 
 int mega_caller (int param, string input, string output){
+  int retour = 0;
   ptree p = (ptree)malloc(sizeof(ptree));
   asml_function_t *t=NULL;
   /*if (is_enabled(param,PARAM_OUTPUT)){
@@ -74,8 +75,11 @@ int mega_caller (int param, string input, string output){
   }
 
   if (is_enabled(param, PARAM_TYPECHECK)){
-    std::cout << "ON FAIT LE TYPECHECK \n";
-    std::cout << "Retour du typecheck est de :" << init_tc(p) << "\n";
+    if (is_enabled(param,PARAM_DEBUG)){
+      retour=init_tc_debug(p);
+    }
+    else {
+    retour= init_tc(p) ;}
   }
 asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){
@@ -104,5 +108,5 @@ asml::asml_factory::initialize();
     generator->set_name(output);
     generator->generate();
   }
-  return 0;
+  return retour;
 }

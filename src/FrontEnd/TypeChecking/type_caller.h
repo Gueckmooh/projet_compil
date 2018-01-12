@@ -12,5 +12,5 @@
 int typeChecking (Ast & ast);
 
 int init_tc(ptree ptree_ast);
-
+int init_tc_debug(ptree ptree_ast);
 #endif

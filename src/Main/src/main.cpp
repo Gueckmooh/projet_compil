@@ -10,7 +10,7 @@
 
 using namespace std;
 
-enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASML2,ASMLI,NOTYPECHECK};
+enum optionIndex {UNKNOWN, OUTPUT, HELP, VERSION, TYPECHECK, PARSER, ASML,ASML2,ASMLI,NOTYPECHECK,DEBUG};
 enum optionType {ENABLE, OTHER,DISABLE};
 
 struct Arg: public option::Arg {
@@ -31,6 +31,7 @@ const option::Descriptor usage[]=
     {ASML2,ENABLE,"asml","asmlgen",option::Arg::None,""},
     {ASMLI,ENABLE,"i","asmlinput",option::Arg::None,"-i, --asmlinput \t Take ASML input and generate ARM output"},
     {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck Analysis because sometimes it crashs"},
+    {DEBUG,ENABLE,"d","debug",option::Arg::None,"-d, --debug \t Print output for debug mode"},
     {0,0,0,0,0,0}
     // Option supplementaires :
     // ASML Parsing to ARM ?
@@ -182,6 +183,10 @@ if (options[ASMLI]){
   //std::cout <<"On fait le parsing ASML to ARM : TOOD \n";
   enable(traitement_param,PARAM_ASMLI);
 
+}
+
+if (options[DEBUG]){
+enable(traitement_param,PARAM_DEBUG);
 }
 
   if (options[NOTYPECHECK]){

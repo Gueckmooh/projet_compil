@@ -208,6 +208,7 @@ elems:
   elems COMMA exp
     {
       $$ = append($1, cons($3, empty()));
+      free($1) ;
      }
 | exp COMMA exp
     {
@@ -218,6 +219,7 @@ pat:
   pat COMMA IDENT
     {
       $$ = append($1, cons($3, empty()));
+      free($1) ;
     }
 | IDENT COMMA IDENT
     {

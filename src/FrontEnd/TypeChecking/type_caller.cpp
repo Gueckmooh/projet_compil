@@ -27,6 +27,7 @@ int typeChecking (Ast & ast) {
     AstVisitor * TypeChecker = Strategy(V_TYPE_CHECKER, &env).setupAstVisitor() ;
     TypeChecker->setOs(&ast.getOs()) ;
     env.setOs(&ast.getOs()) ;
+    TypeSimple::setOs(&ast.getOs()) ;
 
     /* Le TypeChecker se décompose en trois sous-visiteurs  : */
         /* - un sous-visiteur de type AstVisExplore pour le traitement préfixe : */

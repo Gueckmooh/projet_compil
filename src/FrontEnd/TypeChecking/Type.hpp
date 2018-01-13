@@ -3,24 +3,41 @@
 
 #include "print_ast.h"
 #include <ostream>
+#include <map>
 
 namespace Types {
-    enum typeSimple {BOOL, INT, FLOAT, UNIT} ;
-    enum typeComposed {Simple, Tuple, Application} ;
+    enum typeSimple {BOOL, INT, FLOAT, UNIT, POLY} ;
+    enum typeComposed {Simple, Tuple, Application, Polymorphe} ;
 }
 
 using namespace Types ;
+class Type;
+typedef std::map<char, Type*> PolyMap ;
 
 class TypeSimple {
 public:
     TypeSimple(typeSimple ts);
+    TypeSimple(typeSimple ts, char poly);
     typeSimple getType() const;
+    char getPoly() const;
+    static char getNextPoly();
+    static void resetNextPoly();
+    static Type * getMappedPoly(char poly);
+    static void mapPoly(char poly, Type * type);
+    static void printPoly();
+    static void resetPoly () ;
+    static void clearPolyMap () ;
+    static void setOs (std::ostream * os);
     bool isCorrectlyTyped (TypeSimple *typeSimple) ;
     static TypeSimple * copyTypeSimple(TypeSimple *typeSimple);
     friend std::ostream& operator<<(std::ostream& os, TypeSimple& ts) ;
     virtual ~TypeSimple();
 protected:
     typeSimple ts ;
+    char poly ;
+    static std::ostream * os ;
+    static char next_poly ;
+    static PolyMap PM ;
 };
 
 class TypeTuple;
@@ -30,11 +47,19 @@ class AstVisInfer;
 class TypeComposed {
 public:
     TypeComposed(TypeSimple *ts) ;
+    TypeComposed(TypeSimple *ts, unsigned l) ;
     TypeComposed(TypeSimple *ts, TypeComposed *tc) ;
     TypeComposed(TypeTuple  *tt) ;
     TypeComposed(TypeTuple  *tt, TypeComposed *tc) ;
     TypeComposed(TypeApp *ta) ;
     TypeComposed(TypeApp    *ta, TypeComposed *tc) ;
+    unsigned size() const;
+    typeComposed getType() const;
+    TypeApp* getApp() const;
+    TypeComposed* getNext() const;
+    void setNext(TypeComposed* tc);
+    TypeSimple* getSimple() const;
+    TypeTuple* getTuple() const;
     bool isCorrectlyTyped (TypeComposed *typeComposed) ;
     virtual void print(std::ostream& os, TypeComposed& typeComposed) = 0 ;
     static void deleteType (TypeComposed *typeComposed) ;
@@ -73,11 +98,16 @@ public:
     Type(TypeTuple  *tt);
     Type(TypeApp    *ta);
     typeComposed GetType() const;
+    void SetType(typeComposed t);
     TypeSimple* GetTypeSimple() const;
+    void SetTypeSimple(TypeSimple* ts);
+    TypeComposed* GetTypeComposed() const;
+    void SetTypeComposed(TypeComposed *tc);
     Type* getNext() const;
     void setNext(Type* next);
-    static Type* Unification (Type *type1, Type *type2) ;
-    friend std::ostream& operator<<(std::ostream& os, const Type& type);
+    static Type* Unification (Type *typeApp, Type *typeArgs) ;
+    void printApplication(std::ostream& os, Type& type);
+    friend std::ostream& operator<<(std::ostream& os, Type& type);
     static Type* copyType(Type* orig) ;
     static Type* copyTypeRec(Type* orig) ;
     static void deleteType(Type *type);

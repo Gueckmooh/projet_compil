@@ -1,5 +1,6 @@
 #include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
+#include <iomanip>
 
 AstNodeLeaf::AstNodeLeaf(int class_code) :
 AstNode(class_code) {}
@@ -10,7 +11,7 @@ AstNodeBool::AstNodeBool(bool b) :
 AstNodeLeaf(C_BOOL), b(b) {}
 
 std::ostream& AstNodeBool::print(std::ostream& os) {
-    return os << std::string("" + b) ;
+    return os << std::boolalpha << b ;
 }
 
 void AstNodeBool::accept(AstVisAbstract* vis) {
@@ -23,7 +24,7 @@ AstNodeFloat::AstNodeFloat(float f) :
 AstNodeLeaf(C_FLOAT), f(f) {}
 
 std::ostream& AstNodeFloat::print(std::ostream& os) {
-    return os << std::string(std::to_string(f)) ;
+    return os << std::showpoint << std::setprecision(1) << f ;
 }
 
 void AstNodeFloat::accept(AstVisAbstract* vis) {
@@ -55,8 +56,12 @@ std::ostream& AstNodeTuple::print(std::ostream& os) {
 }
 
 void AstNodeTuple::traversal(AstVisitor* vis) {
-    for (std::vector<AstNode *>::iterator it = var_list.begin() ; it != var_list.end() ; it++)
-        (*it)->apply(vis) ;   
+    std::vector<AstNode *>::iterator it = var_list.begin() ;
+    (*it++)->apply(vis) ;
+    for ( ; it != var_list.end() ; it++) {
+        accept(vis->GetInfix()) ;
+        (*it)->apply(vis) ;
+    }
 }
 
 std::vector<AstNode*> AstNodeTuple::getVar_list() const {
@@ -72,7 +77,13 @@ void AstNodeTuple::accept(AstVisAbstract* vis) {
 AstNodeTuple::~AstNodeTuple() {}
 
 AstNodeUnit::AstNodeUnit() :
-AstNodeLeaf(C_UNIT) {}
+AstNodeLeaf(C_UNIT) {
+}
+
+std::ostream& AstNodeUnit::print(std::ostream& os) {
+    return os << "()" ;
+}
+
 
 void AstNodeUnit::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;

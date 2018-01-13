@@ -10,8 +10,8 @@
 
 #include "AstVisitor.hpp"
 
-class Environment;
 class AstVisitor;
+class Environment;
 
 enum Visitor {V_PRINTER, V_DESTRUCTOR, V_TYPE_CHECKER} ;
 enum Strat {S_PREFIX, S_INFIX, S_POSTFIX} ;

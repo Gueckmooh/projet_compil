@@ -73,6 +73,14 @@ AstNodeNot::~AstNodeNot() {}
 FunDef::FunDef(std::string var_name, std::vector<std::string> args_list, AstNode * body) :
 AstNodeUnary(C_FUNDEF, body), var(AstNodeVar(var_name)), args_list(args_list) {}
 
+AstNodeVar & FunDef::getVar() {
+    return var;
+}
+
+std::vector<std::string> & FunDef::getArgs() {
+    return args_list;
+}
+
 std::ostream& FunDef::print(std::ostream& os) {
     os << var << " " ;
     print_str_list(os, args_list);
@@ -94,10 +102,14 @@ FunDef::~FunDef() {}
 AstNodeLetRec::AstNodeLetRec(FunDef* fun_def, AstNode * t1) :
 AstNodeUnary(C_LETREC, t1), fun_def(fun_def) {}
 
+FunDef* AstNodeLetRec::getFunDef() const {
+    return fun_def;
+}
+
 void AstNodeLetRec::traversal(AstVisitor* vis) {
     fun_def->apply(vis) ;
+    accept(vis->GetInfix()) ;
     t1->apply(vis) ;
-
 }
 
 void AstNodeLetRec::accept(AstVisAbstract* vis) {

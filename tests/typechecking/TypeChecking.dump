@@ -1,12 +1,17 @@
-  INT 3 : int
-LET x : int Current Environment : [x : int]
-    VAR x : int
-  LET y : int Current Environment : [x : int, y : int]
-    APP print_int y : int -> unit
-      VAR y : int
-    APP print_int y : unit
-  LET y: On retire la variable de l'environnement courant 
-LET x: On retire la variable de l'environnement courant 
+    INT 1 : int
+    INT 2 : int
+    INT 3 : int
+    INT 4 : int
+  TUPLE 1 2 3 4  : int * int * int * int
+LET tup : int * int * int * int Current Environment : [tup : int * int * int * int]
+    VAR tup : int * int * int * int
+  LET TUPLE a b c d : int * int * int * int Current Environment : [a : int, b : int, c : int, d : int, tup : int * int * int * int]
+    APP print_int a : int -> unit
+      VAR a : int
+    APP print_int a : unit
+Polymorphic Types Map : []
+  LET TUPLE a b c d  : On retire les identificateurs du tuple de l'environnement courant
+LET tup : On retire l'identificateur de la valeur de l'environnement courant
 TYPECHECKING SUCCESS
-Nombre de noeuds détruits : 6
+Nombre de noeuds détruits : 10
 Destruction de l'AST

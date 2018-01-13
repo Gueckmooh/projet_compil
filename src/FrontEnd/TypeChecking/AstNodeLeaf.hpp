@@ -54,7 +54,7 @@ public:
     AstNodeTuple(std::vector<AstNode *> var_list) ;
     std::vector<AstNode*> getVar_list() const;
     void traversal(AstVisitor* vis) override;
-    std::ostream& print(std::ostream& os) ;
+    std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
     ~AstNodeTuple() ;
 };
@@ -62,6 +62,7 @@ public:
 class AstNodeUnit : public AstNodeLeaf {
 public:
     AstNodeUnit();
+    std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
     ~AstNodeUnit() ;
 };

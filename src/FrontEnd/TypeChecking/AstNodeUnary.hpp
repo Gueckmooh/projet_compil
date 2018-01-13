@@ -54,6 +54,8 @@ protected:
     std::vector<std::string> args_list ;
 public:
     FunDef(std::string var_name, std::vector<std::string> args_list, AstNode *body);
+    AstNodeVar & getVar();
+    std::vector<std::string> & getArgs();
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;
     void traversal(AstVisitor* vis) override;
@@ -64,6 +66,7 @@ class AstNodeLetRec : public AstNodeUnary {
     FunDef * fun_def ;
 public:
     AstNodeLetRec(FunDef *fun_def, AstNode *t1);
+    FunDef* getFunDef() const;
     void traversal(AstVisitor* vis) override;
     void accept(AstVisAbstract* vis) override;
     ~AstNodeLetRec();

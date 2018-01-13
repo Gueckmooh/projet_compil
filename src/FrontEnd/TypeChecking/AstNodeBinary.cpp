@@ -131,6 +131,10 @@ AstNodeLet::~AstNodeLet() {}
 AstNodeLetTuple::AstNodeLetTuple(std::vector<std::string> var_list, AstNode * t1, AstNode * t2) :
 AstNodeBinary(C_LETTUPLE, t1, t2), var_list(var_list) {}
 
+std::vector<std::string> & AstNodeLetTuple::getVar_list() {
+    return var_list;
+}
+
 void AstNodeLetTuple::traversal(AstVisitor* vis) {
     AstNodeBinary::traversal(vis) ;
 }
@@ -153,5 +157,4 @@ void AstNodeSub::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
 }
 
-AstNodeSub::~AstNodeSub() {
-}
+AstNodeSub::~AstNodeSub() {}

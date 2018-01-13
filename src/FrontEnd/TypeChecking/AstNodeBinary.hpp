@@ -96,6 +96,7 @@ protected:
     std::vector<std::string> var_list ;
 public:
     AstNodeLetTuple(std::vector<std::string> var_list, AstNode *t1, AstNode *t2);
+    std::vector<std::string> & getVar_list() ;
     void traversal(AstVisitor* vis) override;
     std::ostream& print(std::ostream& os) override;
     void accept(AstVisAbstract* vis) override;

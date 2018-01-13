@@ -4,7 +4,7 @@
 #include "ast.h"
 
 // debug -> prints ast step by step if defined
-// #define _AST_DEBUG_
+#define _AST_DEBUG_
 
 #ifdef _AST_DEBUG_
 #define PRINT_AST_STEP_BY_STEP 1

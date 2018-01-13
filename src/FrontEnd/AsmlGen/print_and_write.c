@@ -370,7 +370,7 @@ void print_term(ptree t) {
             printf(")");
             break;
        default:
-            printf("%d ", t->code);
+            printf("%d \n", t->code);
             assert(false);
     }
 }

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 ptree knorm(ptree t){
-    char *new_var1, *new_var2;
+    char *new_var1, *new_var2, *new_var3;
     listNode *l_node;
     ptree tmp;
     assert(t);
@@ -267,6 +267,63 @@ ptree knorm(ptree t){
                 )
             );
 
+        case T_ARRAY :
+            new_var1 = gen_varname();
+            new_var2 = gen_varname();
+            return ast_let(
+                new_var1,
+                knorm(t->params.tbinary.t1),
+                ast_let(
+                    new_var2,
+                    knorm(t->params.tbinary.t2),
+                    ast_app(
+                        ast_var("create_array\0"),
+                        cons(
+                            (void *)ast_var(new_var2),
+                            cons((void *)ast_var(new_var1), empty())
+                        )
+                    )
+                )
+            );
+
+        case T_GET :
+            new_var1 = gen_varname();
+            new_var2 = gen_varname();
+            return ast_let(
+                new_var1,
+                knorm(t->params.tbinary.t1),
+                ast_let(
+                    new_var2,
+                    knorm(t->params.tbinary.t2),
+                    ast_get(
+                        ast_var(new_var1),
+                        ast_var(new_var2)
+                    )
+                )
+            );
+
+        case T_PUT :
+            new_var1 = gen_varname();
+            new_var2 = gen_varname();
+            new_var3 = gen_varname();
+            return ast_let(
+                new_var1,
+                knorm(t->params.tternary.t1),
+                ast_let(
+                    new_var2,
+                    knorm(t->params.tternary.t2),
+                    ast_let(
+                        new_var3,
+                        knorm(t->params.tternary.t3),
+                        ast_put(
+                            ast_var(new_var1),
+                            ast_var(new_var2),
+                            ast_var(new_var3)
+                        )
+                    )
+                )
+            );
+
         case T_UNIT :
         case T_INT :
         case T_FLOAT :
@@ -278,9 +335,6 @@ ptree knorm(ptree t){
         case T_EQ :
         case T_LE :
         case T_LETREC :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
             return apply_vis(t, knorm);
         default :
             printf("Error : knorm, node code not recognized (%d)\n", t->code);

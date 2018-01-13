@@ -96,6 +96,25 @@ ptree beta_red(ptree t, env_node *env){
                 beta_red(t->params.lettuple.t2, env)
             );
 
+        case T_ARRAY :
+            return ast_array(
+                beta_red(t->params.tbinary.t1, env),
+                beta_red(t->params.tbinary.t2, env)
+            );
+
+        case T_GET :
+            return ast_get(
+                beta_red(t->params.tbinary.t1, env),
+                beta_red(t->params.tbinary.t2, env)
+            );
+
+        case T_PUT :
+            return ast_put(
+                beta_red(t->params.tternary.t1, env),
+                beta_red(t->params.tternary.t2, env),
+                beta_red(t->params.tternary.t3, env)
+            );
+
         case T_UNIT :
         case T_BOOL :
         case T_FLOAT :
@@ -105,9 +124,6 @@ ptree beta_red(ptree t, env_node *env){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
         default :
             printf("TBI : beta_red, code %d needs to be implem\n", t->code);
             return NULL;

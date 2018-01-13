@@ -30,6 +30,9 @@ asml_asmt_t *to_asml_asmt(ptree t){
             // case : let tup = (M1, ...,, Mn) in N -> special care :)
             if (t->params.tlet.t1->code == T_TUPLE){
                 return tuple_to_asml_asmt(t);
+            } else if (t->params.tlet.t1->code == T_ARRAY){
+                printf("Error : Trying to convert a T_ARRAY in to_asml_asmt.\n"
+                "This should never happen\n");
             }
             // non tuple case
             new_asml_asmt->op = t->params.tlet.v;
@@ -44,7 +47,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_INT :
         case T_NEG :
         case T_VAR :
-        case T_IF : // rare case -> all program is a 'if'
+        case T_IF :
         case T_EQ :
         case T_LE :
             new_asml_asmt->op = NULL;
@@ -69,7 +72,16 @@ asml_asmt_t *to_asml_asmt(ptree t){
             return lettuple_to_asmlt(t);
 
         case T_TUPLE :
+            printf("Error, trying to convert a T_TUPLE ast in to_asml_asmt.\n"
+            "This should not happen.\n");
+            exit(1);
 
+        case T_ARRAY :
+            printf("appelé en tant qu'asmt\n");
+            return NULL;
+        case T_GET :
+
+        case T_PUT :
 
         case T_FLOAT :
         case T_FNEG :
@@ -77,9 +89,6 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
         default :
             printf("TBI. ast to asmlt, t->code = %d\n", t->code);
             return NULL;
@@ -172,6 +181,29 @@ asml_exp_t *to_asml_exp(ptree t){
             "this souhld never happen\n");
             return NULL;
 
+        case T_ARRAY :
+            printf("Error : trying to convert a T_ARRAY in to_asml_exp.\n"
+            "This should never happen\n");
+            exit(1);
+
+        case T_GET :
+            assert((t->params.tbinary.t1->code == T_VAR) &&
+                   (t->params.tbinary.t2->code == T_VAR));
+            new_exp->type = ASML_MEM_READ;
+            new_exp->op1 = t->params.tbinary.t1->params.v;
+            new_exp->op2 = t->params.tbinary.t2->params.v;
+            new_exp->op3 = NULL;
+            return new_exp;
+        case T_PUT :
+            assert((t->params.tternary.t1->code == T_VAR) &&
+                   (t->params.tternary.t2->code == T_VAR) &&
+                   (t->params.tternary.t3->code == T_VAR));
+            new_exp->type = ASML_MEM_WRITE;
+            new_exp->op1 = t->params.tternary.t1->params.v;
+            new_exp->op2 = t->params.tternary.t2->params.v;
+            new_exp->op3 = t->params.tternary.t3->params.v;
+            return new_exp;
+
         case T_UNIT :
         case T_FLOAT :
         case T_NOT :
@@ -182,9 +214,6 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_FDIV :
         case T_LETREC :
         case T_LETTUPLE :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
         default :
             printf("TBI. ast_to_asml_exp, t->code = %d\n", t->code);
             return NULL;
@@ -237,11 +266,18 @@ asml_formal_arg_t *string_list_to_asml_args_list(plist str_list){
 
 void send_func_d_to_asml_parser(ptree t){
     pfundef fd = t->params.tletrec.fd;
-    asml_function_t *asml_f = malloc(sizeof(asml_function_t));
-    asml_f->name = fd->var;
-    asml_f->args = string_list_to_asml_args_list(fd->args);
-    asml_f->asmt = to_asml_asmt(fd->body);
-    asml_parser_create_function(asml_f);
+    if ((fd->glob_vars == NULL) && (fd->free_vars == NULL)){
+    // no free variables, a direct call is possible
+        asml_function_t *asml_f = malloc(sizeof(asml_function_t));
+        asml_f->name = fd->var;
+        asml_f->args = string_list_to_asml_args_list(fd->args);
+        asml_f->asmt = to_asml_asmt(fd->body);
+        asml_parser_create_function(asml_f);
+    } else {
+    // presence of free or global variables in the function definition,
+    // we need to make a closure
+
+    }
 }
 
 asml_asmt_t *lettuple_to_asmlt(ptree t){

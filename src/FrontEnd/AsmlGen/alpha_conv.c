@@ -124,7 +124,28 @@ ptree alpha_convert(ptree t, env_node *env){
                 alpha_convert(t->params.lettuple.t2, new_env)
             );
 
+        case T_ARRAY :
+            return ast_array(
+                alpha_convert(t->params.tbinary.t1, env),
+                alpha_convert(t->params.tbinary.t2, env)
+            );
+
+        case T_GET :
+            return ast_get(
+                alpha_convert(t->params.tbinary.t1, env),
+                alpha_convert(t->params.tbinary.t2, env)
+            );
+
+        case T_PUT :
+            return ast_put(
+                alpha_convert(t->params.tternary.t1, env),
+                alpha_convert(t->params.tternary.t2, env),
+                alpha_convert(t->params.tternary.t3, env)
+            );
+
         case T_UNIT :
+            return t;
+
         case T_BOOL :
         case T_FLOAT :
         case T_NOT :
@@ -133,9 +154,6 @@ ptree alpha_convert(ptree t, env_node *env){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
         default :
             printf("TBI : alpha convert, code %d needs to be implem\n", t->code);
             return NULL;

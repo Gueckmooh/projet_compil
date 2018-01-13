@@ -51,3 +51,23 @@ env_node *gen_env_node(char *src, char *dest, env_node *next){
     result->next = next;
     return result;
 }
+
+env_node *gen_env_node_int(char *var_name, int value, env_node *next){
+    env_node *result = malloc(sizeof(env_node));
+    result->src = var_name;
+    result->value = value;
+    result->next = next;
+    return result;
+}
+
+int get_value(char *var_name, env_node *env){
+    if(env != NULL){
+        if(strcmp(env->src, var_name) == 0){
+            return env->value;
+        } else {
+            return get_value(var_name, env->next);
+        }
+    } else {
+        return 0;
+    }
+}

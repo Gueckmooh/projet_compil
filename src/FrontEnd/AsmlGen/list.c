@@ -54,3 +54,23 @@ int list_size(list_t *list)
 bool is_empty(list_t *list) {
     return (list_size(list) == 0);
 }
+
+void print_str_list(plist l){
+    listNode *l_node = l->head;
+    while (l_node !=NULL){
+        printf("%s", (char *)l_node->data);
+        l_node = l_node->next;
+        if (l_node) printf(";");
+    }
+}
+
+bool is_in_str_list(plist l, char *str){
+    listNode *l_node = l->head;
+    while(l_node != NULL){
+        if(strcmp((char *)l_node->data, str) == 0){
+            return true;
+        }
+        l_node = l_node->next;
+    }
+    return false;
+}

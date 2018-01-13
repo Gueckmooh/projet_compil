@@ -32,7 +32,9 @@ enum code {
     T_LETTUPLE,
     T_ARRAY,
     T_GET,
-    T_PUT
+    T_PUT,
+    T_MK_CLOS,
+    T_APP_CLOS
 };
 
 struct tree_;
@@ -41,6 +43,8 @@ struct fundef {
     id var;
     type t;
     plist args;
+    plist free_vars;
+    plist glob_vars;
     struct tree_ *body;
 };
 
@@ -85,6 +89,9 @@ typedef struct tree_ {
           struct tree_ *t1;
           struct tree_ *t2;
       } lettuple;
+      struct {
+          plist l;
+      } tclosure;
   } params;
 } tree;
 

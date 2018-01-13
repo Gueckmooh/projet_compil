@@ -39,11 +39,11 @@ FRONT END
 - [X] alpha-conversion
 - [X] reduction of nested-let
 - [ ] closure conversion
-- [ ] ASML generation
-- [ ] beta-reduction
+- [X] ASML generation
+- [X] beta-reduction
 - [ ] inline expansion
-- [ ] constant folding
-- [ ] elimination of unnecessary definitions
+- [X] constant folding
+- [X] elimination of unnecessary definitions
 
 - [X] Contact with backend structure
 

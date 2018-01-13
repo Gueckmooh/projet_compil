@@ -9,13 +9,13 @@
 #include "env.h"
 #include "constant_folding.h"
 
-bool has_been_modified;
+bool folded_a_const;
 
 ptree apply_constant_folding(ptree t){
     do {
-        has_been_modified = false;
+        folded_a_const = false;
         t = constant_folding(t, NULL);
-    } while (has_been_modified);
+    } while (folded_a_const);
     return t;
 }
 
@@ -162,7 +162,7 @@ ptree constant_folding(ptree t, env_node *env){
                     env
                 );
                 if (can_fold(t->params.tlet.v, t)){
-                    has_been_modified = true;
+                    folded_a_const = true;
                     return (constant_folding(t->params.tlet.t2, env));
                 }
                 t->params.tlet.t2 = constant_folding(t->params.tlet.t2, env);
@@ -301,7 +301,7 @@ bool can_fold(char *var_name, ptree t){
 
 ptree replace_var(ptree t, env_node *env){
     if(is_in_env(env, t->params.v)){
-        has_been_modified = true;
+        folded_a_const = true;
         int value = get_value(t->params.v, env);
         if (value >= 0){
             return ast_integ(value);

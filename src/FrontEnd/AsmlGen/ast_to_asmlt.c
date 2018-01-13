@@ -266,7 +266,7 @@ asml_formal_arg_t *string_list_to_asml_args_list(plist str_list){
 
 void send_func_d_to_asml_parser(ptree t){
     pfundef fd = t->params.tletrec.fd;
-    if ((fd->glob_vars == NULL) && (fd->free_vars == NULL)){
+    if (fd->free_vars == NULL){
     // no free variables, a direct call is possible
         asml_function_t *asml_f = malloc(sizeof(asml_function_t));
         asml_f->name = fd->var;
@@ -344,67 +344,4 @@ asml_asmt_t *tuple_to_asml_asmt(ptree t){
     }
     current->next = to_asml_asmt(t->params.tlet.t2);
     return first;
-}
-
-
-void print_asml_fun(asml_function_t *t){
-    if(t == NULL){
-        printf("FUN :( all NULL)\n");
-        return;
-    }
-    printf("FUN : (name = ");
-    (t->name == NULL ? printf("NULL ;; args = (") : printf("%s ;; exp = ", (char *)t->name));
-    print_asml_fun_args(t->args);
-    printf(" ;; asmt =");
-    print_asml_asmt(t->asmt);
-    printf(")");
-}
-
-void print_asml_asmt(asml_asmt_t *t){
-    if (t == NULL){
-        printf("ASMT :(ALL NULL)");
-        return;
-    }
-    printf("ASMT:(name = ");
-    (t->op == NULL ? printf("NULL") : printf("%s", (char *)(char *)t->op));
-    printf(" ;; exp = ");
-    print_asml_exp(t->exp);
-    printf(" ;; next = ");
-    print_asml_asmt(t->next);
-    printf(")");
-}
-
-void print_asml_exp(asml_exp_t *t){
-    if (t == NULL){
-        printf("EXP : (ALL NULL)");
-    }
-    printf("EXP:(type = ");
-    switch(t->type){
-        case ASML_EXP_INT:
-            printf("int ;; value = %s", (char *)t->op1);
-            break;
-        case ASML_EXP_IDENT:
-            printf("Ident ;; value = %s", (char *)t->op1);
-            break;
-        case ASML_EXP_LABEL:
-            printf("label ;; value = %s", (char *)t->op1);
-            break;
-        case ASML_EXP_ADD:
-            printf("add ;; op1 = %s, op2 = %s", (char *)t->op1, (char *)t->op2);
-            break;
-        case ASML_EXP_CALL:
-            printf("call : fun name = %s ;; args = (", (char *)t->op1);
-            print_asml_fun_args(t->op2);
-            printf(")");
-            break;
-        default:
-            printf("type = %d ", t->type);
-    }
-    printf(")");
-}
-
-void print_asml_fun_args(asml_formal_arg_t *t){
-    if (!t) return;
-    printf(" %s ", (char *)t->val);
-    print_asml_fun_args(t->next);
 }

@@ -5,193 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-void write_binary(FILE* output,char *op, ptree t1, ptree t2) {
-    fprintf(output,"(");
-    write_term(output,t1);
-    fprintf(output," %s ", op);
-    write_term(output,t2);
-    fprintf(output,")");
-}
-
-void write_id(FILE* output,id i) {
-    fprintf(output,"%s", i);
-}
-
-void write_unary(FILE* output,char *op, ptree t) {
-    fprintf(output,"(");
-    fprintf(output,"%s ", op);
-    write_term(output,t);
-    fprintf(output,")");
-}
-
-// precondition: list is not empty
-void write_list(FILE* output,plist l, char *sep, void f(void *)) {
-    assert(l && !is_empty(l));
-    plist cur = l;
-    f(head(cur));
-    cur = tail(cur);
-    while (!is_empty(cur)) {
-        fprintf(output,"%s", sep);
-        f(head(cur));
-        cur = tail(cur);
-    }
-}
-
-void write_term(FILE* output,ptree t) {
-    assert(t);
-    switch (t->code) {
-        case T_UNIT:
-            fprintf(output,"()");
-            break;
-        case T_BOOL:
-            fprintf(output,"%s", t->params.b?"true":"false");
-            break;
-        case T_INT:
-            fprintf(output,"%d", t->params.i);
-            break;
-        case T_FLOAT:
-            fprintf(output,"%.2f", t->params.f);
-            break;
-        case T_LET:
-            fprintf(output,"(");
-            fprintf(output,"let %s = ", t->params.tlet.v);
-            write_term(output, t->params.tlet.t1);
-            fprintf(output," in ");
-            write_term(output, t->params.tlet.t2);
-            fprintf(output,")");
-            break;
-        case T_VAR:
-            fprintf(output,"%s", t->params.v);
-            break;
-        case T_ADD:
-            write_binary(output,"+",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_SUB:
-            write_binary(output,"-",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_FADD:
-            write_binary(output,"+.",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_FSUB:
-            write_binary(output,"-.",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_FMUL:
-            write_binary(output,"*.",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_FDIV:
-            write_binary(output,"/.",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_LE:
-            write_binary(output,"<=",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_EQ:
-            write_binary(output,"=",
-                    t->params.tbinary.t1,
-                    t->params.tbinary.t2);
-            break;
-        case T_NEG:
-            write_unary(output,"-", t->params.t);
-            break;
-        case T_FNEG:
-            write_unary(output,"-.", t->params.t);
-            break;
-        case T_NOT:
-            assert(t->code == T_NOT);
-            assert(t->params.t->code != T_NOT);
-            write_unary(output,"not", t->params.t);
-            break;
-        case T_PUT:
-            fprintf(output,"(");
-            write_term(output,t->params.tternary.t1);
-            fprintf(output,".(");
-            write_term(output,t->params.tternary.t2);
-            fprintf(output,") <- ");
-            write_term(output,t->params.tternary.t3);
-            fprintf(output,")");
-            break;
-        case T_GET:
-            write_term(output,t->params.tbinary.t1);
-            fprintf(output,".(");
-            write_term(output,t->params.tbinary.t2);
-            fprintf(output,")");
-            break;
-        case T_ARRAY:
-            fprintf(output,"(Array.create ");
-            write_term(output,t->params.tbinary.t1);
-            fprintf(output," ");
-            write_term(output,t->params.tbinary.t2);
-            fprintf(output,")");
-            break;
-        case T_IF:
-            fprintf(output,"(if ");
-            write_term(output,t->params.tternary.t1);
-            fprintf(output," then ");
-            write_term(output,t->params.tternary.t2);
-            fprintf(output," else ");
-            write_term(output,t->params.tternary.t3);
-            fprintf(output,")");
-            break;
-        case T_LETREC:
-            fprintf(output,"(let rec %s ",
-                    t->params.tletrec.fd->var);
-        write_list(output,t->params.tletrec.fd->args, " ",
-                   (void *)write_id);
-            fprintf(output," = ");
-            write_term(output,t->params.tletrec.fd->body);
-            fprintf(output," in ");
-            write_term(output,t->params.tletrec.t);
-            fprintf(output,")");
-            break;
-         case T_TUPLE:
-
-            fprintf(output,"(");
-            write_list(output,t->params.ttuple.l, ", ",
-                      (void *)write_term);
-            // TODO - revoir type
-            fprintf(output,")");
-            break;
-         case T_APP:
-            fprintf(output,"(");
-            write_term(output,t->params.tapp.t);
-            fprintf(output," ");
-            write_list(output,t->params.tapp.l, " " ,
-                      (void *)write_term);
-            fprintf(output,")");
-            break;
-         case T_LETTUPLE:
-            fprintf(output,"(let (");
-            write_list(output,t->params.lettuple.l, ", ",
-                      (void *)write_id);
-            fprintf(output,") = ");
-            write_term(output,t->params.lettuple.t1);
-            fprintf(output," in ");
-            write_term(output,t->params.lettuple.t2);
-            fprintf(output,")");
-            break;
-       default:
-            fprintf(output,"%d ", t->code);
-            assert(false);
-    }
-}
-
-
-
-
-void print_term(ptree t);
+extern plist fd_list;
 
 void print_binary(char *op, ptree t1, ptree t2) {
     printf("(");
@@ -373,4 +187,88 @@ void print_term(ptree t) {
             printf("%d \n", t->code);
             assert(false);
     }
+}
+
+
+void print_fd_description(pfundef fd){
+    printf("\n    name = %s\n    args = ", fd->var);
+    print_str_list(fd->args);
+    printf("\n    free vars = ");
+    print_str_list(fd->free_vars);
+    printf("\n    body = ");
+    print_term(fd->body);
+    printf("\n");
+}
+
+void print_all_fd_descriptions(){
+    printf("\nFunctions descriptions :\n");
+    listNode *l_node = fd_list->head;
+    while(l_node != NULL){
+        print_fd_description((pfundef)l_node->data);
+        l_node = l_node->next;
+    }
+}
+
+
+
+void print_asml_fun(asml_function_t *t){
+    if(t == NULL){
+        printf("FUN :( all NULL)\n");
+        return;
+    }
+    printf("FUN : (name = ");
+    (t->name == NULL ? printf("NULL ;; args = (") : printf("%s ;; exp = ", (char *)t->name));
+    print_asml_fun_args(t->args);
+    printf(" ;; asmt =");
+    print_asml_asmt(t->asmt);
+    printf(")");
+}
+
+void print_asml_asmt(asml_asmt_t *t){
+    if (t == NULL){
+        printf("ASMT :(ALL NULL)");
+        return;
+    }
+    printf("ASMT:(name = ");
+    (t->op == NULL ? printf("NULL") : printf("%s", (char *)(char *)t->op));
+    printf(" ;; exp = ");
+    print_asml_exp(t->exp);
+    printf(" ;; next = ");
+    print_asml_asmt(t->next);
+    printf(")");
+}
+
+void print_asml_exp(asml_exp_t *t){
+    if (t == NULL){
+        printf("EXP : (ALL NULL)");
+    }
+    printf("EXP:(type = ");
+    switch(t->type){
+        case ASML_EXP_INT:
+            printf("int ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_IDENT:
+            printf("Ident ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_LABEL:
+            printf("label ;; value = %s", (char *)t->op1);
+            break;
+        case ASML_EXP_ADD:
+            printf("add ;; op1 = %s, op2 = %s", (char *)t->op1, (char *)t->op2);
+            break;
+        case ASML_EXP_CALL:
+            printf("call : fun name = %s ;; args = (", (char *)t->op1);
+            print_asml_fun_args(t->op2);
+            printf(")");
+            break;
+        default:
+            printf("type = %d ", t->type);
+    }
+    printf(")");
+}
+
+void print_asml_fun_args(asml_formal_arg_t *t){
+    if (!t) return;
+    printf(" %s ", (char *)t->val);
+    print_asml_fun_args(t->next);
 }

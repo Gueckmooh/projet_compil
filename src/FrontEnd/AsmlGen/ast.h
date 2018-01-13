@@ -44,7 +44,6 @@ struct fundef {
     type t;
     plist args;
     plist free_vars;
-    plist glob_vars;
     struct tree_ *body;
 };
 

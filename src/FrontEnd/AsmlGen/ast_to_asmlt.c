@@ -326,7 +326,7 @@ asml_asmt_t *tuple_to_asml_asmt(ptree t){
     first->exp = malloc(sizeof(asml_exp_t));
     first->exp->type = ASML_MEM_NEW;
     first->exp->op1 =
-        int_to_str(4 * (t->params.tlet.t1->params.ttuple.l->logicalLength));
+        int_to_str(WORD_SIZE * (t->params.tlet.t1->params.ttuple.l->logicalLength));
     first->exp->op2 = NULL; first->exp->op3 = NULL;
     current = first;
     while(l_node != NULL){

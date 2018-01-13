@@ -36,8 +36,10 @@ ptree constant_folding(ptree t, env_node *env){
         case T_TUPLE :
             l_node = t->params.ttuple.l->head;
             while (l_node != NULL){
-                assert(((ptree)l_node->data)->code == T_VAR);
-                l_node->data = (void *)replace_var((ptree)l_node->data, env);
+                if(((ptree)l_node->data)->code == T_VAR){
+                    l_node->data = (void *)replace_var((ptree)l_node->data, env);
+                }
+                l_node = l_node->next;
             }
             return t;
 
@@ -118,12 +120,12 @@ ptree constant_folding(ptree t, env_node *env){
             }
 
         case T_ARRAY :
-            constant_folding(t->params.tbinary.t1, env);
-            constant_folding(t->params.tbinary.t2, env);
+            t->params.tbinary.t1 = constant_folding(t->params.tbinary.t1, env);
+            t->params.tbinary.t2 = constant_folding(t->params.tbinary.t2, env);
             return t;
 
         case T_GET :
-            constant_folding(t->params.tbinary.t2, env);
+            t->params.tbinary.t2 = constant_folding(t->params.tbinary.t2, env);
             return t;
 
         // ternary

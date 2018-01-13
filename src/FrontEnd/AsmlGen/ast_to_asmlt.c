@@ -187,36 +187,56 @@ asml_exp_t *to_asml_exp(ptree t){
             exit(1);
 
         case T_GET :
-            assert((t->params.tbinary.t1->code == T_VAR) &&
-                   (t->params.tbinary.t2->code == T_VAR));
+            assert(t->params.tbinary.t1->code == T_VAR);
+            assert((t->params.tbinary.t2->code == T_VAR) ||
+                    (t->params.tbinary.t2->code == T_INT));
             new_exp->type = ASML_MEM_READ;
             new_exp->op1 = t->params.tbinary.t1->params.v;
-            new_exp->op2 = t->params.tbinary.t2->params.v;
+            new_exp->op2 = (
+                t->params.tbinary.t2->code == T_VAR ?
+                t->params.tbinary.t2->params.v :
+                int_to_str(WORD_SIZE * t->params.tbinary.t2->params.i)
+            );
             new_exp->op3 = NULL;
             return new_exp;
+
         case T_PUT :
-            assert((t->params.tternary.t1->code == T_VAR) &&
-                   (t->params.tternary.t2->code == T_VAR) &&
-                   (t->params.tternary.t3->code == T_VAR));
+            assert(t->params.tternary.t1->code == T_VAR);
+            assert((t->params.tternary.t2->code == T_VAR) ||
+                   (t->params.tternary.t2->code == T_INT));
+            assert((t->params.tternary.t3->code == T_VAR) ||
+                   (t->params.tternary.t3->code == T_INT));
             new_exp->type = ASML_MEM_WRITE;
             new_exp->op1 = t->params.tternary.t1->params.v;
-            new_exp->op2 = t->params.tternary.t2->params.v;
-            new_exp->op3 = t->params.tternary.t3->params.v;
+            new_exp->op2 = (
+                t->params.tternary.t2->code == T_VAR ?
+                t->params.tternary.t2->params.v :
+                int_to_str(WORD_SIZE * t->params.tternary.t2->params.i)
+            );
+            new_exp->op3 = (
+                t->params.tternary.t3->code == T_VAR ?
+                t->params.tternary.t3->params.v :
+                int_to_str(WORD_SIZE * t->params.tternary.t3->params.i)
+            );;
             return new_exp;
 
+        case T_LETREC :
+        case T_LETTUPLE :
+        case T_NOT :
+            fprintf(stderr, "Error : in ast_to_asml_exp, tryong to convert a "
+            "node with code %d.\nThis should never happen.Exiting\n", t->code);
+            exit(1);
+            
         case T_UNIT :
         case T_FLOAT :
-        case T_NOT :
         case T_FNEG :
         case T_FADD :
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-        case T_LETREC :
-        case T_LETTUPLE :
         default :
-            printf("TBI. ast_to_asml_exp, t->code = %d\n", t->code);
-            return NULL;
+            fprintf(stderr, "TBI. ast_to_asml_exp, t->code = %d\n", t->code);
+            exit(1);
     }
 }
 
@@ -330,6 +350,8 @@ asml_asmt_t *tuple_to_asml_asmt(ptree t){
     first->exp->op2 = NULL; first->exp->op3 = NULL;
     current = first;
     while(l_node != NULL){
+        assert((((ptree)l_node->data)->code == T_VAR) ||
+                (((ptree)l_node->data)->code == T_INT));
         current->next = malloc(sizeof(asml_asmt_t));
         new_varname = gen_varname();
         current->next->op = new_varname;
@@ -337,7 +359,11 @@ asml_asmt_t *tuple_to_asml_asmt(ptree t){
         current->next->exp->type = ASML_MEM_WRITE;
         current->next->exp->op1 = t->params.tlet.v;
         current->next->exp->op2 = int_to_str(i);
-        current->next->exp->op3 = ((ptree)l_node->data)->params.v;
+        current->next->exp->op3 = (
+            ((ptree)l_node->data)->code == T_VAR ?
+            ((ptree)l_node->data)->params.v :
+            int_to_str(((ptree)l_node->data)->params.i)
+        );
         current = current->next;
         l_node = l_node->next;
         i += WORD_SIZE;

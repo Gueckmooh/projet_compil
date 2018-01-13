@@ -42,7 +42,7 @@ struct tree_;
 struct fundef {
     id var;
     type t;
-    plist args;
+    plist args; // list of char *
     plist free_vars;
     struct tree_ *body;
 };
@@ -77,14 +77,14 @@ typedef struct tree_ {
           struct tree_ *t;
       } tletrec;
       struct {
-          plist l;
+          plist l; // list of ptrees
       } ttuple;
       struct {
           struct tree_ *t;
-          plist l;
+          plist l; // list of ptrees
       } tapp;
       struct {
-          plist l;
+          plist l;  // list of char *
           struct tree_ *t1;
           struct tree_ *t2;
       } lettuple;

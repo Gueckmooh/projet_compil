@@ -13,7 +13,7 @@
 #include "closure.h"
 #include "constant_folding.h"
 #include "map_var_and_func.h"
-
+#include "inline_expansion.h"
 // Global variables
 int varname_counter, funcname_counter;
 plist fd_list, used_vars, created_vars;
@@ -78,16 +78,27 @@ ptree ast_transform(ptree t){
         print_term(t5);
         printf("\n\nAfter Constant folding :\n");
         ptree t6 = apply_constant_folding(t5);
-        fd_list = empty();
-        map_functions(t6, NULL);
         print_term(t6);
-        ptree t7 = eliminate_unnecessary_defs(t6);
-        printf("\n\nAfter removing unnecessary defs :\n");
-        print_term(t7);
+        printf("\n\nAfter functions definitions mapping and extraction\n\n");
+        fd_list = empty();
+        ptree t7 = map_functions(t6, NULL);
         print_all_fd_descriptions();
+        printf("\nProgram :\n");
+        print_term(t7);
+        printf("\n\nAfter removing unnecessary defs :\n");
+        ptree t8 = eliminate_unnecessary_defs(t7);
+        print_all_fd_descriptions();
+        printf("\nProgram :\n");
+        print_term(t8);
+        printf("\n\nAfter inline expansion :\n");
+        ptree t9 = apply_inline_expansion(t8);
+        print_all_fd_descriptions();
+        printf("\nProgram :\n");
+        print_term(t9);
         printf("\n\nAST transformation done\n");
         return t7;
     } else {
-        return beta_red(reduce_nested_let(alpha_convert(knorm(t), NULL)), NULL);
+        ptree t1 = beta_red(reduce_nested_let(alpha_convert(knorm(t), NULL)), NULL);
+        return eliminate_unnecessary_defs(apply_constant_folding(t1));
     }
 }

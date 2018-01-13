@@ -12,6 +12,6 @@ plist get_list_of_vars_used(ptree t);
 
 plist get_list_of_vars_created(ptree t);
 
-void map_functions(ptree t, env_node *env);
+ptree map_functions(ptree t, env_node *env);
 
 #endif

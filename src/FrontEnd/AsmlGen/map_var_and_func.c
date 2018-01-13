@@ -373,8 +373,9 @@ plist get_list_of_vars_used(ptree t){
  * let rec f x = x + x in
  * let rec g y = y in ...
  * free_args is always, because there are no nested letrec declarations.
+ * Extracts all function definitions from the program as well
  */
-void map_functions(ptree t, env_node *env){
+ptree map_functions(ptree t, env_node *env){
     env_node *new_env;
     listNode *l_node;
     assert(t);
@@ -391,11 +392,9 @@ void map_functions(ptree t, env_node *env){
                 new_env = gen_env_node((char *)l_node->data, NULL, new_env);
                 l_node = l_node->next;
             }
-            map_functions(t->params.tletrec.fd->body, new_env);
+            t->params.tletrec.fd->body =
+                map_functions(t->params.tletrec.fd->body, new_env);
 
-            // call recursively on the continuation of function (after the in)
-            // with the current env
-            map_functions(t->params.tletrec.t, env);
 
             // find function's free variables
             plist func_args = t->params.tletrec.fd->args;
@@ -423,7 +422,10 @@ void map_functions(ptree t, env_node *env){
                 }
                 l_node = l_node->next;
             }
-            return;
+
+            // call recursively on the continuation of function (after the in)
+            // with the current env
+            return map_functions(t->params.tletrec.t, env);
 
         // leaves
         case T_UNIT :
@@ -431,13 +433,13 @@ void map_functions(ptree t, env_node *env){
         case T_INT :
         case T_FLOAT :
         case T_VAR :
-            return;
+            return t;
 
         // unary nodes
         case T_NOT :
         case T_NEG :
-            map_functions(t->params.t, env);
-            return;
+            t->params.t = map_functions(t->params.t, env);
+            return t;
 
         // binary nodes
         case T_ADD :
@@ -446,40 +448,40 @@ void map_functions(ptree t, env_node *env){
         case T_LE :
         case T_ARRAY :
         case T_GET :
-            map_functions(t->params.tbinary.t1, env);
-            map_functions(t->params.tbinary.t2, env);
-            return;
+            t->params.tbinary.t1 = map_functions(t->params.tbinary.t1, env);
+            t->params.tbinary.t2 = map_functions(t->params.tbinary.t2, env);
+            return t;
 
         // ternary nodes
         case T_IF :
         case T_PUT :
-            map_functions(t->params.tternary.t1, env);
-            map_functions(t->params.tternary.t2, env);
-            map_functions(t->params.tternary.t3, env);
-            return;
+            t->params.tternary.t1 = map_functions(t->params.tternary.t1, env);
+            t->params.tternary.t2 = map_functions(t->params.tternary.t2, env);
+            t->params.tternary.t3 = map_functions(t->params.tternary.t3, env);
+            return t;
 
         // other cases
         case T_LET :
-            map_functions(t->params.tlet.t1, env);
-            map_functions(t->params.tlet.t2, env);
-            return;
+            t->params.tlet.t1 = map_functions(t->params.tlet.t1, env);
+            t->params.tlet.t2 = map_functions(t->params.tlet.t2, env);
+            return t;
 
         case T_APP :
-            map_functions(t->params.tapp.t, env);
-            return;
+            t->params.tapp.t = map_functions(t->params.tapp.t, env);
+            return t;
 
         case T_TUPLE :
             l_node = t->params.ttuple.l->head;
             while(l_node != NULL){
-                map_functions((ptree)l_node->data, env);
+                l_node->data = (void *)map_functions((ptree)l_node->data, env);
                 l_node = l_node->next;
             }
-            return;
+            return t;
 
         case T_LETTUPLE :
-            map_functions(t->params.lettuple.t1, env);
-            map_functions(t->params.lettuple.t2, env);
-            return;
+            t->params.lettuple.t1 = map_functions(t->params.lettuple.t1, env);
+            t->params.lettuple.t2 = map_functions(t->params.lettuple.t2, env);
+            return t;
 
         // TBI
         case T_FNEG :

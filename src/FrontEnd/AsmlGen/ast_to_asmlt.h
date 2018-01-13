@@ -4,7 +4,9 @@
 #include "asml_parser_types.h"
 #include "ast.h"
 
-#define _ALLOCATE_BYTES_
+// #define _ALLOCATE_BYTES_
+// if defined, call mem 4 to allocate an array of size 1 ; if not, call
+// mem 1 to allocate an array of size 1.
 
 #ifdef _ALLOCATE_BYTES_
     #define WORD_SIZE 4
@@ -12,8 +14,6 @@
     #define WORD_SIZE 1
 #endif
 
-// if defined, call mem 4 to allocate an array of size 1 ; if not, call
-// mem 1 to allocate an array of size 1.
 
 asml_function_t *build_asml_from_ptree(ptree t);
 

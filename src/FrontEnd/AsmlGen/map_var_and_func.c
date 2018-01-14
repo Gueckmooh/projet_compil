@@ -7,6 +7,7 @@
 #include "ast.h"
 #include "list.h"
 #include "map_var_and_func.h"
+#include "utils.h"
 
 extern plist used_vars, created_vars, fd_list;
 plist vars_to_remove;
@@ -398,8 +399,10 @@ ptree map_functions(ptree t, env_node *env){
 
             // find function's free variables
             plist func_args = t->params.tletrec.fd->args;
-            plist vars_in_body = get_list_of_vars_used(t->params.tletrec.fd->body);
-            plist vars_created_in_body = get_list_of_vars_created(t->params.tletrec.fd->body);
+            plist vars_in_body =
+                get_list_of_vars_used(t->params.tletrec.fd->body);
+            plist vars_created_in_body =
+                get_list_of_vars_created(t->params.tletrec.fd->body);
             l_node = vars_in_body->head;
             t->params.tletrec.fd->free_vars = empty();
             while(l_node != NULL){
@@ -413,7 +416,8 @@ ptree map_functions(ptree t, env_node *env){
                 } else if (
                     !is_in_str_list(func_args, (char *)l_node->data) &&
                     is_in_str_list(vars_in_body, (char *)l_node->data) &&
-                    !is_in_str_list(vars_created_in_body, (char *)l_node->data)
+                    !is_in_str_list(vars_created_in_body, (char *)l_node->data) &&
+                    !is_a_label((char *)l_node->data)
                     ){
                     t->params.tletrec.fd->free_vars = cons(
                     (char *)l_node->data,

@@ -183,6 +183,20 @@ void print_term(ptree t) {
             print_term(t->params.lettuple.t2);
             printf(")");
             break;
+        case T_MK_CLOS:
+            printf("(make_closure(");
+            // print_list(t->params.tclosure.l, ",", (void*)print_term);
+            // TODO -> revoir type
+            print_str_list(t->params.tclosure.l);
+            printf("))");
+            break;
+        case T_APP_CLOS:
+            printf("(call_closure(");
+            // print_list(t->params.tclosure.l, ",", (void*)print_term);
+            // TODO -> revoir type
+            print_str_list(t->params.tclosure.l);
+            printf("))");
+            break;
        default:
             printf("%d \n", t->code);
             assert(false);
@@ -201,7 +215,7 @@ void print_fd_description(pfundef fd){
 }
 
 void print_all_fd_descriptions(){
-    printf("\nFunctions descriptions :\n");
+    printf("\nFunctions descriptions :");
     listNode *l_node = fd_list->head;
     while(l_node != NULL){
         print_fd_description((pfundef)l_node->data);
@@ -271,4 +285,14 @@ void print_asml_fun_args(asml_formal_arg_t *t){
     if (!t) return;
     printf(" %s ", (char *)t->val);
     print_asml_fun_args(t->next);
+}
+
+
+void print_str_list(plist l){
+    listNode *l_node = l->head;
+    while (l_node !=NULL){
+        printf("%s", (char *)l_node->data);
+        l_node = l_node->next;
+        if (l_node) printf(", ");
+    }
 }

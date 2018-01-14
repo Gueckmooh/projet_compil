@@ -95,6 +95,11 @@ ptree ast_transform(ptree t){
         print_all_fd_descriptions();
         printf("\nProgram :\n");
         print_term(t9);
+        printf("\n\nAfter closure conversion :\n");
+        ptree t10 = apply_closure_conversion(t9);
+        print_all_fd_descriptions();
+        printf("\nProgram :\n");
+        print_term(t10);
         printf("\n\nAST transformation done\n");
         return t7;
     } else {

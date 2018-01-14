@@ -8,6 +8,7 @@
 #include "ast.h"
 #include "utils.h"
 #include "alpha_conv.h"
+#include "reduce_nested_let.h"
 
 extern plist fd_list;
 
@@ -77,7 +78,8 @@ ptree apply_inline_expansion(ptree t){
         }
         l_node = l_node->next;
     }
-    return t;
+    // applying inline expansion can nest let
+    return reduce_nested_let(t);
 }
 
 ptree replace_funcall_by_body(pfundef fd, ptree t){
@@ -89,9 +91,6 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
     switch(t->code){
         // function call -> the interesting part
         case T_APP :
-            printf("app node : ");
-            print_term(t);
-            printf("\n");
             if((t->params.tapp.t->code == T_VAR) &&
                 (strcmp(t->params.tapp.t->params.v, fd->var) == 0)){
                 env = NULL;

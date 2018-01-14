@@ -26,7 +26,5 @@ plist tail(plist l);
 plist append(plist l1, plist l2);
 bool is_empty(plist l);
 
-void print_str_list(plist l);
-
 bool is_in_str_list(plist l, char *str);
 #endif

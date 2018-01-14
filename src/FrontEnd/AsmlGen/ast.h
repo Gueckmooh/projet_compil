@@ -154,6 +154,10 @@ ptree ast_lettuple(plist l, ptree t1, ptree t2);
 
 ptree ast_letrec(pfundef fd, ptree t1);
 
+ptree ast_mkclos(plist l);
+
+ptree ast_app_clos(plist l);
+
 id id_gen();
 
 ptree apply_vis(ptree t, ptree (*vis)(ptree));

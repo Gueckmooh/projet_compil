@@ -180,12 +180,24 @@ ptree ast_letrec(pfundef fd, ptree t1) {
     return t;
 }
 
+ptree ast_mkclos(plist l){
+    ptree t = malloc(sizeof(tree));
+    t->code = T_MK_CLOS;
+    t->params.tclosure.l = l;
+    return t;
+}
+
+ptree ast_app_clos(plist l){
+    ptree t = malloc(sizeof(tree));
+    t->code = T_APP_CLOS;
+    t->params.tclosure.l = l;
+    return t;
+}
 ptree apply_vis(ptree t, ptree (*vis)(ptree)){
     listNode *l_node;
     switch(t->code){
         // leaves
         case T_INT :
-        case T_LET :
         case T_VAR :
         case T_UNIT :
         case T_BOOL :
@@ -223,6 +235,12 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
             t->params.tternary.t3 = vis(t->params.tternary.t3);
             return t;
 
+        // let
+        case T_LET :
+            t->params.tlet.t1 = vis(t->params.tlet.t1);
+            t->params.tlet.t2 = vis(t->params.tlet.t2);
+            return t;
+
         //letrec
         case T_LETREC :
             t->params.tletrec.t = vis(t->params.tletrec.t);
@@ -238,7 +256,7 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
                 l_node = l_node->next;
             }
             return t;
-            
+
         // lettuple
         case T_LETTUPLE :
             t->params.lettuple.t1 = vis(t->params.lettuple.t1);

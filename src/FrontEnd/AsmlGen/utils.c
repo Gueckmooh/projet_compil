@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
+#include "stdbool.h"
 extern int varname_counter;
 extern int funcname_counter;
 
@@ -39,4 +39,9 @@ char *int_to_str(int i){
     char *res = malloc(VARNAME_SIZE);
     sprintf(res,"%d", i);
     return res;
+}
+
+bool is_a_label(char *str){
+    assert(str);
+    return (*str == '_');
 }

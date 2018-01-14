@@ -18,4 +18,6 @@ char *prefix_funcname();
 
 char *int_to_str(int i);
 
+bool is_a_label(char *str);
+
 #endif

@@ -42,48 +42,48 @@ ptree reduce_nested_let(ptree t){
         } else {
             return t;
         }
-    } else if (t->code == T_LETREC){
-        t->params.tletrec.fd->body =
-            reduce_nested_let(t->params.tletrec.fd->body);
-        t->params.tletrec.t = reduce_nested_let(t->params.tletrec.t);
-        if(t->params.tletrec.fd->body->code == T_LET){
-            return t;
-            // ptree let_node = t->params.tletrec.fd->body;
-            // t->params.tletrec.fd->body =
-            //     t->params.tletrec.fd->body->params.tlet.t2;
-            // return ast_let(
-            //     let_node->params.tlet.v,
-            //     let_node->params.tlet.t1,
-            //     ast_letrec(
-            //         t->params.tletrec.fd,
-            //         t->params.tletrec.t
-            //     )
-            // );
-        } else if(t->params.tletrec.fd->body->code == T_LETREC){
-            // let rec f1 = (let rec f2 = M in N) in O becomes
-            // let rec f2 = M in let rec f1 = N in O
-            pfundef fd_f2 = t->params.tletrec.fd->body->params.tletrec.fd;
-            t->params.tletrec.fd->body = t->params.tletrec.fd->body->params.tletrec.t; // N
-            return ast_letrec(
-                fd_f2,
-                ast_letrec(
-                    t->params.tletrec.fd,
-                    t->params.tletrec.t
-                )
-            );
-        } else if(t->params.tletrec.fd->body->code == T_LETTUPLE){
-            return t;
-            // return ast_lettuple(
-            //     t->params.tletrec.fd->body->params.lettuple.l,
-            //     t->params.tletrec.fd->body->params.lettuple.t1,
-            //     ast_letrec(
-            //         t->params.tletrec.fd,
-            //         t->params.tletrec.fd->body->params.lettuple.t2
-            //     )
-            // );
-        } else {
-            return t;
-        }
+    // } else if (t->code == T_LETREC){
+    //     t->params.tletrec.fd->body =
+    //         reduce_nested_let(t->params.tletrec.fd->body);
+    //     t->params.tletrec.t = reduce_nested_let(t->params.tletrec.t);
+    //     if(t->params.tletrec.fd->body->code == T_LET){
+    //         return t;
+    //         // ptree let_node = t->params.tletrec.fd->body;
+    //         // t->params.tletrec.fd->body =
+    //         //     t->params.tletrec.fd->body->params.tlet.t2;
+    //         // return ast_let(
+    //         //     let_node->params.tlet.v,
+    //         //     let_node->params.tlet.t1,
+    //         //     ast_letrec(
+    //         //         t->params.tletrec.fd,
+    //         //         t->params.tletrec.t
+    //         //     )
+    //         // );
+    //     } else if(t->params.tletrec.fd->body->code == T_LETREC){
+    //         // let rec f1 = (let rec f2 = M in N) in O becomes
+    //         // let rec f2 = M in let rec f1 = N in O
+    //         pfundef fd_f2 = t->params.tletrec.fd->body->params.tletrec.fd;
+    //         t->params.tletrec.fd->body = t->params.tletrec.fd->body->params.tletrec.t; // N
+    //         return ast_letrec(
+    //             fd_f2,
+    //             ast_letrec(
+    //                 t->params.tletrec.fd,
+    //                 t->params.tletrec.t
+    //             )
+    //         );
+    //     } else if(t->params.tletrec.fd->body->code == T_LETTUPLE){
+    //         return t;
+    //         // return ast_lettuple(
+    //         //     t->params.tletrec.fd->body->params.lettuple.l,
+    //         //     t->params.tletrec.fd->body->params.lettuple.t1,
+    //         //     ast_letrec(
+    //         //         t->params.tletrec.fd,
+    //         //         t->params.tletrec.fd->body->params.lettuple.t2
+    //         //     )
+    //         // );
+    //     } else {
+    //         return t;
+    //     }
     } else if(t->code == T_LETTUPLE){
         t->params.lettuple.t1 = reduce_nested_let(t->params.lettuple.t1);
         t->params.lettuple.t2 = reduce_nested_let(t->params.lettuple.t2);

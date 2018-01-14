@@ -5,8 +5,10 @@
 #include "list.h"
 #include "env.h"
 
-void convert_fd_bodies();
+ptree apply_closure_conversion(ptree t);
 
-void convert_fd_body();
+ptree apply_clos(ptree t);
+
+pfundef get_fd(char *label);
 
 #endif

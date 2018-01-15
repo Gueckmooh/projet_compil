@@ -24,11 +24,11 @@ namespace asml {
    */
   class asml_boolean {
   public:
-    static const int LT = 3;
-    static const int GT = 4;
-    static const int LE = 5;
-    static const int GE = 6;
-    static const int EQUAL = 7;
+    static const int LT = 3; /*! Less Than */
+    static const int GT = 4; /*! Greater Than */
+    static const int LE = 5; /*! Less or Equal than */
+    static const int GE = 6; /*! Greater or Equal than */
+    static const int EQUAL = 7; /*! Equal */
 
     asml_boolean (int);
     virtual ~asml_boolean (void) {};
@@ -43,11 +43,11 @@ namespace asml {
 
     virtual string generate (void);
   protected:
-    int type_id;
-    string op1;
-    string op2;
+    int type_id; /*! ID of type */
+    string op1; /*! The first operand of the addition in let op1 = add op2 op3 in .. */
+    string op2; /*! The second operand of the addition in let op1 = add op2 op3 in .. */
   };
 
-} // TODO
+} 
 
 #endif //__ASML_BOOLEAN_H__

@@ -56,21 +56,33 @@ namespace nom_name_space
  // BON CA CEST LES EXEMPLES VOILAAAAAAAAAAAAAAA
   public:
     /*!
-     *  \brief Constructeur
+     *  \brief Constructor
      *
-     *  Constructeur de la classe CPlayer
+     *  Constructor of the class 
      *
      *  \param listSongs : liste initial des morceaux
      */
     CPlayer(std::list<string> listSongs);
  
     /*!
-     *  \brief Destructeur
+     *  \brief Destructor
      *
-     *  Destructeur de la classe CPlayer
+     *  Destructor of the class
      */
     virtual ~CPlayer();
- 
+     /*!
+     *  \brief Number of Register
+     *
+     *  Return the number of registers
+     *  \return int of register
+     */
+
+    /*!
+     * \brief Getter of operands
+     * Return the list of operands
+     * \return list of string of operands
+     */
+
   public:
     /*!
      *  \brief Ajout d'un morceau

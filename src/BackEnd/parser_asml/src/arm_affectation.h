@@ -8,10 +8,25 @@
 
 #include "arm_instruction.h"
 
-namespace arm {
+/**
+ * \file      arm_addition.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Affectation function implementation in ARM
+ *
+ */
 
+namespace arm {
+/*! \class arm_addition
+ * \brief Affectation instruction Object
+ */
   class arm_affectation : public arm_instruction {
   public:
+    /*!
+     *  \brief Constructor of the class arm_affectation
+     *
+     */
     arm_affectation (void);
 
     virtual string get_instruction (void);
@@ -20,12 +35,22 @@ namespace arm {
 
     virtual string get_op1 (void);
     virtual string get_op2 (void);
-
+    /*!
+     *  \brief Number of Register
+     *
+     *  Return the number of registers
+     *  \return int of register
+     */
     virtual int nb_regs (void);
+    /*!
+     * \brief Getter of operands
+     * Return the list of operands
+     * \return list of string of operands
+     */
     virtual list<string>* get_op_list (void);
   protected:
-    string op1;
-    string op2;
+    string op1;/*!< first operand              >*/
+    string op2;/*!< second operand             > */
   };
 
 }

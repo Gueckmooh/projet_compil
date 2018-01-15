@@ -3,9 +3,7 @@
  * \author    The C Team - Enzo Brignon
  * \version   1.0
  * \date      17 Janvier 2018
- * \brief     Description breve du fichier
- *
- * \details    Description detaillee du fichier (non obligee)
+ * \brief     Defines the asml_affectation class
  */
 
 #ifndef __ASML_AFFECTATION_H__

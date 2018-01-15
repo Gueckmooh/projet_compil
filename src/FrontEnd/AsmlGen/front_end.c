@@ -103,9 +103,15 @@ ptree ast_transform(ptree t){
         printf("\n\nAST transformation done\n");
         return t10;
     } else {
-        ptree t1 = beta_red(reduce_nested_let(alpha_convert(knorm(t), init_env())), NULL);
-        ptree t2 = eliminate_unnecessary_defs(apply_constant_folding(t1));
-        ptree t3 = apply_inline_expansion(apply_closure_conversion(t2));
-        return t3;
+        ptree t2 = knorm(t);
+        ptree t3 = alpha_convert(t2, init_env());
+        ptree t4 = reduce_nested_let(t3);
+        ptree t5 = beta_red(t4, NULL);
+        ptree t6 = apply_constant_folding(t5);
+        ptree t7 = map_functions(t6, NULL);
+        ptree t8 = eliminate_unnecessary_defs(t7);
+        ptree t9 = apply_inline_expansion(t8);
+        ptree t10 = apply_closure_conversion(t9);
+        return t10;
     }
 }

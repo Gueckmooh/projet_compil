@@ -14,8 +14,14 @@
 #include "asml_node.h"
 #include "asml_instruction.h"
 
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
 
+  /*! \class asml_unary_node
+   *  \brief
+   */
   class asml_unary_node : public asml_node {
   public:
     asml_unary_node (void);
@@ -31,6 +37,6 @@ namespace asml {
     asml_instruction* instruction;
   };
 
-}
+} // TODO
 
 #endif // __ASML_UNARY_NODE_H__

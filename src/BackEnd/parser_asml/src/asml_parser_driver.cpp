@@ -30,14 +30,6 @@ extern "C" void asml_parser_create_function (asml_function_t* func) {
     function->add_param (var);
     current_arg = current_arg->next;
   }
-  // while (current_asmt != NULL) {
-  //   if (current_asmt->op != NULL) {
-  //     var = new asml_integer ();
-  //     var->set_name (string(current_asmt->op));
-  //     function->add_variable (var);
-  //   }
-  //   current_asmt = current_asmt->next;
-  // }
   set_variables (function, current_asmt);
   tree = asml_parser_create_tree (asmt);
   asml_factory::add_function (function, tree);

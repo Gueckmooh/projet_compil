@@ -1,16 +1,29 @@
-#include <string>
+/**
+ * \file      asml_boolean.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_boolean class
+ */
 
 #ifndef __ASML_BOOLEAN_H__
 #define __ASML_BOOLEAN_H__
 
+#include <string>
+
 using namespace std;
 
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
 
+  /*! \class   asml_addition
+   *  \brief   class that represent an addition in asml
+   *  \details it inherits from asml_instruction
+   */
   class asml_boolean {
   public:
-    static const int CONJONCTION = 1; // TODO ??
-    static const int DISJONCTION = 2; // TODO ??
     static const int LT = 3;
     static const int GT = 4;
     static const int LE = 5;
@@ -35,6 +48,6 @@ namespace asml {
     string op2;
   };
 
-}
+} // TODO
 
 #endif //__ASML_BOOLEAN_H__

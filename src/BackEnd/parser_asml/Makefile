@@ -88,6 +88,9 @@ endif
 ifneq ("$(VERBOSE)", "")
 DEBUGFLAGS += -D__VERBOSE
 endif
+ifneq ("$(ASML)", "")
+DEBUGFLAGS += -D__TO_ASML
+endif
 
 CFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CFLAGS += -std=gnu99

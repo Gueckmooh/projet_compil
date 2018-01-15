@@ -1,11 +1,9 @@
 /**
- *
  * \file      asml_variable.h
  * \author    The C Team - Enzo Brignon
  * \version   1.0
  * \date      17 Janvier 2018
  * \brief     Class that represent a variable in ASML
- *
  */
 
 #ifndef __ASML_VARIABLE_H__
@@ -33,6 +31,6 @@ namespace asml {
     string name; /*!< The name of the variable */
   };
 
-}
+} // TODO
 
 #endif //__ASML_VARIABLE_H__

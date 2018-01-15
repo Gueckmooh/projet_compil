@@ -1,13 +1,27 @@
-#include <string>
-#include <iostream>
+/**
+ * \file      asml_instruction.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_instruction class
+ */
 
 #ifndef __ASML_INSTRUCTION_H__
 #define __ASML_INSTRUCTION_H__
 
+#include <string>
+#include <iostream>
+
 using namespace std;
 
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
 
+  /*! \class asml_instruction
+   *  \brief This class is defines the different interfaces for instructions in asml
+   */
   class asml_instruction {
     friend class asml_factory;
   public:
@@ -30,6 +44,6 @@ namespace asml {
     int type_id;
   };
 
-}
+} // TODO
 
 #endif //__ASML_INSTRUCTION_H__

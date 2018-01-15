@@ -1,27 +1,26 @@
-#include <string>
-#include <map>
-#include <vector>
-
-#ifndef __ARM_ADDITION_H__
-#define __ARM_ADDITION_H__
-
-#include "arm_instruction.h"
-
 /**
  * \file      arm_addition.h
  * \author    The C Team - Enzo Brignon
  * \version   1.0
  * \date      17 Janvier 2018
  * \brief     Addition function implementation in ARM
- *
  */
+
+#ifndef __ARM_ADDITION_H__
+#define __ARM_ADDITION_H__
+
+#include <string>
+#include <map>
+#include <vector>
+
+#include "arm_instruction.h"
 
 using namespace std;
 
 namespace arm {
-/*! \class arm_addition
- * \brief Addition instruction Object
- */
+  /*! \class arm_addition
+   * \brief Addition instruction Object
+   */
   class arm_addition : public arm_instruction {
   public:
     /*!

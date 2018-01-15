@@ -1,5 +1,4 @@
 #include <functional>
-#include <boost/range/adaptor/reversed.hpp>
 
 #ifndef __ARM_REGISTER_OPTIMIZER_H__
 #define __ARM_REGISTER_OPTIMIZER_H__

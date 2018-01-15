@@ -5,15 +5,21 @@ namespace arm {
   set<arm_cfg_node*> arm_cfg_util::used;
 
   void print_vars (list<string>* vars) {
+    #if defined __DEBUG && defined __VERBOSE
+    cout << "arm::arm_cfh_util::print_vars" << endl;
     for (list<string>::iterator it = vars->begin();
 	 it != vars->end();
 	 it++) {
       cout << (*it) << "; ";
     }
     cout << endl;
+    #endif
+    return;
   }
 
   void arm_cfg_util::print_cfg (arm_cfg_node* node) {
+#if defined __DEBUG && defined __VERBOSE
+    cout << "arm::arm_cfg_util::print_cfg" << endl;
     arm_cfg_node* current = node;
     if ((*(used.find(current))) != current) {
       used.insert (current);
@@ -34,6 +40,8 @@ namespace arm {
       }
       cout << endl;
     }
+#endif
+    return;
   }
 
 }

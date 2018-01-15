@@ -85,6 +85,9 @@ DEBUGFLAGS += -D__DEBUG
 else
 DEBUGFLAGS = -O2
 endif
+ifneq ("$(VERBOSE)", "")
+DEBUGFLAGS += -D__VERBOSE
+endif
 
 CFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CFLAGS += -std=gnu99

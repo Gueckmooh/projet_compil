@@ -1,6 +1,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <functional>
 
 #ifndef __ARM_CFG_ELEMENT_H__
 #define __ARM_CFG_ELEMENT_H__
@@ -19,6 +20,7 @@ namespace arm {
     list<string>::iterator vars_end (void);
     list<string>* get_vars (void);
     int get_nbregs (void);
+    void set_callback (function<map<string, string>(void)>);
   protected:
     map<string, string> regs_maps;
     list<string> used_variables;

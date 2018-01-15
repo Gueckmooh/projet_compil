@@ -1,4 +1,5 @@
 #include <string>
+#include <set>
 #include <map>
 #include <vector>
 #include <list>
@@ -29,6 +30,7 @@ namespace arm {
     vector<arm_cfg_element*> elements;
     vector<list<string>*> var_instr;
     list<string> used_variables;
+    set<string> destroyed_variables;
     vector<map<string, string>> regs_maps;
     vector<map<string, int>> scope;
     vector<int> nb_regs;

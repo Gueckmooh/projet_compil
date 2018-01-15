@@ -11,28 +11,37 @@ namespace arm {
   }
 
   void print_dom (arm_dom_node* root) {
+#if defined __DEBUG && defined __VERBOSE
+    cout << "arm::arm_dom_node_factory::prnt_dom" << endl;
     cout << root;
     for (auto& e: *root->get_succs())
       cout << " : " << e;
     cout << endl;
     for (auto& e: *root->get_succs())
       print_dom (e);
+#endif
+    return;
   }
 
   arm_dom_node* arm_dom_node_factory::generate (void) {
+#if defined __DEBUG && defined __VERBOSE
+    cout << "arm::arm_dom_node_factory::generate" << endl;
     for (auto& e: succs)
       cout << "[" << e.first << " : " << e.second << "]" << endl;
     cout << endl;
+#endif
     arm_cfg_node* n = cfg_root;
     while (!n->get_succs()->empty())
       n = n->get_succs()->back();
-    set<path>* p = find_path(n);
     find_father(n);
+#if defined __DEBUG && defined __VERBOSE
+    set<path>* p = find_path(n);
     for (auto& e: *p) {
       for (auto& f: e)
 	cout << f << " : ";
       cout << endl;
     }
+#endif
     gen (cfg_root);
     //print_dom(dom_root);
     return dom_root;
@@ -94,7 +103,9 @@ namespace arm {
     while(!present(*it, paths)) {
       it++;
     }
+#if defined __DEBUG && defined __VERBOSE
     cout << node << " : " << *it << endl;
+#endif
     return *it;
   }
 

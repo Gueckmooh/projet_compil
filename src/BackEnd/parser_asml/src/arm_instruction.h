@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <functional>
 
 #ifndef __ARM_INSTRUCION_H__
 #define __ARM_INSTRUCION_H__
@@ -33,8 +34,11 @@ namespace arm {
 
     virtual void set_var_offset (map<string, string>*);
     void add_param (string);
+    void set_callback (function<map<string, string>(void)>);
+    vector<string> get_used (void);
   protected:
     int type_id;
+    function<map<string, string>(void)> callback;
     map<string, string>* offset;
     vector<string> params;
   };

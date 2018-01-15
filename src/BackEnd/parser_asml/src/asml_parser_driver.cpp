@@ -74,7 +74,6 @@ asml_node* asml_parser_create_tree (asml_asmt_t* asmt) {
   case ASML_EXP_ADD    :
     node = new asml_unary_node ();
     instruction = new asml_addition ();
-    
     dynamic_cast<asml_addition*>(instruction)->set_op1 (string((asmt->op == NULL ? "0" : (char*)asmt->op)));
     dynamic_cast<asml_addition*>(instruction)->set_op2 (string((char*)asmt->exp->op1));
     dynamic_cast<asml_addition*>(instruction)->set_op3 (string((char*)asmt->exp->op2));

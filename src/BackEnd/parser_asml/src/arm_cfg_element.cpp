@@ -28,4 +28,8 @@ namespace arm {
     return nb_regs;
   }
 
+  void arm_cfg_element::set_callback (function<map<string, string>(void)> callback) {
+    instruction->set_callback(callback);
+  }
+
 }

@@ -19,22 +19,6 @@ extern "C" void asml_set_function_name (char* name) {
 }
 
 extern "C" void asml_add_int_param (char* params) {
-  /*
-  vector<string>* vect = new vector<string> ();
-  char* current = params;
-  cout << string(params) << endl;
-  while (*current != '\0') {
-    if (*current == ' ')
-      *current = '\0';
-    current++;
-  }
-  current = params;
-  while (strlen(current) != 0) {
-    vect->push_back(string(current));
-    current += strlen (current)+1;
-  }
-  asml_factory::add_int_param (vect);
-  */
   string name = string(params);
   asml_factory::add_int_param (name);
 }
@@ -51,7 +35,6 @@ extern "C" void asml_add_funcall (char* funcname, char* retval, char* params) {
   vector<string>* vect = new vector<string> ();
   char* current = params;
   if (params != NULL) {
-    //cout << string(params) << endl;
     while (*current != '\0') {
       if (*current == ' ')
 	*current = '\0';

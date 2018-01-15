@@ -5,8 +5,10 @@
 #include <string.h>
 #include <assert.h>
 #include "stdbool.h"
+
 extern int varname_counter;
 extern int funcname_counter;
+extern plist fd_list;
 
 char *cpy_str(char *src){
     char *res = malloc(strlen(src) + 1);
@@ -44,4 +46,21 @@ char *int_to_str(int i){
 bool is_a_label(char *str){
     assert(str);
     return (*str == '_');
+}
+
+
+pfundef get_fd(char *label){
+    assert(is_a_label(label));
+    listNode *l_node = fd_list->head;
+    pfundef fd;
+    while(l_node != NULL){
+        fd = (pfundef)l_node->data;
+        if(strcmp(fd->var, label) == 0){
+            return fd;
+        }
+        l_node = l_node->next;
+    }
+    // case -> fd was not found, it's a label to an external function
+    // (should be prefixed by _min_caml_)
+    return NULL;
 }

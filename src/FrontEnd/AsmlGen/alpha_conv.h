@@ -6,4 +6,5 @@
 
 ptree alpha_convert(ptree t, env_node *env);
 
+env_node *init_env();
 #endif

@@ -144,3 +144,7 @@ ptree alpha_convert(ptree t, env_node *env){
     }
 
 }
+
+env_node *init_env(){
+    return gen_env_node("print_int", "_min_caml_print_int", NULL);
+}

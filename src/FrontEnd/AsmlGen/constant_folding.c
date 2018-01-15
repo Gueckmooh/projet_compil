@@ -34,13 +34,13 @@ ptree constant_folding(ptree t, env_node *env){
             return replace_var(t, env);
 
         case T_TUPLE :
-            l_node = t->params.ttuple.l->head;
-            while (l_node != NULL){
-                if(((ptree)l_node->data)->code == T_VAR){
-                    l_node->data = (void *)replace_var((ptree)l_node->data, env);
-                }
-                l_node = l_node->next;
-            }
+            // l_node = t->params.ttuple.l->head;
+            // while (l_node != NULL){
+            //     if(((ptree)l_node->data)->code == T_VAR){
+            //         l_node->data = (void *)replace_var((ptree)l_node->data, env);
+            //     }
+            //     l_node = l_node->next;
+            // }
             return t;
 
         // unary
@@ -241,7 +241,17 @@ bool can_fold(char *var_name, ptree t){
         case T_INT :
         case T_FLOAT :
         case T_VAR :
+            return true;
+
         case T_TUPLE :
+            l_node = t->params.ttuple.l->head;
+            while(l_node != NULL){
+                assert(((ptree)l_node->data)->code == T_VAR);
+                if(strcmp(var_name, ((ptree)l_node->data)->params.v) == 0){
+                    return false;
+                }
+                l_node = l_node->next;
+            }
             return true;
 
         // unary

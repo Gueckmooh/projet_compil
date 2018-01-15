@@ -31,6 +31,7 @@ ptree beta_red(ptree t, env_node *env){
 
         case T_APP :
         // replace args var_names if needed
+            t->params.tapp.t = beta_red(t->params.tapp.t, env);
             l_node = t->params.tapp.l->head;
             while(l_node != NULL){
                 l_node->data = (void *)beta_red(((ptree)l_node->data), env);
@@ -97,7 +98,7 @@ ptree beta_red(ptree t, env_node *env){
                 beta_red(t->params.lettuple.t1, env),
                 beta_red(t->params.lettuple.t2, env)
             );
-            
+
         case T_MK_CLOS:
         case T_APP_CLOS:
             fprintf(stderr, "TBI : beta_red, code %d needs to be"

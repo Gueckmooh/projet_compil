@@ -34,6 +34,6 @@ namespace arm {
     mutable arm_dom_node* pred;
   };
 
-}
+} // TODO
 
 #endif//__ARM_DOM_NODE_H__

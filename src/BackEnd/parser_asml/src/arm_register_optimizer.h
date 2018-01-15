@@ -29,6 +29,6 @@ namespace arm {
     list<arm_dom_node*> already_visited;
   };
 
-}
+} // TODO
 
 #endif//__ARM_REGISTER_OPTIMIZER_H__

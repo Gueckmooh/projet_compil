@@ -62,6 +62,6 @@ namespace arm {
     string value; /*!< value that need to be written in memory            */
   };
 
-}
+} // TODO
 
 #endif //__ARM_MEM_WRITE_H__

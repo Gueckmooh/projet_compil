@@ -59,6 +59,6 @@ namespace arm {
     string mem_addr; /*!<    memory address         */
   };
 
-}
+} // TODO
 
 #endif //__ARM_MEM_READ_H__

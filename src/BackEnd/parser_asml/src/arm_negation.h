@@ -57,6 +57,6 @@ namespace arm {
     string op2;/*!< second operand              */
   };
 
-}
+} // TODO
 
 #endif //__ARM_NEGATION_H__

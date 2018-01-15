@@ -103,6 +103,6 @@ namespace arm {
     map<string, string> var_offsets; /*!<  map of variable offsets           */
   };
 
-}
+} // TODO
 
 #endif //__ARM_FUNCTION_GENERATOR_H__

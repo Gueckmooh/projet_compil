@@ -93,6 +93,6 @@ namespace arm {
     vector<string> params; /*!< parameter vector              */
   };
 
-}
+} // TODO
 
 #endif //__ARM_CLOSURE_H__

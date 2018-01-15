@@ -60,6 +60,6 @@ namespace arm {
     string op3;/*!< third operand              */
   };
 
-}
+} // TODO
 
 #endif //__ARM_SOUSTRACTION_H__

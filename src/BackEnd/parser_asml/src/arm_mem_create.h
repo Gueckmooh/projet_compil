@@ -51,6 +51,6 @@ namespace arm {
     string size; /*!<     size of memory        */
   };
 
-}
+} // TODO
 
 #endif //__ARM_MEM_CREATE_H__

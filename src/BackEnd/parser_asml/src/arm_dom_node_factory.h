@@ -31,6 +31,6 @@ namespace arm {
     map<arm_cfg_node*, arm_dom_node*> node_eq;
   };
 
-}
+} // TODO
 
 #endif//__ARM_DOM_NODE_FACTORY_H__

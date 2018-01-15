@@ -69,6 +69,6 @@ namespace arm {
     string lFin; /*!< label to go to the end              */
   };
 
-}
+} // TODO
 
 #endif //__ARM_CONDITION_H__

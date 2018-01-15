@@ -17,21 +17,17 @@
 
 using namespace std;
 
+/*! \namespace arm
+ *  \brief     Contains the classes that manages the arm generation
+ */
 namespace arm {
+
   /*! \class arm_addition
-   * \brief Addition instruction Object
+   *  \brief Contains the classes that manages the asml
    */
   class arm_addition : public arm_instruction {
   public:
-    /*!
-     *  \brief Constructor of the class arm_addition
-     *
-     */
     arm_addition (void);
-    /*!
-     *  \brief Destructor of the class arm_addition
-     *
-     */
     ~arm_addition (void) {};
 
     virtual string get_instruction (void);
@@ -42,25 +38,22 @@ namespace arm {
     virtual void set_op1 (string);
     virtual void set_op2 (string);
     virtual void set_op3 (string);
+
     /*!
-     *  \brief Number of Register
-     *
-     *  Return the number of registers
-     *  \return int of register
+     *  \brief Gives the number of registers used in this instruction
+     *  \return an int, the number of register
      */
     virtual int nb_regs (void);
 
-
     /*!
-     * \brief Getter of operands
-     * Return the list of operands
+     * \brief  This function gives the list of operands of this instruction
      * \return list of string of operands
      */
     virtual list<string>* get_op_list (void);
   protected:
-    string op1; /*!< first operand              */
-    string op2; /*!< second operand              */
-    string op3; /*!< third operand              */
+    string op1; /*!< first operand  */
+    string op2; /*!< second operand */
+    string op3; /*!< third operand  */
   };
 
 }

@@ -114,6 +114,6 @@ namespace arm {
     static arm_closure* create_closure (asml_closure*);
   };
 
-}
+} // TODO
 
 #endif //__ARM_INSTRUCTION_FACTORY_H__

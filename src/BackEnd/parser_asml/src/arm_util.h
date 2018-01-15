@@ -25,6 +25,6 @@ namespace arm {
     static int type_of (string); /*!< get type of ASML               */
   };
 
-}
+} // TODO
 
 #endif //__ARM_UTIL_H__

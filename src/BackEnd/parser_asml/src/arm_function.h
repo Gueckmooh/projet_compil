@@ -49,6 +49,6 @@ namespace arm {
     static map<string, string>* ref_map; /*!< map of references             */
   };
 
-}
+} // TODO
 
 #endif // __ARM_FUNCTION_H__

@@ -77,6 +77,6 @@ namespace arm {
     map<string, string> var_offsets; /*!<     offset map        */
   };
 
-}
+} // TODO
 
 #endif //__ARM_GENERATOR_H__

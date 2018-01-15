@@ -179,9 +179,9 @@ __mem_new:
 	ldmfd	sp!, {fp}
 	bx 	lr
 	.align 	2
-	.global	_min_caml_create_array
-	.type 	_min_caml_create_array, %function
-_min_caml_create_array:
+	.global	min_caml_create_array
+	.type 	min_caml_create_array, %function
+min_caml_create_array:
 	stmfd 	sp!, {sp, lr}
 	add 	fp, sp, #4
 	sub 	sp, sp, #12

@@ -48,7 +48,7 @@
 extern int asml_debug;
 #endif
 /* "%code requires" blocks.  */
-#line 17 "src/asml_parser.y" /* yacc.c:1909  */
+#line 16 "src/asml_parser.y" /* yacc.c:1909  */
 
 
     #include "asml_parser_types.h"
@@ -107,7 +107,7 @@ extern int asml_debug;
 
 union ASML_STYPE
 {
-#line 23 "src/asml_parser.y" /* yacc.c:1909  */
+#line 22 "src/asml_parser.y" /* yacc.c:1909  */
 
     char* token_str;
     asml_asmt_t* token_asmt;

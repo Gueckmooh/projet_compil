@@ -1,5 +1,5 @@
 	.text
-        .globl min_caml_exit
+    .globl min_caml_exit
 /* exit syscall */
 min_caml_exit:
 	mov	r0, #0
@@ -162,7 +162,9 @@ __mem_new:
 	stmfd	sp!, {fp}
 	add 	fp, sp, #0
 	sub	sp, sp, #12
+    #if WORD_SIZE == 1
 	lsl 	r0, r0, #2
+    #endif
 	str	r0, [fp, #-8]
 	sub 	r2, r5, r4
 	ldr  	r3, [fp, #-8]

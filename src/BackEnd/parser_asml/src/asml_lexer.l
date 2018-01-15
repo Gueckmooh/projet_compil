@@ -3,7 +3,6 @@
 #include <string.h>
 #include "asml_factory_stub.h"
 #include "asml_parser.h"
-#include "asml_util.h"
 %}
 
 %option noyywrap nounput noinput

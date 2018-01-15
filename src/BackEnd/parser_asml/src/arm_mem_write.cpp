@@ -18,30 +18,11 @@ namespace arm {
     default:
       break;
     }
-    /*
-    switch (arm_util::type_of (value)) {
-    case arm_util::DIRECT:
-      instruction += "\tmov r2, #" + value + "\n";
-      break;
-    case arm_util::VARIABLE:
-      instruction += "\tldr r2, [fp, #" + offset->find(value)->second + "]\n";
-    }
-    switch (arm_util::type_of (mem_offset)) {
-    case arm_util::DIRECT:
-      instruction += "\tstr r2, [r0, #" + mem_offset + "]\n";
-      break;
-    case arm_util::VARIABLE:
-      instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";
-      instruction += "\tadd r0, r0, r1\n";
-      instruction += "\tstr r2, [r0]\n";
-      break;
-    default:
-      break;
-    }
-    */
     if (arm_util::type_of(mem_offset) == arm_util::VARIABLE) {
       instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";
+      #if WORD_SIZE == 1
       instruction += "\tlsl r1, r1, #2\n";
+      #endif
       instruction += "\tadd r0, r0, r1\n";
     }
     switch (arm_util::type_of (value)) {

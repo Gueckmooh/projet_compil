@@ -1,7 +1,6 @@
 %{
 //#include "asml_factory_stub.h"
 #include "asml_parser.h"
-//#include "asml_util.h"
 #include "asml_parser_types.h"
 #include "asml_parser_driver.h"
 #include <stdio.h>

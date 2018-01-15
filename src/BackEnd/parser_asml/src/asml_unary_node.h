@@ -1,3 +1,13 @@
+/**
+ * \file      asml_unary_node.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Class that represents a unary node for the asml tree
+ *
+ * \details    This class inherits from asml_nodegg
+ */
+
 #ifndef __ASML_UNARY_NODE_H__
 #define __ASML_UNARY_NODE_H__
 

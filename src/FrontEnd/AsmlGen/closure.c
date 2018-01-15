@@ -19,6 +19,9 @@ ptree apply_closure_conversion(ptree t){
     while (l_node != NULL) {
         fd = (pfundef)l_node->data;
         fd->body = apply_clos(fd->body);
+        if (fd->free_vars != NULL){
+            fd->body = add_free_vars_refs(fd, fd->free_vars->head, 1);
+        }
         l_node = l_node->next;
     }
     // now apply closure conversion to the program itself;
@@ -46,6 +49,9 @@ ptree apply_clos(ptree t){
                     cons(fd->var, empty()),
                     t->params.tapp.l
                 );
+                printf("ici\n");
+                print_str_list(mk_clos_args);
+                printf("\n");
                 return ast_let(
                     new_varname,
                     ast_mkclos(mk_clos_args),
@@ -87,6 +93,9 @@ ptree apply_clos(ptree t){
                     cons((void *)t->params.v, empty()),
                     fd->free_vars
                 );
+                printf("la\n");
+                print_str_list(mk_clos_args);
+                printf("\n");
                 return ast_let(
                     new_varname,
                     ast_mkclos(mk_clos_args),
@@ -119,18 +128,14 @@ ptree apply_clos(ptree t){
     }
 }
 
-pfundef get_fd(char *label){
-    assert(is_a_label(label));
-    listNode *l_node = fd_list->head;
-    pfundef fd;
-    while(l_node != NULL){
-        fd = (pfundef)l_node->data;
-        if(strcmp(fd->var, label) == 0){
-            return fd;
-        }
-        l_node = l_node->next;
+ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset){
+    if (current_var == NULL){
+        return fd->body;
+    } else {
+        return ast_let(
+            (char *)current_var->data,
+            ast_get(ast_var("\%self"), ast_integ(offset)),
+            add_free_vars_refs(fd, current_var->next, offset +1)
+        );
     }
-    // case -> fd was not found, it's a label to an external function
-    // (should be prefixed by _min_caml_)
-    return NULL;
 }

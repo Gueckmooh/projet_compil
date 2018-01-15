@@ -242,7 +242,16 @@ ptree knorm(ptree t){
         case T_TUPLE :
             l_node = t->params.ttuple.l->head;
             while(l_node != NULL){
-                l_node->data = knorm((ptree)l_node->data);
+                tmp = (ptree)l_node->data;
+                if (tmp->code != T_VAR){
+                    new_var1 = gen_varname();
+                    l_node->data = (void *)ast_var(new_var1);
+                    return ast_let(
+                        new_var1,
+                        knorm(tmp),
+                        t
+                    );
+                }
                 l_node = l_node->next;
             }
             new_var1 = gen_varname();

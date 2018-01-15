@@ -16,11 +16,18 @@ int get_function_size(ptree t){
     assert(t);
     switch(t->code){
         // 'sizeless' nodes
+        case T_VAR :
+        if (is_a_label(t->params.v)){
+            pfundef fd = get_fd(t->params.v);
+            if (fd->free_vars != NULL){
+                return INLINE_THRESHOLD + 1;
+            }
+        }
+
         case T_UNIT :
         case T_BOOL :
         case T_INT :
         case T_FLOAT :
-        case T_VAR :
         case T_APP :
         case T_TUPLE :
         case T_NOT :
@@ -70,10 +77,8 @@ ptree apply_inline_expansion(ptree t){
     listNode *l_node = fd_list->head;
     while(l_node != NULL){
         pfundef fd = (pfundef)l_node->data;
-        printf("size of %s : %d\n", fd->var, get_function_size(fd->body));
         if ((get_function_size(fd->body) <= INLINE_THRESHOLD) &&
             (fd->free_vars->head == NULL)){
-                printf("replacing %s\n", fd->var);
             t = replace_funcall_by_body(fd, t);
         }
         l_node = l_node->next;
@@ -93,7 +98,7 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
         case T_APP :
             if((t->params.tapp.t->code == T_VAR) &&
                 (strcmp(t->params.tapp.t->params.v, fd->var) == 0)){
-                env = NULL;
+                env = init_env();
                 l_node_call = t->params.tapp.l->head;
                 l_node_fd = fd->args->head;
                 while(l_node_fd != NULL){

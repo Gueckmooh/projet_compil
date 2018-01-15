@@ -25,17 +25,12 @@ asml_formal_arg_t *args_list_to_asml_args_list(plist ast_args_list);
 
 asml_formal_arg_t *string_list_to_asml_args_list(plist str_list);
 
-void send_func_d_to_asml_parser(ptree t);
+void send_func_d_to_asml_parser(pfundef fd);
 
 asml_asmt_t *lettuple_to_asmlt(ptree t);
 
 asml_asmt_t *tuple_to_asml_asmt(ptree t);
 
-void print_asml_fun(asml_function_t *t);
+asml_asmt_t *mk_clos_to_asml_asmt(ptree t);
 
-void print_asml_asmt(asml_asmt_t *t);
-
-void print_asml_exp(asml_exp_t *t);
-
-void print_asml_fun_args(asml_formal_arg_t *t);
 #endif

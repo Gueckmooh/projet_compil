@@ -68,7 +68,7 @@ ptree ast_transform(ptree t){
         ptree t2 = knorm(t);
         print_term(t2);
         printf("\n\nAfter alpha conversion :\n");
-        ptree t3 = alpha_convert(t2, NULL);
+        ptree t3 = alpha_convert(t2, init_env());
         print_term(t3);
         printf("\n\nAfter nested let reduction :\n");
         ptree t4 = reduce_nested_let(t3);
@@ -101,9 +101,17 @@ ptree ast_transform(ptree t){
         printf("\nProgram :\n");
         print_term(t10);
         printf("\n\nAST transformation done\n");
-        return t7;
+        return t10;
     } else {
-        ptree t1 = beta_red(reduce_nested_let(alpha_convert(knorm(t), NULL)), NULL);
-        return eliminate_unnecessary_defs(apply_constant_folding(t1));
+        ptree t2 = knorm(t);
+        ptree t3 = alpha_convert(t2, init_env());
+        ptree t4 = reduce_nested_let(t3);
+        ptree t5 = beta_red(t4, NULL);
+        ptree t6 = apply_constant_folding(t5);
+        ptree t7 = map_functions(t6, NULL);
+        ptree t8 = eliminate_unnecessary_defs(t7);
+        ptree t9 = apply_inline_expansion(t8);
+        ptree t10 = apply_closure_conversion(t9);
+        return t10;
     }
 }

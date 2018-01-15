@@ -9,6 +9,5 @@ ptree apply_closure_conversion(ptree t);
 
 ptree apply_clos(ptree t);
 
-pfundef get_fd(char *label);
-
+ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset);
 #endif

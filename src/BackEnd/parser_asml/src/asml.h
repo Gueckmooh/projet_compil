@@ -3,7 +3,6 @@
 #include "asml_instruction.h"
 #include "asml_variable.h"
 #include "asml_affectation.h"
-#include "asml_factory_stub.h"
 #include "asml_integer.h"
 #include "asml_parser_types.h"
 #include "asml_binary_node.h"

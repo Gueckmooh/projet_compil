@@ -14,7 +14,6 @@
 #define __ASML_PARSER_DRIVER_H__
 
 #include "asml_parser_types.h"
-#include "asml_factory_stub.h"
 #ifdef __cplusplus
 #include "asml_factory.h"
 

@@ -63,7 +63,7 @@ namespace asml {
       ret += "\t";
     if (var.compare("0") != 0)
       ret += "let " + var + " = ";
-    ret += "if " + boolean->generate() + " (\n";
+    ret += "if " + boolean->generate() + " then (\n";
     for (vector<asml_instruction*>::iterator it = then_list->begin();
 	 it != then_list->end();
 	 it++) {

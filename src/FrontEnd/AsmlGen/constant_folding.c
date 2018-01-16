@@ -52,7 +52,7 @@ ptree constant_folding(ptree t, env_node *env){
             if (t->params.t->code == T_NEG){
                 return constant_folding(t->params.t->params.t, env);
             }
-            return constant_folding(t->params.t, env);
+            return ast_neg(constant_folding(t->params.t, env));
 
         // binary
         case T_ADD :

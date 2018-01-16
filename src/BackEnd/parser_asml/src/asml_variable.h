@@ -12,9 +12,14 @@
 #include <string>
 
 using namespace std;
-
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
-
+  /*! \class   asml_variable
+   *  \brief   TODO
+   *  \details TODO
+   */
   class asml_variable {
     friend class asml_factory;
   public:

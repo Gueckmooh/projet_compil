@@ -1,4 +1,5 @@
 /**
+<<<<<<< HEAD
  * \file      asml_addidition.h
  * \author    The C Team - Enzo Brignon
  * \version   1.0
@@ -9,6 +10,15 @@
 #ifndef __ASML_FACTORY_STUB_H__
 #define __ASML_FACTORY_STUB_H__
 
+=======
+ * \file      asml_factory_stub.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_factory_stub class
+ */
+
+>>>>>>> cbfc206d6dadb50ee3269154fde6f2982bcd121f
 #ifdef __cplusplus
 #include <string>
 #include <vector>
@@ -16,20 +26,51 @@
 using namespace asml;
 #endif //__cplusplus
 #include <string.h>
-
+/*!
+  \def ASML_NORMAL
+  \brief Normal ASML case
+*/
 #define ASML_NORMAL 0
+/*!
+  \def ASML_THEN
+  \brief ASML then case
+*/
 #define ASML_THEN 1
+/*!
+  \def ASML_ELSE
+  \brief ASML else case
+*/
 #define ASML_ELSE 2
+/*!
+  \def ASML_LT
+  \brief ASML less than
+*/
 #define ASML_LT 3
+/*!
+  \def ASML_GT
+  \brief ASML Greater Than
+*/
 #define ASML_GT 4
+/*!
+  \def ASML_LE
+  \brief ASML Less or Equal
+*/
 #define ASML_LE 5
+/*!
+  \def ASML_GE
+  \brief ASML Greater or Equal
+*/
 #define ASML_GE 6
+/*!
+  \def ASML_EQUAL
+  \brief ASML Equality
+*/
 #define ASML_EQUAL 7
 
 typedef struct {
-  char* op1;
-  char* op2;
-  int type;
+  char* op1; /*!< first operand              */
+  char* op2; /*!< second operand              */
+  int type; /*!< type              */
 } asml_operation_t;
 
 #ifdef __cplusplus

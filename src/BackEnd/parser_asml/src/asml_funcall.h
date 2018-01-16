@@ -1,3 +1,10 @@
+/**
+ * \file      asml_funcall.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_funcall class
+ */
 #include <string>
 #include <vector>
 
@@ -7,9 +14,14 @@
 #define __ASML_FUNCALL_H__
 
 using namespace std;
-
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
-
+  /*! \class   asml_funcall
+   *  \brief   class that represent a function call in asml
+   *  \details it inherits from asml_instruction
+   */
   class asml_funcall : public asml_instruction {
   public:
     asml_funcall (void);
@@ -25,14 +37,30 @@ namespace asml {
     virtual void add_param (string);
     virtual vector<string>::iterator begin (void);
     virtual vector<string>::iterator end (void);
+    /**
+     * \brief    TODO
+     * \return   an int TODO
+     */
     virtual int size (void);
+    /**
+     * \brief    TODO
+     * \param    t an int TODO
+     * \return   a string containing the generated code
+     */
     virtual string operator[] (int);
+    /**
+     * \brief    This function generates the ASML code that correspond to this instruction
+     * \details  This function is used to generate ASML code.
+     * \param    ident an int that is the number of tabulations to insert to indent
+     *           correctly the generated code
+     * \return   a string containing the generated code
+     */
     virtual string generate (int);
   protected:
-    string funcname;
-    string return_variable;
-    bool do_return;
-    vector<string> params;
+    string funcname; /*! The name of the function */
+    string return_variable; /*! The returning variable */
+    bool do_return; /*! A boolean that checks if a variable is returning */
+    vector<string> params; /*! A vector of parameters */
   };
 
 } // TODO

@@ -16,20 +16,20 @@
 #define INLINE_THRESHOLD 4
 
 /**
+* \brief     applies inline expansion on the ptree t
+* \details
+* \param     t : the ptree to appply expansion to
+* \return    the modified ptree
+*/
+ptree apply_inline_expansion(ptree t);
+
+/**
  * \brief     calculate the size of a function's body
  * \details
  * \param     t : the body of the function
  * \return    the size of the function's body
  */
 int get_function_size(ptree t);
-
-/**
- * \brief     applies inline expansion on the ptree t
- * \details
- * \param     t : the ptree to appply expansion to
- * \return    the modified ptree
- */
-ptree apply_inline_expansion(ptree t);
 
 /**
  * \brief     replace all calls to the function described in fd by its body in t
@@ -54,5 +54,13 @@ void remove_fd_from_fd_list(pfundef fd);
  * \return    true if it is used as a variable, false otherwise
  */
 bool is_used_as_var(pfundef fd, ptree t);
+
+/**
+ * \brief     checks if a function is used as a variable in the other function bodies
+ * \details
+ * \param     fd : the function definition
+ * \return    true if it is used as a variable, false otherwise
+ */
+bool is_used_in_other_fd_bodies(pfundef fd);
 
 #endif

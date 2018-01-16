@@ -52,7 +52,7 @@ ptree constant_folding(ptree t, env_node *env){
             if (t->params.t->code == T_NEG){
                 return constant_folding(t->params.t->params.t, env);
             }
-            return constant_folding(t->params.t, env);
+            return ast_neg(constant_folding(t->params.t, env));
 
         // binary
         case T_ADD :
@@ -222,8 +222,6 @@ bool can_fold(char *var_name, ptree t){
     switch(t->code){
         // function  call -> check if var_name is one of the arguments
         case T_APP :
-        // case T_MK_CLOS :
-        // case T_APP_CLOS :
             l_node = t->params.tapp.l->head;
             while(l_node != NULL){
                 assert(((ptree)l_node->data)->code == T_VAR);
@@ -303,6 +301,8 @@ bool can_fold(char *var_name, ptree t){
                 can_fold(var_name, t->params.lettuple.t2)
             );
 
+        case T_MK_CLOS :
+        case T_APP_CLOS :
         default :
             fprintf(stderr, "TBI : in can_fold, code %d not yet implemented.\n"
             "Exiting.\n", t->code);

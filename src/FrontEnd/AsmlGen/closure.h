@@ -37,4 +37,21 @@ ptree apply_clos(ptree t);
  * \return    the modified body of fd
  */
 ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset);
+
+/**
+ * \brief     checks that a function body never return a function label
+ * \details
+ * \param     t : the function body
+ * \return    the modified function body
+ */
+ptree never_return_label(ptree t);
+
+/**
+ * \brief     replace a simple label with let new_var = label in new_var
+ * \details
+ * \param     t : the node containing the label
+ * \return    a node containing let new_var = label in new_var
+ */
+ptree replace_label_by_var(ptree t);
+
 #endif

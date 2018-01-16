@@ -162,12 +162,10 @@ ptree constant_folding(ptree t, env_node *env){
                     t->params.tlet.t1->params.i,
                     env
                 );
-                printf("for var %s\n", t->params.tlet.v);
                 if (can_fold(t->params.tlet.v, t)){
-                    printf("can fold\n");
                     folded_a_const = true;
                     return (constant_folding(t->params.tlet.t2, env));
-                } else {printf("cannot fold\n");}
+                }
                 t->params.tlet.t2 = constant_folding(t->params.tlet.t2, env);
             } else if ((t->params.tlet.t1->code == T_NEG) &&
                        (t->params.tlet.t1->params.t->code == T_INT)){

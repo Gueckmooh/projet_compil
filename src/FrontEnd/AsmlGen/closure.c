@@ -18,12 +18,17 @@ ptree apply_closure_conversion(ptree t){
     pfundef fd;
     while (l_node != NULL) {
         fd = (pfundef)l_node->data;
+
+        // check that the function does not return a label
+        fd->body = never_return_label(fd->body);
+        l_node = l_node->next;
+
+        // and now apply closure for real
         fd->body = apply_clos(fd->body);
         if (fd->free_vars != NULL){
             fd->body = add_free_vars_refs(fd, fd->free_vars->head, 1);
             // fd->body = beta_red(fd->body, NULL);
         }
-        l_node = l_node->next;
     }
     // now apply closure conversion to the program itself;
     return apply_clos(t);
@@ -107,6 +112,7 @@ ptree apply_clos(ptree t){
             // case -> function with no free args
             if ((fd->free_vars == NULL) || (fd->free_vars->head == NULL)){
                 return t;
+            // case -> function with no free args
             } else {
                 char *new_varname = gen_varname();
                 plist mk_clos_args = append(
@@ -139,6 +145,15 @@ ptree apply_clos(ptree t){
             l_node = l_node->next;
         }
         return t;
+    // case -> let var = label in whatever
+    } else if ((t->code == T_LET) &&
+                (t->params.tlet.t1->code == T_VAR) &&
+                (is_a_label(t->params.tlet.t1->params.v))){
+        return ast_let(
+            t->params.tlet.v,
+            ast_mkclos(cons(t->params.tlet.t1->params.v, empty())),
+            apply_clos(t->params.tlet.t2)
+        );
     // other cases -> call recursively
     } else {
         return apply_vis(t, apply_clos);
@@ -155,4 +170,87 @@ ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset){
             add_free_vars_refs(fd, current_var->next, offset +1)
         );
     }
+}
+
+
+ptree never_return_label(ptree t){
+    assert(t);
+    switch(t->code){
+        case T_NEG :
+        case T_NOT :
+            if ((t->params.t->code == T_VAR) &&
+                (is_a_label(t->params.t->params.v))){
+                t->params.t = replace_label_by_var(t->params.t);
+            } else  {
+                return t;
+            }
+
+        case T_LET :
+            if ((t->params.tlet.t2->code == T_VAR) &&
+                (is_a_label(t->params.tlet.t2->params.v))){
+                t->params.tlet.t2 = replace_label_by_var(t->params.tlet.t2);
+            } else  {
+                return t;
+            }
+
+        case T_LETTUPLE :
+            if ((t->params.lettuple.t2->code == T_VAR) &&
+                (is_a_label(t->params.lettuple.t2->params.v))){
+                t->params.lettuple.t2 =
+                    replace_label_by_var(t->params.lettuple.t2);
+            } else  {
+                return t;
+            }
+
+        case T_VAR :
+            if (is_a_label(t->params.v)){
+                t = replace_label_by_var(t);
+            } else {
+                return t;
+            }
+        // other cases -> all right, nothing to do
+        case T_UNIT :
+        case T_BOOL :
+        case T_INT :
+        case T_FLOAT :
+        case T_ADD :
+        case T_SUB :
+        case T_FNEG :
+        case T_FADD :
+        case T_FSUB :
+        case T_FMUL :
+        case T_FDIV :
+        case T_EQ :
+        case T_LE :
+        case T_IF :
+        case T_LETREC :
+        case T_APP :
+        case T_TUPLE :
+        case T_ARRAY :
+        case T_GET :
+        case T_PUT :
+        case T_MK_CLOS :
+        case T_APP_CLOS :
+            return t;
+        default :
+            fprintf(stderr, "TBI : in is_used_in_other_fd_bodies, code"
+                " %d not yet implemented.\nExiting.\n", t->code);
+            exit(1);
+    }
+}
+
+ptree replace_label_by_var(ptree t){
+    assert(t);
+    assert(t->code == T_VAR);
+    assert(is_a_label(t->params.v));
+    pfundef fd = get_fd(t->params.v);
+    if ((fd->free_vars != NULL) || (fd->free_vars->head != NULL)){
+        return t;
+    }
+    char *new_var = gen_varname();
+    return ast_let(
+        new_var,
+        ast_var(t->params.v),
+        ast_var(new_var)
+    );
 }

@@ -13,6 +13,24 @@
 
 extern plist fd_list;
 
+ptree apply_inline_expansion(ptree t){
+    t = duplicate_tree(t);
+    listNode *l_node = fd_list->head;
+    while(l_node != NULL){
+        pfundef fd = (pfundef)l_node->data;
+        if ((get_function_size(fd->body) <= INLINE_THRESHOLD) &&
+        (fd->free_vars->head == NULL) &&
+        (!is_used_as_var(fd, t)) &&
+        !is_used_in_other_fd_bodies(fd)){
+            t = replace_funcall_by_body(fd, t);
+            remove_fd_from_fd_list(fd);
+        }
+        l_node = l_node->next;
+    }
+    // applying inline expansion can nest let
+    return reduce_nested_let(t);
+}
+
 int get_function_size(ptree t){
     assert(t);
     switch(t->code){
@@ -87,22 +105,6 @@ int get_function_size(ptree t){
     }
 }
 
-ptree apply_inline_expansion(ptree t){
-    t = duplicate_tree(t);
-    listNode *l_node = fd_list->head;
-    while(l_node != NULL){
-        pfundef fd = (pfundef)l_node->data;
-        if ((get_function_size(fd->body) <= INLINE_THRESHOLD) &&
-            (fd->free_vars->head == NULL) &&
-            (!is_used_as_var(fd, t))){
-            t = replace_funcall_by_body(fd, t);
-            remove_fd_from_fd_list(fd);
-        }
-        l_node = l_node->next;
-    }
-    // applying inline expansion can nest let
-    return reduce_nested_let(t);
-}
 
 ptree replace_funcall_by_body(pfundef fd, ptree t){
     assert(fd && t);
@@ -364,7 +366,19 @@ bool is_used_as_var(pfundef fd, ptree t){
 
         default :
             fprintf(stderr, "TBI : in is_used_as_var, code %d not yet implemented.\n"
-            "Exiting.\n", t->code);
+                "Exiting.\n", t->code);
             exit(1);
     }
+}
+
+bool is_used_in_other_fd_bodies(pfundef fd){
+    listNode *l_node = fd_list->head;
+    while(l_node != NULL){
+        pfundef current_fd = (pfundef)l_node->data;
+        if (is_used_as_var(fd, current_fd->body)){
+            return true;
+        }
+        l_node = l_node->next;
+    }
+    return false;
 }

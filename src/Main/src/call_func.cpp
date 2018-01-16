@@ -2,39 +2,6 @@
 #include "front_end.h"
 
 
-// Cette fonction prends en parametre, le fichier d'entree
-// Cette fonction renvois la structure.
-
-int parser_caller (int zboub){
-
-  return 0;
-}
-
-// Cette fonction prends en parametre la structure parsee
-// Cette fonction print dans un fichier l'arbre.
-int parser_printer (int zboub){
-  return 0;
-}
-
-// Cette fonction prends en paramètre la structure
-// Cette fonction renvois 0 si tout se passe bien
-// Cette fonction renvoit 1 et affiche un message d'erreur en cas de probleme.
-int typecheck_caller (int zboub){
-  return 0;
-}
-
-// Cette fonction prends en parametre la structure
-// Cette fonction renvoit la structure front-endee
-int ASML_caller (int zboub){
-  return 0;
-}
-
-//Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ASML genere.
-int ASML_PRINTER (int zboub){
-  return 0;
-}
-
 //Cette fonction prends en parametre un fichier ASML
 //Cette fonction genere de l'ARM dans un fichier output.s
 void ASML_PARSER (string i, string s){
@@ -50,12 +17,6 @@ void ASML_PARSER (string i, string s){
 	delete generator;
 }
 
-
-// Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ARM genere.
-int ARM_caller (int zboub){
-  return 0;
-}
 
 int mega_caller (int param, string input, string output){
   int retour = 0;

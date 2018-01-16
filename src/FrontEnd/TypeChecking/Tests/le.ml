@@ -1,0 +1,2 @@
+print_int (let (a,b) = if true then if true then 5 else if true then (5,4) else if true then (4,5) else (4,5) else if true then (4,5) else (4,5) in a)
+(*print_int (let (a,b) = if true then (4,5) else (5,4) in a)*)

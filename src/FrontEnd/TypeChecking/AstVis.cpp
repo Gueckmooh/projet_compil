@@ -2,6 +2,7 @@
 #include "AstNodeLeaf.hpp"
 #include "AstNodeUnary.hpp"
 #include "AstNodeBinary.hpp"
+#include "AstNodeTernary.hpp"
 #include "AstVis.hpp"
 #include "AstVisitor.hpp"
 #include <iostream>
@@ -51,8 +52,13 @@ inline void AstVisGhost::visit_node(AstNodeNeg* neg) {}
 
 inline void AstVisGhost::visit_node(AstNodeAdd* add) {}
 inline void AstVisGhost::visit_node(AstNodeLet* let) {}
+inline void AstVisGhost::visit_node(AstNodeLe* le) {}
 inline void AstVisGhost::visit_node(AstNodeLetTuple* lettuple) {}
 inline void AstVisGhost::visit_node(AstNodeSub* sub) {}
+
+// Ternary Nodes
+    
+inline void AstVisGhost::visit_node(AstNodeIf *ite) {} ;
 
 
 AstVisGhost::~AstVisGhost() {}
@@ -86,9 +92,14 @@ inline void AstVisDestruct::visit_node(AstNodeNeg* neg) { delete neg ; }
 // Binary Nodes
 
 inline void AstVisDestruct::visit_node(AstNodeAdd* add) { delete add ; }
+inline void AstVisDestruct::visit_node(AstNodeLe* le) { delete le ; }
 inline void AstVisDestruct::visit_node(AstNodeLet* let) { delete let ; }
 inline void AstVisDestruct::visit_node(AstNodeLetTuple* lettuple) { delete lettuple ; }
 inline void AstVisDestruct::visit_node(AstNodeSub* sub) { delete sub ; }
+
+// Ternary Nodes
+    
+inline void AstVisDestruct::visit_node(AstNodeIf *ite) { delete ite ; }
 
 AstVisDestruct::~AstVisDestruct() {}
 
@@ -144,6 +155,9 @@ void AstVisPrint::visit_node(AstNodeNeg* neg) {
 void AstVisPrint::visit_node(AstNodeAdd* add) {
     print_node_then_new_line(add) ;
 }
+void AstVisPrint::visit_node(AstNodeLe* le) {
+    print_node_then_new_line(le) ;
+}
 void AstVisPrint::visit_node(AstNodeLet* let) {
     print_node_then_new_line(let) ;
 }
@@ -154,16 +168,26 @@ void AstVisPrint::visit_node(AstNodeSub* sub) {
     print_node_then_new_line(sub) ;
 }
 
+// Ternary Nodes
+
+void AstVisPrint::visit_node(AstNodeIf* ite) {
+    print_node_then_new_line(ite) ;
+}
+
 void AstVisPrint::print(AstNode * node) {
-    for (int i = 0 ; i < getAstVis()->getIndent() ; i++) {
-        getAstVis()->getOs() << getAstVis()->INDENT ;
-    }
+    printIndent() ;
     getAstVis()->getOs() << node->class_code_to_string() + " " << *node ;
 }
 
 void AstVisPrint::print_node_then_new_line(AstNode *node) {
     print(node) ;
     getAstVis()->getOs() << std::endl ;
+}
+
+void AstVisPrint::printIndent() {
+    for (int i = 0 ; i < getAstVis()->getIndent() ; i++) {
+        getAstVis()->getOs() << getAstVis()->INDENT ;
+    }
 }
 
 

@@ -1,15 +1,12 @@
 #ifndef __CALL_FUNC_H__
 #define __CALL_FUNC_H__
-
-
-
-
-
 /*!
  * \file call_func.h
  * \brief Caller of various configuration functions
- * \author THE C TEAM
- * \version 0.1337
+ * \author THE C TEAM - Florian MARCO
+ * \version 1.0
+ * \date 17 Janvier 2018
+ * \details Main program that calls all the different functions of our compiler, MinCaml Parsing, Typchecking, ASML generation and optimisation, ARM generation...
  */
 #include "param.h"
 #include "asml.h"
@@ -36,49 +33,23 @@ using namespace std;
 using namespace asml;
 using namespace arm;
 
-// Cette fonction prends en parametre, le fichier d'entree
-// Cette fonction renvois la structure.
 
-int parser_caller (int);
-
-// Cette fonction prends en parametre la structure parsee
-// Cette fonction print dans un fichier l'arbre.
-int parser_printer (int);
-
-// Cette fonction prends en paramètre la structure
-// Cette fonction renvois 0 si tout se passe bien
-// Cette fonction renvoit 1 et affiche un message d'erreur en cas de probleme.
-int typecheck_caller (int);
-
-// Cette fonction prends en parametre la structure
-// Cette fonction renvoit la structure front-endee
-int ASML_caller (int);
-
-//Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ASML genere.
-int ASML_PRINTER (int);
 /*!
- *  \brief ASML Parser 
+ *  \brief This function take an ASML file, parse it, and generate an ARM output.
  *
- *  This function take an ASML file, parse it, and generate an ARM output.
+ *  
  *	\param string input : The ASML input file
  *	\param string output : The ASML output file
  */
-//Cette fonction prends en parametre un fichier ASML
-//Cette fonction genere de l'ARM dans un fichier output.s
 void ASML_PARSER (string, string);
 
-// Cette fonction prends en parametre la structure front-endee
-// Cette fonction print dans un fichier l'ARM genere.
-int ARM_caller (int);
 /*!
- *  \brief Mega Caller
- *
- *  This function calls all compilation function
+ *  \brief This function calls all compilation function
+ *  
  *	\param int param : List of active parameters
  *	\param string input : The input files
  *	\param string output : The output files
- *	\return 0 if everything goes well, 1 if there is a mistake
+ *	\return 0 if everything goes well, 1 if there is an error
  */
 int mega_caller (int, std::string, string);
 

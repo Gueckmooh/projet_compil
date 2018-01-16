@@ -115,3 +115,7 @@ ptree ast_transform(ptree t){
         return t10;
     }
 }
+
+ptree b4_tc (ptree t){
+	return alpha_convert(knorm(t),init_env());
+}

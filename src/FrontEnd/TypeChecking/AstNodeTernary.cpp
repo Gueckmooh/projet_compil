@@ -7,14 +7,17 @@ AstNode(class_code), t1(t1), t2(t2), t3(t3) {}
 
 void AstNodeTernary::traversal(AstVisitor* vis) {
     t1->apply(vis) ;
+    accept(vis->GetInfix()) ;
     t2->apply(vis) ;
+    accept(vis->GetInfix()) ;
     t3->apply(vis) ;
 }
 
 AstNodeTernary::~AstNodeTernary() {}
 
 AstNodeIf::AstNodeIf(AstNode* t1, AstNode* t2, AstNode* t3) :
-AstNodeTernary(C_IF, t1, t2, t3) {}
+AstNodeTernary(C_IF, t1, t2, t3) {
+}
 
 void AstNodeIf::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;

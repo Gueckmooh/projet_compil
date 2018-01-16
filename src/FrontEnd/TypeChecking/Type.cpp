@@ -40,7 +40,19 @@ Type * TypeSimple::getMappedPoly(char poly) {
 }
 
 void TypeSimple::mapPoly(char poly, Type* type) {
-    PM[poly] = type ;
+    Type * old_type = NULL ;
+    if((old_type =  PM[poly]))
+        Type::deleteTypeRec(old_type);
+    PM[poly] = Type::copyType(type) ;
+}
+
+void TypeSimple::substitutePoly(Type** subtituted, Type* subtitution) {
+    char poly = (*subtituted)->GetTypeSimple()->getPoly() ;
+    mapPoly(poly, subtitution) ;
+    Type * tmp = *subtituted ;
+    *subtituted = Type::copyType(PM[poly]) ;
+    (*subtituted)->setNext(tmp->getNext()) ;
+    Type::deleteType(tmp) ;
 }
 
 void TypeSimple::printPoly() {
@@ -62,7 +74,7 @@ void TypeSimple::printPoly() {
         else
             *os << "NULL" ;
     }
-    *os << "]" ;
+    *os << "]\n" ;
 }
 
 void TypeSimple::resetPoly() {
@@ -74,32 +86,20 @@ void TypeSimple::resetPoly() {
     }
 }
 
-void TypeSimple::clearPolyMap() {
-    PolyMap::iterator it = PM.begin() ;
-    while (it != PM.end()) {
-        Type::deleteTypeRec(it->second);
-        PM.erase(it) ;
-        it++ ;
-    }
-    next_poly = 'a' ;
+std::ostream & TypeSimple::getOs() {
+    return *os;
 }
 
 void TypeSimple::setOs(std::ostream* os) {
     TypeSimple::os = os ;
 }
 
-
 typeSimple TypeSimple::getType() const {
     return ts;
 }
 
 bool TypeSimple::isCorrectlyTyped(TypeSimple *typeSimple) {
-    if (ts == typeSimple->ts) {
-        if (ts == POLY)
-            return poly == typeSimple->poly ;
-        return true ;
-    }
-    return false ;
+    return ts == typeSimple->ts ;
 }
 
 TypeSimple* TypeSimple::copyTypeSimple(TypeSimple* typeSimple) {
@@ -133,19 +133,19 @@ std::ostream& operator<<(std::ostream& os, TypeSimple& typeSimple) {
 TypeSimple::~TypeSimple() {}
 
 TypeComposed::TypeComposed(TypeSimple *ts) :
-l(1), t(ts->getType() == POLY ? Polymorphe : Simple), ts(ts), tt(NULL), ta(NULL), tc(NULL)  {}
+l(1), t(Simple), ts(ts), tt(NULL), ta(NULL), tc(NULL)  {}
 
 TypeComposed::TypeComposed(TypeSimple *ts, unsigned l) :
-l(l), t(ts->getType() == POLY ? Polymorphe : Simple), ts(ts), tt(NULL), ta(NULL), tc(NULL)  {}
+l(l), t(Simple), ts(ts), tt(NULL), ta(NULL), tc(NULL)  {}
 
 TypeComposed::TypeComposed(TypeSimple *ts, TypeComposed *tc) :
-l(1 + tc->l), t(ts->getType() == POLY ? Polymorphe : Simple), ts(ts), tt(NULL), ta(NULL), tc(tc) {}
+l(1 + (tc ? tc->l : 0)), t(Simple), ts(ts), tt(NULL), ta(NULL), tc(tc) {}
 
 TypeComposed::TypeComposed(TypeTuple *tt) :
 l(1), t(Tuple), ts(NULL), tt(tt), ta(NULL), tc(NULL) {}
 
 TypeComposed::TypeComposed(TypeTuple *tt, TypeComposed *tc) :
-l(1 + tc->l), t(Tuple), ts(NULL), tt(tt), ta(NULL), tc(tc)  {}
+l(1 + (tc ? tc->l : 0)), t(Tuple), ts(NULL), tt(tt), ta(NULL), tc(tc)  {}
 
 TypeComposed::TypeComposed(TypeApp *ta) :
 l(1), t(Application), ts(NULL), tt(NULL), ta(ta), tc(NULL) {}
@@ -182,11 +182,19 @@ void TypeComposed::setNext(TypeComposed* tc) {
 }
 
 bool TypeComposed::areCorrectlyTyped(TypeComposed *typeComposed) {
-    if (tc) {
+    if (this) {
         if (t != typeComposed->t)
             return false ;
-        switch (t) {
-            case Simple : case Polymorphe :
+        if (ts->getType() == POLY) {
+            Type * poly = new Type(ts) ;           
+            Type * sub = new Type(typeComposed->ts) ;
+            TypeSimple::substitutePoly(&poly, sub) ;
+            ts = poly->GetTypeSimple() ;
+            delete poly ;
+            delete sub ;
+        }
+        switch (typeComposed->t) {
+            case Simple :
                 return ts->isCorrectlyTyped(typeComposed->ts) && tc->areCorrectlyTyped(typeComposed->tc) ;
             case Tuple :
                 return tt->isCorrectlyTyped(typeComposed->tt) && tc->areCorrectlyTyped(typeComposed->tc) ;
@@ -194,8 +202,13 @@ bool TypeComposed::areCorrectlyTyped(TypeComposed *typeComposed) {
                 return ta->isCorrectlyTyped(typeComposed->ta) && tc->areCorrectlyTyped(typeComposed->tc) ;
             assert(false) ;
         }
+        
     }
     return true ;
+}
+
+bool TypeComposed::isPoly() {
+   return t == Simple && getSimple()->getType() == POLY ;
 }
 
 bool TypeComposed::isCorrectlyTyped(TypeComposed *typeComposed) {
@@ -206,7 +219,7 @@ void TypeComposed::deleteType(TypeComposed *typeComposed) {
     if (typeComposed) {
         deleteType(typeComposed->tc) ;
         switch (typeComposed->t) {
-            case Simple : case Polymorphe :
+            case Simple :
                 delete typeComposed->ts ;
                 break ;
             case Tuple :
@@ -227,7 +240,7 @@ TypeComposed::~TypeComposed() {
 void TypeTuple::print(std::ostream& os, TypeComposed& typeComposed) {
     TypeTuple & typeTuple = (TypeTuple &) typeComposed ;
     switch (typeTuple.t) {
-        case Simple : case Polymorphe :
+        case Simple :
             os << *typeTuple.ts ;
             break ;
         case Tuple :
@@ -247,7 +260,7 @@ void TypeTuple::print(std::ostream& os, TypeComposed& typeComposed) {
 TypeTuple* TypeTuple::copyTypeTuple(TypeTuple* typeTuple) {
     if (typeTuple->l == 1) {
         switch (typeTuple->t) {
-            case Simple : case Polymorphe :
+            case Simple :
                 return new TypeTuple(TypeSimple::copyTypeSimple(typeTuple->ts)) ;
             case Tuple :
                 return new TypeTuple(copyTypeTuple(typeTuple->tt)) ;
@@ -257,7 +270,7 @@ TypeTuple* TypeTuple::copyTypeTuple(TypeTuple* typeTuple) {
     }
     TypeTuple * next = copyTypeTuple((TypeTuple *)typeTuple->tc) ;
     switch (typeTuple->t) {
-        case Simple : case Polymorphe :
+        case Simple :
             return new TypeTuple(TypeSimple::copyTypeSimple(typeTuple->ts), next) ;
         case Tuple :
             return new TypeTuple(copyTypeTuple(typeTuple->tt), next) ;
@@ -280,7 +293,7 @@ TypeTuple::~TypeTuple() {
 void TypeApp::print(std::ostream& os, TypeComposed& typeComposed) {
     TypeApp & typeApp = (TypeApp &) typeComposed ;
     switch (typeApp.t) {
-        case Simple : case Polymorphe :
+        case Simple :
             os << *typeApp.ts ;
             break ;
         case Tuple :
@@ -300,7 +313,7 @@ void TypeApp::print(std::ostream& os, TypeComposed& typeComposed) {
 TypeApp* TypeApp::copyTypeApp(TypeApp* typeApp) {
     if (typeApp->l == 1)
         switch (typeApp->t) {
-            case Simple : case Polymorphe :
+            case Simple :
                 return new TypeApp(TypeSimple::copyTypeSimple(typeApp->ts)) ;
             case Tuple :
                 return new TypeApp(TypeTuple::copyTypeTuple(typeApp->tt)) ;
@@ -309,7 +322,7 @@ TypeApp* TypeApp::copyTypeApp(TypeApp* typeApp) {
         }
     TypeApp * next = copyTypeApp((TypeApp*)typeApp->tc) ;
     switch (typeApp->t) {
-        case Simple : case Polymorphe :
+        case Simple :
             return new TypeApp(TypeSimple::copyTypeSimple(typeApp->ts), next) ;
         case Tuple :
             return new TypeApp(TypeTuple::copyTypeTuple(typeApp->tt), next) ;
@@ -329,11 +342,14 @@ std::ostream& operator<<(std::ostream& os, TypeApp& typeApp) {
 TypeApp::~TypeApp() {
 }
 
-Type::Type(TypeSimple* ts) : t(ts->getType() == POLY ? Polymorphe : Simple), ts(ts), next(NULL) {}
+Type::Type(TypeSimple* ts) : t(Simple), ts(ts), next(NULL) {}
 
 Type::Type(TypeTuple* tt) : t(Tuple), tc(tt), next(NULL) {}
 
 Type::Type(TypeApp* ta) :  t(Application), tc(ta), next(NULL) {}
+
+Type::Type(TypeComposed* tc) :
+t(tc->getType()), tc(tc), next(NULL) {}
 
 typeComposed Type::GetType() const {
     return t;
@@ -367,46 +383,34 @@ void Type::setNext(Type* next) {
     this->next = next;
 }
 
+bool Type::isPoly() {
+    return t == Simple && GetTypeSimple()->getType() == POLY ;
+}
+
+bool Type::isCorrectlyTyped(Type* type) {
+    if (t == Simple)
+        return ts->isCorrectlyTyped(type->ts);
+    return tc->isCorrectlyTyped(type->tc);
+}
+
+
 Type* Type::Unification(Type *typeApp, Type *typeArgs) {
     if (typeArgs) {
         
         if (!typeApp) {
-            std::cout << "APPLIED TOO MANY ARGUMENTS" << std::endl ;
+            TypeSimple::getOs() << "APPLIED TOO MANY ARGUMENTS" << std::endl ;
             throw false ;
         }
+        if (typeApp->isPoly())
+            TypeSimple::substitutePoly(&typeApp, typeArgs) ;
         
-        if (typeApp->t == Polymorphe) {
-            if(!TypeSimple::getMappedPoly(typeApp->GetTypeSimple()->getPoly()))
-                TypeSimple::mapPoly(typeApp->GetTypeSimple()->getPoly(), Type::copyType(typeArgs)) ;
-            Type * Poly = Type::copyType(TypeSimple::getMappedPoly(typeApp->GetTypeSimple()->getPoly())) ;
-            Type * tmp = typeApp ;
-            Poly->setNext(typeApp->getNext()) ;
-            typeApp = Poly ;
-            Type::deleteType(tmp) ;
-        }
+        if (typeArgs->isPoly())
+            TypeSimple::substitutePoly(&typeArgs, typeApp) ;
         
-        else if (typeArgs->t == Polymorphe) {
-            if(!TypeSimple::getMappedPoly(typeArgs->GetTypeSimple()->getPoly()))
-                TypeSimple::mapPoly(typeArgs->GetTypeSimple()->getPoly(), Type::copyType(typeApp)) ;
-            Type * Poly = Type::copyType(TypeSimple::getMappedPoly(typeArgs->GetTypeSimple()->getPoly())) ;
-            Type * tmp = typeArgs ;
-            Poly->setNext(typeArgs->getNext()) ;
-            typeArgs = Poly ;
-            Type::deleteType(tmp) ;
-        }
-        
-        if(typeApp->t != typeArgs->t) {
-            std::cout << "ERROR TYPE :" << std::endl ;
-            throw false ;
-        }
-        
-        bool res ;
-        if (typeArgs->t == Simple || typeArgs->t == Polymorphe)
-            res = typeApp->ts->isCorrectlyTyped(typeArgs->ts) ;
-        else
-            res = typeApp->tc->isCorrectlyTyped(typeArgs->tc) ;
-        if (!res) {
-            std::cout << "MISMATCH UNIFICATION" << std::endl ;
+        if (!typeApp->isCorrectlyTyped(typeArgs)) {
+            TypeSimple::getOs() << " MISMATCH UNIFICATION" << std::endl ;
+            TypeSimple::getOs() << "Type App : " << *typeApp << std::endl ;
+            TypeSimple::getOs() << "Type Args : " << *typeArgs << std::endl ;
             throw false ;
         }
         Type *tmpApp = typeApp, *tmpArgs = typeArgs ;
@@ -422,7 +426,7 @@ Type* Type::Unification(Type *typeApp, Type *typeArgs) {
 
 void Type::printApplication(std::ostream& os, Type& type) {
     switch(type.t) {
-        case Simple : case Polymorphe :
+        case Simple :
             os << *type.ts ;
             break ;
         case Tuple :
@@ -447,7 +451,7 @@ std::ostream& operator<<(std::ostream& os, Type& type) {
 
 Type* Type::copyType(Type* orig) {
     switch (orig->t) {
-        case Simple : case Polymorphe :
+        case Simple :
             return new Type(TypeSimple::copyTypeSimple(orig->ts)) ;
         case Tuple :
             return new Type(TypeTuple::copyTypeTuple((TypeTuple *) orig->tc)) ;
@@ -471,7 +475,7 @@ Type* Type::copyTypeRec(Type* orig) {
 void Type::deleteType(Type* type) {
     if (type) {
         switch(type->t) {
-            case Simple : case Polymorphe :
+            case Simple :
                 delete type->ts ;
                 break ;
             case Tuple : case Application :

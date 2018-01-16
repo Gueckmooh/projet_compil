@@ -3,8 +3,11 @@
 
 #include "Type.hpp"
 #include <vector>
+#include <string>
 
 using std::vector;
+
+class Environment;
 
 class InitTypeComposed {
 public:
@@ -39,6 +42,7 @@ class TypeTupleFactory : public TypeComposedFactory {
 public:
     using TypeComposedFactory::TypeComposedFactory ;
     TypeTuple * create() override;
+    static TypeTuple * createPoly(vector<std::string> vars, char poly, Environment *Env);
     TypeTuple * createReversal() ;
     ~TypeTupleFactory();
 private:
@@ -65,11 +69,13 @@ public:
     ~TypeSimpleFactory();
 protected:
     typeSimple ts ;
+    char poly = 'a' ;
 };
 
 class TypeFactory {
-public:    
+public:
     TypeFactory(std::initializer_list<Type *> types);
+    TypeFactory(vector<Type*> types);
     Type * create() ;
     static Type* createPoly(unsigned size);
     ~TypeFactory();

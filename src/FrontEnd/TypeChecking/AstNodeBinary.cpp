@@ -26,8 +26,13 @@ void AstNodeBinary::traversal(AstVisitor* vis) {
 
 AstNodeBinary::~AstNodeBinary() {}
 
+// InfixOperator
+
+InfixOperator::~InfixOperator() {}
+
+
 AstNodeAdd::AstNodeAdd(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_ADD, t1, t2) {}
+InfixOperator(C_ADD, t1, t2) {}
 
 void AstNodeAdd::accept(AstVisAbstract * vis) {
     vis->visit_node(this) ;
@@ -45,7 +50,7 @@ void AstNodeArray::accept(AstVisAbstract* vis) {
 AstNodeArray::~AstNodeArray() {}
 
 AstNodeEq::AstNodeEq(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_EQ, t1, t2) {}
+InfixOperator(C_EQ, t1, t2) {}
 
 void AstNodeEq::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -54,7 +59,7 @@ void AstNodeEq::accept(AstVisAbstract* vis) {
 AstNodeEq::~AstNodeEq() {}
 
 AstNodeFadd::AstNodeFadd(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_FADD, t1, t2) {}
+InfixOperator(C_FADD, t1, t2) {}
 
 void AstNodeFadd::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -63,7 +68,7 @@ void AstNodeFadd::accept(AstVisAbstract* vis) {
 AstNodeFadd::~AstNodeFadd() {}
 
 AstNodeFdiv::AstNodeFdiv(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_FDIV, t1, t2) {}
+InfixOperator(C_FDIV, t1, t2) {}
 
 void AstNodeFdiv::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -72,7 +77,7 @@ void AstNodeFdiv::accept(AstVisAbstract* vis) {
 AstNodeFdiv::~AstNodeFdiv() {}
 
 AstNodeFmul::AstNodeFmul(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_FMUL, t1, t2) {}
+InfixOperator(C_FMUL, t1, t2) {}
 
 void AstNodeFmul::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -81,7 +86,7 @@ void AstNodeFmul::accept(AstVisAbstract* vis) {
 AstNodeFmul::~AstNodeFmul() {}
 
 AstNodeFsub::AstNodeFsub(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_FSUB, t1, t2) {}
+InfixOperator(C_FSUB, t1, t2) {}
 
 void AstNodeFsub::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
@@ -99,13 +104,14 @@ void AstNodeGet::accept(AstVisAbstract* vis) {
 AstNodeGet::~AstNodeGet() {}
 
 AstNodeLe::AstNodeLe(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_LE, t1, t2) {}
+InfixOperator(C_LE, t1, t2) {}
 
 void AstNodeLe::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;
 }
 
-AstNodeLe::~AstNodeLe() {}
+AstNodeLe::~AstNodeLe() {
+}
 
 AstNodeLet::AstNodeLet(AstNode * t1, AstNode * t2, std::string var_name) :
 AstNodeBinary(C_LET, t1, t2), var(AstNodeVar(var_name)) {}
@@ -151,7 +157,7 @@ void AstNodeLetTuple::accept(AstVisAbstract* vis) {
 AstNodeLetTuple::~AstNodeLetTuple() {}
 
 AstNodeSub::AstNodeSub(AstNode * t1, AstNode * t2) :
-AstNodeBinary(C_SUB, t1, t2) {}
+InfixOperator(C_SUB, t1, t2) {}
 
 void AstNodeSub::accept(AstVisAbstract* vis) {
     vis->visit_node(this) ;

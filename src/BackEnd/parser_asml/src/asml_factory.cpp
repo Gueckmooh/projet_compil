@@ -103,10 +103,8 @@ namespace asml {
       func->set_return (retname);
     else
       func->unset_return ();
-    //while (!paramlist->empty()) {
     for (vector<string>::iterator it = paramlist->begin(); it != paramlist->end(); it++) {
       func->add_param (*it);
-      //paramlist->pop_front(); // TODO
     }
     paramlist->erase(paramlist->begin(), paramlist->end());
     delete paramlist;

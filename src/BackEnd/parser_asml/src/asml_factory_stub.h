@@ -1,3 +1,14 @@
+/**
+ * \file      asml_addidition.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_addition class
+ */
+
+#ifndef __ASML_FACTORY_STUB_H__
+#define __ASML_FACTORY_STUB_H__
+
 #ifdef __cplusplus
 #include <string>
 #include <vector>
@@ -15,9 +26,6 @@ using namespace asml;
 #define ASML_GE 6
 #define ASML_EQUAL 7
 
-#ifndef __ASML_FACTORY_STUB_H__
-#define __ASML_FACTORY_STUB_H__
-
 typedef struct {
   char* op1;
   char* op2;
@@ -25,7 +33,6 @@ typedef struct {
 } asml_operation_t;
 
 #ifdef __cplusplus
-//extern "C" void asml_create_function (void);
 extern "C" void asml_validate_function (void);
 extern "C" void asml_validate_condition (void);
 extern "C" void asml_set_function_name (char* name);
@@ -39,7 +46,6 @@ extern "C" void asml_set_boolean (char* op1, char* op2, int type);
 extern "C" void asml_set_next (int next);
 #else
 
-//void asml_create_function (void);
 void asml_validate_function (void);
 void asml_validate_condition (void);
 void asml_set_function_name (char* name);

@@ -1,9 +1,3 @@
-#include <string>
-
-using namespace std;
-
-#ifndef __ARM_UTIL_H__
-#define __ARM_UTIL_H__
 /**
  * \file      arm_util.h
  * \author    The C Team - Enzo Brignon
@@ -12,19 +6,37 @@ using namespace std;
  * \brief     utility function for ARM generation
  *
  */
-namespace arm {
-/*! \class arm_util
- * \brief utils class
+
+#ifndef __ARM_UTIL_H__
+#define __ARM_UTIL_H__
+
+#include <string>
+
+using namespace std;
+
+/*! \namespace arm
+ *  \brief     Contains the classes that manages the arm generation
  */
+namespace arm {
+  /*! \class arm_util
+   * \brief utils class
+   */
   class arm_util {
   public:
-    static const int DIRECT = 0; /*!< TODO            */
-    static const int VARIABLE = 1; /*!< Variable type             */
-    static const int LABEL = 2; /*!< Label Type              */
-    static const int SELF = 3; /*!< TODO            */
-    static int type_of (string); /*!< get type of ASML               */
+    static const int DIRECT = 0;   /*!< The string is a direct value  */
+    static const int VARIABLE = 1; /*!< The string is a variable name */
+    static const int LABEL = 2;    /*!< The string is a label         */
+    static const int SELF = 3;     /*!< The string is a %selg         */
+
+    /**
+     * \brief  This function returns a value following the 'type'
+     *         given string
+     * \param  param the string to 'evaluate'
+     * \return an int in function of the 'type' of the variable
+     */
+    static int type_of (string);
   };
 
-} // TODO
+}
 
 #endif //__ARM_UTIL_H__

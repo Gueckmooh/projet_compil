@@ -39,13 +39,13 @@ namespace arm {
     virtual void set_op2 (string);
     virtual void set_op3 (string);
 
-    /*!
+    /**
      *  \brief Gives the number of registers used in this instruction
      *  \return an int, the number of register
      */
     virtual int nb_regs (void);
 
-    /*!
+    /**
      * \brief  This function gives the list of operands of this instruction
      * \return list of string of operands
      */

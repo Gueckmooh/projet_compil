@@ -41,6 +41,7 @@ namespace arm {
     virtual ~arm_instruction (void) {};
 
     int get_type (void);
+
     /**
      *  \brief This function gies the number of registers used in this instruction
      *  \return int of register
@@ -68,12 +69,11 @@ namespace arm {
     void add_param (string);
     vector<string> get_used (void);
   protected:
-    int type_id; /*!<      Id of type of insutrction       */
-    function<map<string, string>(void)> callback; /*!<        TODO     */
-    map<string, string>* offset; /*!<        map of offsets     */
-    vector<string> params; /*!<   vector of parameters          */
+    int type_id;                 /*!< Id of type of insutrction  */
+    map<string, string>* offset; /*!< map of offsets             */
+    vector<string> params;       /*!< vector of parameters       */
   };
 
-} // TODO
+}
 
 #endif //__ARM_INSTRUCION_H__

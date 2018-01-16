@@ -207,7 +207,9 @@ plist get_list_of_vars_used(ptree t){
             l = empty();
             l_node = t->params.ttuple.l->head;
             while(l_node != NULL){
-                l = append(l, get_list_of_vars_used((ptree)l_node->data));
+                ptree tmp = (ptree)l_node->data;
+                assert(tmp->code == T_VAR);
+                l = append(l, get_list_of_vars_used(tmp->params.v);
                 l_node = l_node->next;
             }
             return l;

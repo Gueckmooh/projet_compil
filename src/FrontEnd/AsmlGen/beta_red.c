@@ -44,7 +44,7 @@ ptree beta_red(ptree t, env_node *env){
         case T_TUPLE :
             l_node = t->params.ttuple.l->head;
             while(l_node != NULL){
-                l_node->data = (void *)epsilon(env, (char *)l_node->data);
+                l_node->data = (void *)beta_red(((ptree)l_node->data), env);
                 l_node = l_node->next;
             }
             return t;

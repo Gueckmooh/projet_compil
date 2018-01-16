@@ -68,6 +68,11 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_LE :
         case T_MK_CLOS :
         case T_APP_CLOS :
+        // the 4 last are  experimentals, so there could be unexpected results
+        case T_TUPLE :
+        case T_ARRAY :
+        case T_GET :
+        case T_PUT :
             new_asml_asmt->op = NULL;
             new_asml_asmt->exp = to_asml_exp(t);
             new_asml_asmt->next = NULL;
@@ -90,10 +95,6 @@ asml_asmt_t *to_asml_asmt(ptree t){
             assert(t->params.lettuple.t1->code == T_VAR);
             return lettuple_to_asmlt(t);
 
-        case T_TUPLE :
-        case T_ARRAY :
-        case T_GET :
-        case T_PUT :
             fprintf(stderr, "Error, trying to convert ast node with code %d in ast "
             "in to_asml_asmt.\nThis should not happen.\n", t->code);
             exit(1);

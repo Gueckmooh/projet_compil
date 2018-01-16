@@ -38,7 +38,7 @@ def get_file(path) :
 
 def arm_to_exec (outputf) :
 	try : 
-		output = subprocess.check_output(['arm-none-eabi-as', '../../src/lib_arm/libmincaml.S', '-o', '../../tmp/libmincaml.o'])
+		
 		output = subprocess.check_output(['arm-none-eabi-as', '../../tmp/'+outputf+'.s' , '-o', '../../tmp/'+outputf+'.o'])
 		output = subprocess.check_output(['arm-none-eabi-ld', '../../tmp/'+outputf+'.o', '../../tmp/libmincaml.o', '-o', '../../tmp/'+outputf+'.out'])
 	except subprocess.CalledProcessError as e :
@@ -81,7 +81,7 @@ def exec_arm(nom_fich) :
 			outputmin = e.output
 			print(bcolors.FAIL+"    Echec ouverture fichier minml"+bcolors.ENDC)
 		try :
-			output5=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
+			output5=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-n','-a','-o','../../tmp/'+nom_fich+'.asml'])
 			output6 = subprocess.check_output(['cat','../../tmp/'+nom_fich+'.asml'])
 			print(bcolors.WARNING + "    Generation du fichier ASML \n " + output6.decode() + bcolors.ENDC)
 		except subprocess.CalledProcessError as e :
@@ -96,7 +96,7 @@ def exec_asml(nom_fich) :
 	try : 
 		output = subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-i','-o','../../tmp/'+nom_fich+'.s'])
 		arm_to_exec(nom_fich)
-		output2 = subprocess.check_output(['./../../scripts/asml',nom_fich])
+		output2 = subprocess.check_output(['./../../tools/asml',nom_fich])
 		output3 = subprocess.check_output(['qemu-arm','../../tmp/'+nom_fich+'.out'])
 	except subprocess.CalledProcessError as e :
 		output3 = e.output
@@ -114,9 +114,9 @@ def exec_asml(nom_fich) :
 def gen_asml(nom_fich) :
 	#print ("Je genere l'asml de "+nom_fich)
 	try :
-		output=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-a','-o','../../tmp/'+nom_fich+'.asml'])
+		output=subprocess.check_output(['./../../scripts/mincamlc',nom_fich,'-n','-a','-o','../../tmp/'+nom_fich+'.asml'])
 		output2 = subprocess.check_output(['ocamlc',nom_fich,'-o','../../tmp/base_'+nom_fich+'.out'])
-		output3 = subprocess.check_output(['qemu-arm','../../scripts/asml','../../tmp/'+nom_fich+'.asml'])
+		output3 = subprocess.check_output(['./../../tools/asml','../../tmp/'+nom_fich+'.asml'])
 		output4 = subprocess.check_output(['./../../tmp/base_'+nom_fich+'.out'])
 
 
@@ -229,7 +229,10 @@ def main() :
 	repo = repo+'/tests'
 	os.chdir(repo)
 	liste_dossier_test = get_folder(repo)
-
+	try :
+		libmincaml = subprocess.check_output(['arm-none-eabi-as', '../src/lib_arm/libmincaml.S', '-o', '../tmp/libmincaml.o'])
+	except subprocess.CalledProcessError as e:
+		libmincaml = e.output
 
 	print(bcolors.HEADER + "Bienvenue dans le Testeur de notre programme " + bcolors.ENDC)
 	print(bcolors.HEADER + "Organisation: Tests/Dossier/fichier_test ou Tests/Dossier/Valid/fichier_test : \n"+ bcolors.ENDC)

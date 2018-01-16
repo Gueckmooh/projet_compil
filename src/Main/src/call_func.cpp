@@ -47,7 +47,7 @@ asml::asml_factory::initialize();
     ptree p2 = ast_transform(p);
     t=build_asml_from_ptree(p2);
     if (!(is_enabled(param,PARAM_ARM))){
-      parseprint(p2,const_cast<char*>(output.c_str()));
+      //parseprint(p2,const_cast<char*>(output.c_str()));
 
       asml_parser_create_function(t);
       vector <asml_function*>*vect = asml_factory::get_function();

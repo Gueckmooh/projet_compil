@@ -40,7 +40,11 @@ namespace asml {
     virtual string get_op2 (void);
 
     virtual int get_type (void);
-
+    /**
+     * \brief    This function generates the ASML code that correspond to this instruction
+     * \details  This function is used to generate ASML code.
+     * \return   a string containing the generated code
+     */
     virtual string generate (void);
   protected:
     int type_id; /*! ID of type */

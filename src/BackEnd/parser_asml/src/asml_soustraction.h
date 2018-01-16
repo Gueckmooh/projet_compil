@@ -1,3 +1,11 @@
+/**
+ * \file      asml_soustraction.h
+ * \author    The C Team - Enzo Brignon
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Defines the asml_soustraction class
+ */
+
 #include <string>
 #include <iostream>
 
@@ -7,7 +15,9 @@
 #include "asml_instruction.h"
 
 using namespace std;
-
+/*! \namespace asml
+ *  \brief     Contains the classes that manages the asml
+ */
 namespace asml {
 
   class asml_soustraction : public asml_instruction {

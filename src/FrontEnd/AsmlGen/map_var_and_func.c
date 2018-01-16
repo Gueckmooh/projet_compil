@@ -209,7 +209,7 @@ plist get_list_of_vars_used(ptree t){
             while(l_node != NULL){
                 ptree tmp = (ptree)l_node->data;
                 assert(tmp->code == T_VAR);
-                l = append(l, get_list_of_vars_used((void *)tmp->params.v));
+                l = append(l, (void *)tmp->params.v);
                 l_node = l_node->next;
             }
             return l;
@@ -226,11 +226,11 @@ plist get_list_of_vars_used(ptree t){
         case T_FSUB :
         case T_FMUL :
         case T_FDIV :
-            fprintf(stderr, "TBI : in map_functions, code = %d.\n"
+            fprintf(stderr, "TBI : in get_list_of_vars_used, code = %d.\n"
             "Exiting.\n", t->code);
             exit(1);
         default :
-            fprintf(stderr, "Error : in map_functions, incorrect node with "
+            fprintf(stderr, "Error : in get_list_of_vars_used, incorrect node with "
             "code = %d.\nExiting.\n", t->code);
             exit(1);
     }

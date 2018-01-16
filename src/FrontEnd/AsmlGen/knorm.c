@@ -1,5 +1,7 @@
 #include "ast.h"
 #include "utils.h"
+#include "knorm.h"
+#include "ast_to_asmlt.h"
 
 #include <assert.h>
 #include <string.h>
@@ -7,7 +9,7 @@
 #include <stdlib.h>
 
 ptree knorm(ptree t){
-    char *new_var1, *new_var2, *new_var3;
+    char *new_var1, *new_var2, *new_var3, *new_var4;
     listNode *l_node;
     ptree tmp;
     assert(t);
@@ -161,26 +163,18 @@ ptree knorm(ptree t){
             return ast_integ((t->params.b == true ? 1 : 0));
 
         case T_APP :
-            // case -> func name is not a var -> insert let
             if (t->params.tapp.t->code != T_VAR){
-                new_var1 = gen_funcname();
+                new_var1 = gen_varname();
                 tmp = t->params.tapp.t;
                 t->params.tapp.t = ast_var(new_var1);
-                return knorm(ast_let(new_var1, tmp, t));
+                return ast_let(
+                    new_var1,
+                    knorm(tmp),
+                    k_norm_t_app(t, t->params.tapp.l->head)
+                );
+            } else {
+                return k_norm_t_app(t, t->params.tapp.l->head);
             }
-
-            // case -> one of args is not a var but an expression -> insert let
-            l_node = t->params.tapp.l->head;
-            while(l_node != NULL){
-                if (((ptree)l_node->data)->code != T_VAR){
-                    new_var1 = gen_varname();
-                    tmp = (ptree)(l_node->data);
-                    l_node->data = (void *)ast_var(new_var1);
-                    return knorm(ast_let(new_var1, tmp, t));
-                }
-                l_node = l_node->next;
-            }
-
         case T_NEG :
             if(t->params.t->code != T_VAR){
                 new_var1 = gen_varname();
@@ -240,26 +234,27 @@ ptree knorm(ptree t){
             );
 
         case T_TUPLE :
-            l_node = t->params.ttuple.l->head;
-            while(l_node != NULL){
-                tmp = (ptree)l_node->data;
-                if (tmp->code != T_VAR){
-                    new_var1 = gen_varname();
-                    l_node->data = (void *)ast_var(new_var1);
-                    return ast_let(
-                        new_var1,
-                        knorm(tmp),
-                        t
-                    );
-                }
-                l_node = l_node->next;
-            }
-            new_var1 = gen_varname();
-            return ast_let(
-                new_var1,
-                t,
-                ast_var(new_var1)
-            );
+            return knorm_tuple(t, t->params.ttuple.l->head);
+            // l_node = t->params.ttuple.l->head;
+            // while(l_node != NULL){
+            //     tmp = (ptree)l_node->data;
+            //     if (tmp->code != T_VAR){
+            //         new_var1 = gen_varname();
+            //         l_node->data = (void *)ast_var(new_var1);
+            //         return ast_let(
+            //             new_var1,
+            //             knorm(tmp),
+            //             t
+            //         );
+            //     }
+            //     l_node = l_node->next;
+            // }
+            // new_var1 = gen_varname();
+            // return ast_let(
+            //     new_var1,
+            //     t,
+            //     ast_var(new_var1)
+            // );
 
         case T_LETTUPLE :
             // replace let (x1, ..., xn) = M in N
@@ -279,6 +274,46 @@ ptree knorm(ptree t){
         case T_ARRAY :
             new_var1 = gen_varname();
             new_var2 = gen_varname();
+#ifdef _ALLOCATE_BYTES_
+            // dirty and ugly, we multiply per 4
+            // so we change let x = array M N in
+            // let v1 = knorm(M) in
+            // let v3 = v1 + v1 in
+            // let v4 = v3 + v3 in
+            // let v2 = knorm(N) in
+            // let x = array M N
+            new_var3 = gen_varname();
+            new_var4 = gen_varname();
+            return ast_let(
+                new_var1,
+                knorm(t->params.tbinary.t1),
+                ast_let(
+                    new_var3,
+                    ast_add(
+                        ast_var(new_var1),
+                        ast_var(new_var1)
+                    ),
+                    ast_let(
+                        new_var4,
+                        ast_add(
+                            ast_var(new_var3),
+                            ast_var(new_var3)
+                        ),
+                        ast_let(
+                            new_var2,
+                            knorm(t->params.tbinary.t2),
+                            ast_app(
+                                ast_var("create_array\0"),
+                                cons(
+                                    (void *)ast_var(new_var4),
+                                    cons((void *)ast_var(new_var2), empty())
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+#else
             return ast_let(
                 new_var1,
                 knorm(t->params.tbinary.t1),
@@ -288,13 +323,13 @@ ptree knorm(ptree t){
                     ast_app(
                         ast_var("create_array\0"),
                         cons(
-                            (void *)ast_var(new_var2),
-                            cons((void *)ast_var(new_var1), empty())
+                            (void *)ast_var(new_var1),
+                            cons((void *)ast_var(new_var2), empty())
                         )
                     )
                 )
             );
-
+#endif
         case T_GET :
             new_var1 = gen_varname();
             new_var2 = gen_varname();
@@ -348,5 +383,35 @@ ptree knorm(ptree t){
         default :
             printf("Error : knorm, node code not recognized (%d)\n", t->code);
             return NULL;
+    }
+}
+
+ptree k_norm_t_app(ptree t, listNode *arg_node){
+    if (arg_node == NULL){
+        return t;
+    } else {
+        char *new_varname = gen_varname();
+        ptree tmp = (ptree)arg_node->data;
+        arg_node->data = (void *)ast_var(new_varname);
+        return ast_let(
+            new_varname,
+            knorm(tmp),
+            k_norm_t_app(t, arg_node->next)
+        );
+    }
+}
+
+ptree knorm_tuple(ptree t, listNode *arg_node){
+    if (arg_node == NULL){
+        return t;
+    } else {
+        char *new_varname = gen_varname();
+        ptree tmp = (ptree)arg_node->data;
+        arg_node->data = (void *)ast_var(new_varname);
+        return ast_let(
+            new_varname,
+            knorm(tmp),
+            knorm_tuple(t, arg_node->next)
+        );
     }
 }

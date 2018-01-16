@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "alpha_conv.h"
 #include "reduce_nested_let.h"
+#include "duplicate.h"
 
 extern plist fd_list;
 
@@ -17,18 +18,31 @@ int get_function_size(ptree t){
     switch(t->code){
         // 'sizeless' nodes
         case T_VAR :
-        if (is_a_label(t->params.v)){
-            pfundef fd = get_fd(t->params.v);
-            if (fd->free_vars != NULL){
-                return INLINE_THRESHOLD + 1;
+            if (is_a_label(t->params.v)){
+                pfundef fd = get_fd(t->params.v);
+                if (fd->free_vars != NULL){
+                    return INLINE_THRESHOLD + 1;
+                }
+            } else {
+                return 0;
             }
-        }
 
+        case T_APP :
+            if ((t->params.tapp.t->code == T_VAR) &&
+                is_a_label(t->params.tapp.t->params.v)){
+                pfundef fd = get_fd(t->params.tapp.t->params.v);
+                if ((fd != NULL) && (fd->free_vars != NULL)){
+                    return INLINE_THRESHOLD + 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
         case T_UNIT :
         case T_BOOL :
         case T_INT :
         case T_FLOAT :
-        case T_APP :
         case T_TUPLE :
         case T_NOT :
         case T_NEG :
@@ -74,12 +88,15 @@ int get_function_size(ptree t){
 }
 
 ptree apply_inline_expansion(ptree t){
+    t = duplicate_tree(t);
     listNode *l_node = fd_list->head;
     while(l_node != NULL){
         pfundef fd = (pfundef)l_node->data;
         if ((get_function_size(fd->body) <= INLINE_THRESHOLD) &&
-            (fd->free_vars->head == NULL)){
+            (fd->free_vars->head == NULL) &&
+            (!is_used_as_var(fd, t))){
             t = replace_funcall_by_body(fd, t);
+            remove_fd_from_fd_list(fd);
         }
         l_node = l_node->next;
     }
@@ -92,10 +109,12 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
     listNode *l_node, *l_node_fd, *l_node_call;
     env_node *env;
     char *var_name;
+    ptree tmp;
     plist args_remaining;
     switch(t->code){
         // function call -> the interesting part
         case T_APP :
+            // if function called is the one to replace
             if((t->params.tapp.t->code == T_VAR) &&
                 (strcmp(t->params.tapp.t->params.v, fd->var) == 0)){
                 env = init_env();
@@ -113,7 +132,8 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
                 }
                 // all the args from the call have been consumed by the function
                 if (l_node_call == NULL){
-                    return alpha_convert(fd->body, env);
+                    tmp = alpha_convert(duplicate_tree(fd->body), env);
+                    return tmp;
                 } else { // there are args remaining
                     var_name = gen_varname();
                     args_remaining = empty();
@@ -123,7 +143,7 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
                         fd->args->logicalLength;
                     return ast_let(
                         var_name,
-                        alpha_convert(fd->body, env),
+                        alpha_convert(duplicate_tree(fd->body), env),
                         ast_app(
                             ast_var(var_name),
                             args_remaining
@@ -153,6 +173,11 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
 
         // binary nodes
         case T_ADD :
+            t->params.tbinary.t1 =
+                replace_funcall_by_body(fd, t->params.tbinary.t1);
+            t->params.tbinary.t2 =
+                replace_funcall_by_body(fd, t->params.tbinary.t2);
+            return t;
         case T_SUB :
         case T_EQ :
         case T_LE :
@@ -160,7 +185,7 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
         case T_GET :
             t->params.tbinary.t1 =
                 replace_funcall_by_body(fd, t->params.tbinary.t1);
-            t->params.tbinary.t1 =
+            t->params.tbinary.t2 =
                 replace_funcall_by_body(fd, t->params.tbinary.t2);
             return t;
 
@@ -213,6 +238,133 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
         default :
             fprintf(stderr, "Error : get_function_size, code ="
             " %d (incorrect).\nExiting.\n", t->code);
+            exit(1);
+    }
+}
+
+void remove_fd_from_fd_list(pfundef fd){
+    listNode *current = fd_list->head, *next = current->next;
+    if (strcmp(fd->var, ((pfundef)current->data)->var) == 0){
+        fd_list->head = fd_list->head->next;
+        fd_list->logicalLength --;
+    } else {
+        while(next != NULL){
+            if (strcmp(fd->var, ((pfundef)next->data)->var) == 0){
+                current->next = next->next;
+                fd_list->logicalLength --;
+                return;
+            }
+            current = next;
+            next = next->next;
+        }
+    }
+}
+
+bool is_used_as_var(pfundef fd, ptree t){
+    assert(fd);
+    assert(t);
+    listNode *l_node;
+    switch(t->code){
+        // function  call -> check if var_name is one of the arguments
+        case T_APP :
+            l_node = t->params.tapp.l->head;
+            while(l_node != NULL){
+                assert(((ptree)l_node->data)->code == T_VAR);
+                if(strcmp(fd->var, ((ptree)l_node->data)->params.v) == 0){
+                    return true;
+                }
+                l_node = l_node->next;
+            }
+            return false;
+
+        case T_MK_CLOS :
+        case T_APP_CLOS :
+            l_node = t->params.tclosure.l->head;
+            while(l_node != NULL){
+                if(strcmp(fd->var, (char *)l_node->data) == 0){
+                    return true;
+                }
+                l_node = l_node->next;
+            }
+            return false;
+
+        //leaves
+        case T_UNIT :
+        case T_BOOL :
+        case T_INT :
+        case T_FLOAT :
+            return false;
+
+        case T_VAR :
+            if (strcmp(fd->var, t->params.v) == 0){
+                return true;
+            }
+            return false;
+
+        case T_TUPLE :
+            l_node = t->params.ttuple.l->head;
+            while(l_node != NULL){
+                assert(((ptree)l_node->data)->code == T_VAR);
+                if(strcmp(fd->var, ((ptree)l_node->data)->params.v) == 0){
+                    return true;
+                }
+                l_node = l_node->next;
+            }
+            return false;
+
+        // unary
+        case T_NOT :
+        case T_NEG :
+            return is_used_as_var(fd, t->params.t);
+
+        // binary
+        case T_ADD :
+        case T_SUB :
+        case T_FNEG :
+        case T_FADD :
+        case T_FSUB :
+        case T_FMUL :
+        case T_FDIV :
+        case T_EQ :
+        case T_LE :
+        case T_ARRAY :
+        case T_GET :
+            return (
+                is_used_as_var(fd, t->params.tbinary.t1) ||
+                is_used_as_var(fd, t->params.tbinary.t2)
+            );
+
+        // ternary
+        case T_IF :
+        case T_PUT :
+            return (
+                is_used_as_var(fd, t->params.tternary.t1) ||
+                is_used_as_var(fd, t->params.tternary.t2) ||
+                is_used_as_var(fd, t->params.tternary.t3)
+            );
+
+        // other cases
+        case T_LET :
+            return (
+                is_used_as_var(fd, t->params.tlet.t1) ||
+                is_used_as_var(fd, t->params.tlet.t2)
+            );
+
+        case T_LETREC :
+            return (
+                is_used_as_var(fd, t->params.tletrec.fd->body) ||
+                is_used_as_var(fd, t->params.tletrec.t)
+            );
+
+        case T_LETTUPLE :
+            return (
+                is_used_as_var(fd, t->params.lettuple.t1) ||
+                is_used_as_var(fd, t->params.lettuple.t2)
+            );
+
+        default :
+            fprintf(stderr, "TBI : in is_used_as_var, code %d not yet implemented.\n"
+            "Exiting.\n", t->code);
             exit(1);
     }
 }

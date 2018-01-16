@@ -7,8 +7,8 @@
 #include "list.h"
 #include "env.h"
 #include "closure.h"
-#include "print_and_write.h"
 #include "utils.h"
+#include "beta_red.h"
 
 extern plist fd_list;
 
@@ -21,6 +21,7 @@ ptree apply_closure_conversion(ptree t){
         fd->body = apply_clos(fd->body);
         if (fd->free_vars != NULL){
             fd->body = add_free_vars_refs(fd, fd->free_vars->head, 1);
+            // fd->body = beta_red(fd->body, NULL);
         }
         l_node = l_node->next;
     }
@@ -47,15 +48,37 @@ ptree apply_clos(ptree t){
                 char *new_varname = gen_varname();
                 plist mk_clos_args = append(
                     cons(fd->var, empty()),
-                    t->params.tapp.l
+                    empty()
                 );
-                printf("ici\n");
-                print_str_list(mk_clos_args);
-                printf("\n");
+                listNode *l_node = fd->free_vars->head;
+                while(l_node != NULL){
+                    // ptree tmp = l_node->data;
+                    // assert(tmp->code == T_VAR);
+                    // mk_clos_args = append(
+                    //     mk_clos_args,
+                    //     cons(tmp->params.v, empty())
+                    // );
+                    mk_clos_args = append(
+                        mk_clos_args,
+                        cons(l_node->data, empty())
+                    );
+                    l_node = l_node->next;
+                }
+                plist app_clos_args = cons(new_varname, empty());
+                l_node = t->params.tapp.l->head;
+                while(l_node != NULL){
+                    ptree tmp = (ptree)l_node->data;
+                    assert(tmp->code == T_VAR);
+                    app_clos_args = append(
+                        app_clos_args,
+                        cons((char *)tmp->params.v, empty())
+                    );
+                    l_node = l_node->next;
+                }
                 return ast_let(
                     new_varname,
                     ast_mkclos(mk_clos_args),
-                    ast_var(new_varname)
+                    ast_app_clos(app_clos_args)
                 );
             }
         //case -> func_name is not a label -> convert to apply closure
@@ -72,9 +95,6 @@ ptree apply_clos(ptree t){
                 );
                 l_node = l_node->next;
             }
-            printf("\n");
-            print_str_list(app_clos_args);
-            printf("\n");
             return ast_app_clos(app_clos_args);
         }
     } else if (t->code == T_VAR){
@@ -85,7 +105,7 @@ ptree apply_clos(ptree t){
                 return t;
             }
             // case -> function with no free args
-            if (fd->free_vars == NULL){
+            if ((fd->free_vars == NULL) || (fd->free_vars->head == NULL)){
                 return t;
             } else {
                 char *new_varname = gen_varname();
@@ -93,9 +113,6 @@ ptree apply_clos(ptree t){
                     cons((void *)t->params.v, empty()),
                     fd->free_vars
                 );
-                printf("la\n");
-                print_str_list(mk_clos_args);
-                printf("\n");
                 return ast_let(
                     new_varname,
                     ast_mkclos(mk_clos_args),

@@ -5,6 +5,7 @@
 #include "ast.h"
 #include "env.h"
 #include "list.h"
+#include "utils.h"
 
 ptree beta_red(ptree t, env_node *env){
     assert(t);
@@ -13,7 +14,8 @@ ptree beta_red(ptree t, env_node *env){
     switch(t->code){
         // Cases related to beta reduction -> special treatment
         case T_LET :
-            if (t->params.tlet.t1->code == T_VAR){
+            if ((t->params.tlet.t1->code == T_VAR) &&
+                (!is_a_label(t->params.tlet.t1->params.v))){
                 new_env = gen_env_node(t->params.tlet.v,
                                        t->params.tlet.t1->params.v,
                                        env
@@ -101,9 +103,15 @@ ptree beta_red(ptree t, env_node *env){
 
         case T_MK_CLOS:
         case T_APP_CLOS:
-            fprintf(stderr, "TBI : beta_red, code %d needs to be"
-                " implem\n", t->code);
-            exit(1);
+            l_node = t->params.tclosure.l->head;
+            char *var_name;
+            while(l_node != NULL){
+                var_name = (char *)l_node->data;
+                l_node->data = epsilon(env, var_name);
+                l_node = l_node->next;
+            }
+            return t;
+
         default :
             fprintf(stderr, "Error : beta_red called with incorrect"
                 " tree node (code %d).\nExiting.\n", t->code);

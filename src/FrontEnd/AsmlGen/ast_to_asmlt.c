@@ -66,6 +66,8 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_IF :
         case T_EQ :
         case T_LE :
+        case T_MK_CLOS :
+        case T_APP_CLOS :
             new_asml_asmt->op = NULL;
             new_asml_asmt->exp = to_asml_exp(t);
             new_asml_asmt->next = NULL;
@@ -96,8 +98,6 @@ asml_asmt_t *to_asml_asmt(ptree t){
             "in to_asml_asmt.\nThis should not happen.\n", t->code);
             exit(1);
 
-        case T_MK_CLOS :
-        case T_APP_CLOS :
             fprintf(stderr, "Encountered T_MK_CLOS or T_APP_CLOS in ast_to_asmlt.\nSo "
                 "just implement it.\n");
             exit(1);

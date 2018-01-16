@@ -64,3 +64,8 @@ pfundef get_fd(char *label){
     // (should be prefixed by _min_caml_)
     return NULL;
 }
+
+pfundef alloc_fd(){
+    pfundef res = malloc(sizeof(struct fundef));
+    return res;
+}

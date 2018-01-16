@@ -21,7 +21,6 @@ ptree apply_constant_folding(ptree t){
 
 ptree constant_folding(ptree t, env_node *env){
     assert(t);
-    listNode *l_node;
     switch(t->code){
         //leaves
         case T_UNIT :

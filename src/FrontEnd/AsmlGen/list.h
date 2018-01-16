@@ -1,3 +1,12 @@
+/**
+ * \file      list.h
+ * \author    file provided by teacher
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     implements a generic list in C
+ *
+ * \details
+ */
 #ifndef __LIST_H
 #define __LIST_H
 
@@ -26,5 +35,11 @@ plist tail(plist l);
 plist append(plist l1, plist l2);
 bool is_empty(plist l);
 
+/**
+ * \brief     checks if a string is in a list of strings
+ * \details
+ * \param     l the list ; str : the string
+ * \return    true if the list contains str
+ */
 bool is_in_str_list(plist l, char *str);
 #endif

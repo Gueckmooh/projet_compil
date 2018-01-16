@@ -40,7 +40,6 @@ ptree remove_unused_vars(ptree t){
         // case let x = e1 in e2 -> if x is unused, replace with e2
         case T_LET :
             if (is_in_str_list(vars_to_remove, t->params.tlet.v)){
-                printf("hop!\n");
                 removed_a_var = true;
                 return remove_unused_vars(t->params.tlet.t2);
             } else {
@@ -384,7 +383,6 @@ ptree map_functions(ptree t, env_node *env){
         case T_LETREC :
             // add the function descriptor to fd_list
             fd_list = cons(t->params.tletrec.fd, fd_list);
-
             // call recursively on body with enriched env, to detect free vars
             // in functions declared in this function
             new_env = env;
@@ -393,8 +391,6 @@ ptree map_functions(ptree t, env_node *env){
                 new_env = gen_env_node((char *)l_node->data, NULL, new_env);
                 l_node = l_node->next;
             }
-            t->params.tletrec.fd->body =
-                map_functions(t->params.tletrec.fd->body, new_env);
 
 
             // find function's free variables
@@ -427,6 +423,8 @@ ptree map_functions(ptree t, env_node *env){
                 l_node = l_node->next;
             }
 
+            t->params.tletrec.fd->body =
+            map_functions(t->params.tletrec.fd->body, new_env);
             // call recursively on the continuation of function (after the in)
             // with the current env
             return map_functions(t->params.tletrec.t, env);

@@ -100,8 +100,13 @@ ptree ast_transform(ptree t){
         print_all_fd_descriptions();
         printf("\nProgram :\n");
         print_term(t10);
+        ptree t11 = reduce_nested_let(t10);
+        printf("\n\nAfter nested let reduction :\n");
+        print_all_fd_descriptions();
+        printf("\nProgram :\n");
+        print_term(t11);
         printf("\n\nAST transformation done\n");
-        return t10;
+        return t11;
     } else {
         ptree t2 = knorm(t);
         ptree t3 = alpha_convert(t2, init_env());

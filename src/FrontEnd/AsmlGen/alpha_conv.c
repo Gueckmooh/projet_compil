@@ -10,30 +10,34 @@
 
 ptree alpha_convert(ptree t, env_node *env){
     assert(t);
-    ptree debug;
     char *new_varname, *new_funcname;
     env_node *new_env, *new_env_with_params;
     listNode *l_node;
+    plist new_list;
     ptree t1, t2;
     switch(t->code){
         // Cases related to alpha conversion -> special treatment
         case T_VAR :
-            t->params.v = epsilon(env, t->params.v);
-            return t;
+            return ast_var(epsilon(env, t->params.v));
 
         case T_LET :
             new_varname = gen_varname();
             new_env = gen_env_node(t->params.tlet.v, new_varname, env);
             t1 = alpha_convert(t->params.tlet.t1, env);
             t2 = alpha_convert(t->params.tlet.t2, new_env);
-            debug = ast_let(new_varname, t1, t2);
-            return debug;
+            return ast_let(new_varname, t1, t2);
+
 
         case T_APP :
             // replace args var_names if needed
             l_node = t->params.tapp.l->head;
+            new_list = empty();
             while(l_node != NULL){
-                l_node->data = (void *)alpha_convert(((ptree)l_node->data), env);
+                new_list = append(
+                    new_list,
+                    cons((void *)alpha_convert(((ptree)l_node->data), env),
+                         empty())
+                );
                 l_node = l_node->next;
             }
             // case -> func_name is not in env -> prefix it with _min_caml_
@@ -43,9 +47,12 @@ ptree alpha_convert(ptree t, env_node *env){
 
             // case -> func_name is in env -> apply epsilon to it
             } else {
-                alpha_convert(t->params.tapp.t, env);
+                t->params.tapp.t = alpha_convert(t->params.tapp.t, env);
             }
-            return t;
+            return ast_app(
+                alpha_convert(t->params.tapp.t, env),
+                new_list
+            );
 
         case T_LETREC :
             new_funcname = gen_funcname();
@@ -71,11 +78,18 @@ ptree alpha_convert(ptree t, env_node *env){
 
         case T_TUPLE :
             l_node = t->params.ttuple.l->head;
+            new_list = empty();
             while(l_node != NULL){
-                l_node->data = (void *)alpha_convert((ptree)l_node->data, env);
+                new_list = append(
+                    new_list,
+                    cons(
+                        (void *)alpha_convert((ptree)l_node->data, env),
+                        empty()
+                    )
+                );
                 l_node = l_node->next;
             }
-            return t;
+            return ast_tuple(new_list);
 
         case T_LETTUPLE :
             l_node = t->params.lettuple.l->head;

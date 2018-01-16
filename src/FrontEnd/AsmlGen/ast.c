@@ -203,6 +203,8 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
         case T_BOOL :
         case T_FLOAT :
         case T_TUPLE :
+        case T_MK_CLOS :
+        case T_APP_CLOS :
             return t;
 
         //unary

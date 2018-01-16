@@ -1,3 +1,12 @@
+/**
+ * \file      print_and_write.h
+ * \author    The C Team - Maxime Raynal
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     contains all printing functions used in the front end
+ *
+ * \details
+ */
 #ifndef _PRINT_AND_WRITE_H_
 #define _PRINT_AND_WRITE_H_
 

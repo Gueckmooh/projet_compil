@@ -21,7 +21,7 @@ namespace arm {
     switch (arm_util::type_of (mem_offset)) {
     case arm_util::DIRECT:
       instruction += "\tldr r1, [r0, #" + mem_offset + "]\n";
-      #if WORD_SIZE == 1
+      #if __WORD_SIZE == 1
       instruction += "\tlsl r1, r1, #2\n";
       #endif
       break;

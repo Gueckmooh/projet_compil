@@ -91,6 +91,9 @@ endif
 ifneq ("$(ASML)", "")
 DEBUGFLAGS += -D__TO_ASML
 endif
+ifneq ("$(WORD_SIZE)", "")
+DEBUGFLAGS += -D__WORD_SIZE=$(WORD_SIZE)
+endif
 
 CFLAGS = $(FLAGS) $(DEBUGFLAGS)
 CFLAGS += -std=gnu99

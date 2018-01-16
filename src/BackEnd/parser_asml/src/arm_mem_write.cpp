@@ -20,7 +20,7 @@ namespace arm {
     }
     if (arm_util::type_of(mem_offset) == arm_util::VARIABLE) {
       instruction += "\tldr r1, [fp, #" + offset->find(mem_offset)->second + "]\n";
-      #if WORD_SIZE == 1
+      #if __WORD_SIZE == 1
       instruction += "\tlsl r1, r1, #2\n";
       #endif
       instruction += "\tadd r0, r0, r1\n";

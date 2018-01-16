@@ -38,12 +38,11 @@ namespace arm {
     set<path>* p = find_path(n);
     for (auto& e: *p) {
       for (auto& f: e)
-	cout << f << " : ";
+        cout << f << " : ";
       cout << endl;
     }
 #endif
     gen (cfg_root);
-    //print_dom(dom_root);
     return dom_root;
   }
 
@@ -52,9 +51,9 @@ namespace arm {
     arm_dom_node* n;
     for (auto e: *node->get_succs()) {
       if (node_eq.find(e)->first != e) {
-	n = new arm_dom_node (e);
-	node_eq.find(find_father(e))->second->add_succ(n);
-	node_eq.insert(eq(e, n));
+        n = new arm_dom_node (e);
+        node_eq.find(find_father(e))->second->add_succ(n);
+        node_eq.insert(eq(e, n));
       }
     }
     for (auto e: *node->get_succs()) {
@@ -69,12 +68,12 @@ namespace arm {
     p1 = new set<path> ();
     for (auto& e: succs) {
       if (e.second == node) {
-	has_pred = true;
-	p2 = find_path (e.first);
-	for (auto e: *p2) {
-	  e.push_back(node);
-	  p1->insert(e);
-	}
+        has_pred = true;
+        p2 = find_path (e.first);
+        for (auto e: *p2) {
+          e.push_back(node);
+          p1->insert(e);
+        }
       }
     }
     if (!has_pred)
@@ -86,11 +85,11 @@ namespace arm {
     bool is_present = true;
     for (auto& e: *s) {
       is_present &= ([](auto e, auto n){
-	bool ret = false;
-	for (auto& p:e)
-	  ret |= p==n;
-	return ret;
-      })(e, node);
+          bool ret = false;
+          for (auto& p:e)
+            ret |= p==n;
+          return ret;
+        })(e, node);
     }
     return is_present;
   }
@@ -113,8 +112,8 @@ namespace arm {
     if ((*(already_visited.find (node))) != node) {
       already_visited.insert (node);
       for (auto& e: *node->get_succs()) {
-	succs.insert (succ (node, e));
-	get_succs (e);
+        succs.insert (succ (node, e));
+        get_succs (e);
       }
     }
   }

@@ -1,38 +1,35 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <sstream>
-
-#ifndef __ARM_CONDITION_H__
-#define __ARM_CONDITION_H__
-
-#include "arm_instruction.h"
-#include "arm_boolean.h"
 /**
  * \file      arm_condition.h
  * \author    The C Team - Enzo Brignon
  * \version   1.0
  * \date      17 Janvier 2018
  * \brief     Condition function implementation in ARM
- *
  */
+
+#ifndef __ARM_CONDITION_H__
+#define __ARM_CONDITION_H__
+
+#include <string>
+#include <map>
+#include <vector>
+#include <sstream>
+
+#include "arm_instruction.h"
+#include "arm_boolean.h"
+
 using namespace std;
 
-namespace arm {
-/*! \class arm_condition
- * \brief Condition instruction Object
+/*! \namespace arm
+ *  \brief     Contains the classes that manages the arm generation
  */
+namespace arm {
+
+  /*! \class arm_condition
+   *  \brief Condition instruction Object
+   */
   class arm_condition : public arm_instruction {
   public:
-    /*!
-     *  \brief Constructor of the class arm_condition
-     *
-     */
     arm_condition (void);
-    /*!
-     *  \brief Destructor of the class arm_condition
-     *
-     */
     virtual ~arm_condition (void);
 
     virtual string get_instruction (void);
@@ -47,28 +44,28 @@ namespace arm {
 
     virtual vector<arm_instruction*>* get_list_then (void);
     virtual vector<arm_instruction*>* get_list_else (void);
+
     /*!
-     *  \brief Number of Register
-     *
-     *  Return the number of registers
-     *  \return int of register
+     *  \brief This function returns the number of regsters used in this instruction
+     *  \return an int, the number of registers that are used in this instruction
      */
     virtual int nb_regs (void);
+
     /*!
-     * \brief Getter of operands
-     * Return the list of operands
+     * \brief  This function returns a list of the operands used in this instruction
      * \return list of string of operands
      */
     virtual list<string>* get_op_list (void);
   protected:
-    string var; /*!< var name             */
-    arm_boolean* boolean; /*!< TODO              */
-    vector<arm_instruction*>* list_then; /*!< list of then instruction              */
-    vector<arm_instruction*>* list_else; /*!< list of else instruction              */
-    string lFalse; /*!< label to go to false              */
-    string lFin; /*!< label to go to the end              */
+    string var;                          /*!< var name                 */
+    arm_boolean* boolean;                /*!< the conditional statement corresponding
+                                           to the condition            */
+    vector<arm_instruction*>* list_then; /*!< list of then instruction */
+    vector<arm_instruction*>* list_else; /*!< list of else instruction */
+    string lFalse;                       /*!< label to go to false     */
+    string lFin;                         /*!< label to go to the end   */
   };
 
-} // TODO
+}
 
 #endif //__ARM_CONDITION_H__

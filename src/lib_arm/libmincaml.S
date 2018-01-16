@@ -162,7 +162,7 @@ __mem_new:
 	stmfd	sp!, {fp}
 	add 	fp, sp, #0
 	sub	sp, sp, #12
-    #if WORD_SIZE == 1
+    #if __WORD_SIZE == 1
 	lsl 	r0, r0, #2
     #endif
 	str	r0, [fp, #-8]

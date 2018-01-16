@@ -34,7 +34,7 @@ namespace arm {
     else {
       l = new list<arm_dom_node*> ();
       for (auto& e:succs) {
-	l->splice(l->end(), *e->find_leafs());
+        l->splice(l->end(), *e->find_leafs());
       }
       return l;
     }

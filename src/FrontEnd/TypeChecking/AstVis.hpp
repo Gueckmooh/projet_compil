@@ -28,9 +28,14 @@ class AstNodeNeg;
 // Binary Nodes
 
 class AstNodeAdd;
+class AstNodeLe;
 class AstNodeLet;
 class AstNodeLetTuple;
 class AstNodeSub;
+
+// Ternary Nodes
+
+class AstNodeIf;
 
 class AstVisAbstract {
 private:
@@ -63,9 +68,14 @@ public:
     // Binary Nodes
     
     virtual void visit_node(AstNodeAdd *add) = 0 ;
+    virtual void visit_node(AstNodeLe *le) = 0 ;
     virtual void visit_node(AstNodeLet *let) = 0 ;
     virtual void visit_node(AstNodeLetTuple *lettuple) = 0 ;
     virtual void visit_node(AstNodeSub *sub) = 0 ;
+    
+    // Ternary Nodes
+    
+    virtual void visit_node(AstNodeIf *ite) = 0 ;
     
     virtual ~AstVisAbstract() = 0 ;
 };
@@ -97,9 +107,15 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
+    
     
     virtual ~AstVisGhost();
 };
@@ -131,9 +147,14 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
     
     virtual ~AstVisDestruct();
 };
@@ -145,7 +166,7 @@ protected:
     virtual void print (AstNode * node) ;
 public:
     AstVisPrint();
-    
+    void printIndent() ;
     // Node
     
     void visit_node(AstNode* node) override;
@@ -169,9 +190,14 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
     
     ~AstVisPrint();
 };

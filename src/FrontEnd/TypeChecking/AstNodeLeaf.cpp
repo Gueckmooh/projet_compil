@@ -50,8 +50,11 @@ AstNodeTuple::AstNodeTuple(std::vector<AstNode *> var_list) :
 AstNodeLeaf(C_TUPLE), var_list(var_list) {}
 
 std::ostream& AstNodeTuple::print(std::ostream& os) {
-    for (std::vector<AstNode *>::iterator it = var_list.begin() ; it != var_list.end() ; it++)
-        os << **it  << " " ;
+    std::vector<AstNode *>::iterator it = var_list.begin() ;
+    os << "(" << **(it++) ;
+    for ( ; it != var_list.end() ; it++)
+        os << ", " << **it ;
+    os << ")" ;
     return os ;
 }
 

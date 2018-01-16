@@ -17,7 +17,14 @@ public:
     virtual ~AstNodeBinary() = 0 ;
 };
 
-class AstNodeAdd : public AstNodeBinary {
+class InfixOperator : public AstNodeBinary {
+public:
+    using AstNodeBinary::AstNodeBinary ;
+    virtual ~InfixOperator() = 0 ;
+
+};
+
+class AstNodeAdd : public InfixOperator {
 public:
     AstNodeAdd(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
@@ -31,35 +38,35 @@ public:
     ~AstNodeArray();
 };
 
-class AstNodeEq : public AstNodeBinary {
+class AstNodeEq : public InfixOperator {
 public:
     AstNodeEq(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
     ~AstNodeEq();
 };
 
-class AstNodeFadd : public AstNodeBinary {
+class AstNodeFadd : public InfixOperator {
 public:
     AstNodeFadd(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
     ~AstNodeFadd();
 };
 
-class AstNodeFdiv : public AstNodeBinary {
+class AstNodeFdiv : public InfixOperator {
 public:
     AstNodeFdiv(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
     ~AstNodeFdiv();
 };
 
-class AstNodeFmul : public AstNodeBinary {
+class AstNodeFmul : public InfixOperator {
 public:
     AstNodeFmul(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
     ~AstNodeFmul();
 };
 
-class AstNodeFsub : public AstNodeBinary {
+class AstNodeFsub : public InfixOperator {
 public:
     AstNodeFsub(AstNode * t1, AstNode * t2);
     void accept(AstVisAbstract* vis) override;
@@ -73,7 +80,7 @@ public:
     ~AstNodeGet();
 };
 
-class AstNodeLe : public AstNodeBinary {
+class AstNodeLe : public InfixOperator {
 public:
     AstNodeLe(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;
@@ -103,7 +110,7 @@ public:
     ~AstNodeLetTuple();
 };
 
-class AstNodeSub : public AstNodeBinary {
+class AstNodeSub : public InfixOperator {
 public:
     AstNodeSub(AstNode *t1, AstNode *t2);
     void accept(AstVisAbstract* vis) override;

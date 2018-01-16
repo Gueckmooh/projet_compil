@@ -7,7 +7,7 @@
 
 namespace Types {
     enum typeSimple {BOOL, INT, FLOAT, UNIT, POLY} ;
-    enum typeComposed {Simple, Tuple, Application, Polymorphe} ;
+    enum typeComposed {Simple, Tuple, Application} ;
 }
 
 using namespace Types ;
@@ -18,15 +18,17 @@ class TypeSimple {
 public:
     TypeSimple(typeSimple ts);
     TypeSimple(typeSimple ts, char poly);
+    TypeSimple(TypeSimple *typeSimple);
     typeSimple getType() const;
     char getPoly() const;
     static char getNextPoly();
     static void resetNextPoly();
     static Type * getMappedPoly(char poly);
     static void mapPoly(char poly, Type * type);
+    static void substitutePoly(Type** substitued, Type* substitution);
     static void printPoly();
     static void resetPoly () ;
-    static void clearPolyMap () ;
+    static std::ostream & getOs();
     static void setOs (std::ostream * os);
     bool isCorrectlyTyped (TypeSimple *typeSimple) ;
     static TypeSimple * copyTypeSimple(TypeSimple *typeSimple);
@@ -60,6 +62,7 @@ public:
     void setNext(TypeComposed* tc);
     TypeSimple* getSimple() const;
     TypeTuple* getTuple() const;
+    bool isPoly();
     bool isCorrectlyTyped (TypeComposed *typeComposed) ;
     virtual void print(std::ostream& os, TypeComposed& typeComposed) = 0 ;
     static void deleteType (TypeComposed *typeComposed) ;
@@ -97,6 +100,7 @@ public:
     Type(TypeSimple *ts);
     Type(TypeTuple  *tt);
     Type(TypeApp    *ta);
+    Type(TypeComposed *tc);
     typeComposed GetType() const;
     void SetType(typeComposed t);
     TypeSimple* GetTypeSimple() const;
@@ -105,6 +109,8 @@ public:
     void SetTypeComposed(TypeComposed *tc);
     Type* getNext() const;
     void setNext(Type* next);
+    bool isPoly();
+    bool isCorrectlyTyped (Type *type) ;
     static Type* Unification (Type *typeApp, Type *typeArgs) ;
     void printApplication(std::ostream& os, Type& type);
     friend std::ostream& operator<<(std::ostream& os, Type& type);

@@ -17,6 +17,7 @@ public:
 
 class AstNodeIf : public AstNodeTernary {
 public:
+    Type * type = NULL ;
     AstNodeIf(AstNode *t1, AstNode *t2, AstNode *t3);
     void accept(AstVisAbstract* vis) override;
     ~AstNodeIf();

@@ -27,7 +27,10 @@ AstNodeVar* AstNodeApp::getVar() const {
 
 std::ostream& AstNodeApp::print(std::ostream& os) {
     os << *var << " " ;
-    AstNodeTuple::print(os) ;
+    std::vector<AstNode *>::iterator it = var_list.begin() ;
+    os << **(it++) ;
+    for ( ; it != var_list.end() ; it++)
+        os << " " << **it ;
     return os ;
 }
 

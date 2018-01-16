@@ -42,7 +42,7 @@ TypeComposedFactory::~TypeComposedFactory() {}
 void TypeTupleFactory::cons(TypeTuple **typeTuple, unsigned i) {
     if (i == types.size() - 1) {
         switch(types[i].GetType()) {
-            case Simple : case Polymorphe :
+            case Simple :
                 *typeTuple = new TypeTuple(new TypeSimple(types[i].GetTypeSimple(), types[i].GetPoly())) ;
                 break ;
             case Tuple :
@@ -57,7 +57,7 @@ void TypeTupleFactory::cons(TypeTuple **typeTuple, unsigned i) {
     }
     cons(typeTuple, i + 1) ;
     switch(types[i].GetType()) {
-        case Simple : case Polymorphe :
+        case Simple :
             *typeTuple = new TypeTuple(new TypeSimple(types[i].GetTypeSimple(), types[i].GetPoly()), *typeTuple) ;
             break ;
         case Tuple :
@@ -76,11 +76,24 @@ TypeTuple * TypeTupleFactory::create() {
     return typeTuple ;
 }
 
+TypeTuple * TypeTupleFactory::createPoly(vector<string> vars, char poly, Environment *Env) {
+    unsigned i = 0 ;
+    TypeTuple * tuple = new TypeTuple(new TypeSimple(POLY, poly++), vars.size() - i) ;
+    Env->addVar(vars[i++], new Type(TypeSimple::copyTypeSimple(tuple->getSimple()))) ;
+    TypeTuple * AC = tuple ;
+    while (i < vars.size()) {
+        AC->setNext(new TypeTuple(new TypeSimple(POLY, poly++), vars.size() - i)) ;
+        AC = (TypeTuple*)AC->getNext() ;
+        Env->addVar(vars[i++], new Type(TypeSimple::copyTypeSimple(AC->getSimple()))) ;
+    }
+    return tuple ;
+}
+
 TypeTuple* TypeTupleFactory::createReversal() {
     TypeTuple * tuple = NULL ; 
     unsigned i = 0 ;
     switch(types[i].GetType()) {
-        case Simple : case Polymorphe :
+        case Simple :
             tuple = new TypeTuple(new TypeSimple(types[i].GetTypeSimple()), types.size()) ;
             break ;
         case Tuple :
@@ -95,7 +108,7 @@ TypeTuple* TypeTupleFactory::createReversal() {
     i++ ;
     for(; i < types.size() ; i++) {
         switch(types[i].GetType()) {
-            case Simple : case Polymorphe :
+            case Simple :
                 AC->setNext(new TypeTuple(new TypeSimple(types[i].GetTypeSimple()), types.size() - i)) ;
                 break ;
             case Tuple :
@@ -117,7 +130,7 @@ TypeTupleFactory::~TypeTupleFactory() {}
 void TypeAppFactory::cons(TypeApp** typeApp, unsigned i) {
     if (i == types.size() - 1) {
         switch(types[i].GetType()) {
-            case Simple : case Polymorphe :
+            case Simple :
                 *typeApp = new TypeApp(new TypeSimple(types[i].GetTypeSimple())) ;
                 break ;
             case Tuple :
@@ -130,7 +143,7 @@ void TypeAppFactory::cons(TypeApp** typeApp, unsigned i) {
     }
     cons(typeApp, i + 1) ;
     switch(types[i].GetType()) {
-        case Simple : case Polymorphe :
+        case Simple :
             *typeApp = new TypeApp(new TypeSimple(types[i].GetTypeSimple()), *typeApp) ;
             break ;
         case Tuple :
@@ -177,6 +190,12 @@ Type * TypeSimpleFactory::create() {
 TypeSimpleFactory::~TypeSimpleFactory() {}
 
 TypeFactory::TypeFactory(std::initializer_list<Type*> types) :
+types(types) {
+    if(types.size() < 2)
+        assert(false) ;
+}
+
+TypeFactory::TypeFactory(vector<Type*> types) :
 types(types) {
     if(types.size() < 2)
         assert(false) ;

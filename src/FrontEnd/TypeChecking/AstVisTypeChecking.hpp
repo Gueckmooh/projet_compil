@@ -90,9 +90,14 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
     
     virtual ~AstVisExplore();
 };
@@ -101,7 +106,7 @@ typedef std::vector<std::string>::iterator VarIt ;
 
 class AstVisRangeLet : public AstVisExplore {
 private:
-    void UnificationTuple (VarIt * it, VarIt end, TypeComposed **typeMember);
+    void UnificationTuple (VarIt it, TypeComposed **typeMember);
 public:
     vector<InitTypeComposed> types ;
     using AstVisExplore::AstVisExplore ;
@@ -130,9 +135,14 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
     
     ~AstVisRangeLet();
 };
@@ -180,9 +190,14 @@ public:
     // Binary Nodes
     
     void visit_node(AstNodeAdd* add) override;
+    void visit_node(AstNodeLe *le) override;
     void visit_node(AstNodeLet* let) override;
     void visit_node(AstNodeLetTuple* lettuple) override;
     void visit_node(AstNodeSub* sub) override;
+    
+    // Ternary Nodes
+    
+    void visit_node(AstNodeIf *ite) override;
 };
 
 #endif /* ASTVISTYPECHECKING_HPP */

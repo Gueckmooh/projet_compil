@@ -162,10 +162,12 @@ ptree constant_folding(ptree t, env_node *env){
                     t->params.tlet.t1->params.i,
                     env
                 );
+                printf("for var %s\n", t->params.tlet.v);
                 if (can_fold(t->params.tlet.v, t)){
+                    printf("can fold\n");
                     folded_a_const = true;
                     return (constant_folding(t->params.tlet.t2, env));
-                }
+                } else {printf("cannot fold\n");}
                 t->params.tlet.t2 = constant_folding(t->params.tlet.t2, env);
             } else if ((t->params.tlet.t1->code == T_NEG) &&
                        (t->params.tlet.t1->params.t->code == T_INT)){
@@ -222,8 +224,6 @@ bool can_fold(char *var_name, ptree t){
     switch(t->code){
         // function  call -> check if var_name is one of the arguments
         case T_APP :
-        // case T_MK_CLOS :
-        // case T_APP_CLOS :
             l_node = t->params.tapp.l->head;
             while(l_node != NULL){
                 assert(((ptree)l_node->data)->code == T_VAR);
@@ -303,6 +303,8 @@ bool can_fold(char *var_name, ptree t){
                 can_fold(var_name, t->params.lettuple.t2)
             );
 
+        case T_MK_CLOS :
+        case T_APP_CLOS :
         default :
             fprintf(stderr, "TBI : in can_fold, code %d not yet implemented.\n"
             "Exiting.\n", t->code);

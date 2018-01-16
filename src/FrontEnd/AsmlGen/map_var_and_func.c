@@ -209,7 +209,9 @@ plist get_list_of_vars_used(ptree t){
             while(l_node != NULL){
                 ptree tmp = (ptree)l_node->data;
                 assert(tmp->code == T_VAR);
-                l = append(l, (void *)tmp->params.v);
+                l = (l->head == NULL ?
+                    cons((void *)tmp->params.v, empty()) :
+                    append(l, cons((void *)tmp->params.v, empty())));
                 l_node = l_node->next;
             }
             return l;

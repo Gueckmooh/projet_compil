@@ -17,5 +17,5 @@ int parsecall(ptree* p, char* fichier);
 int parseprint(ptree p, char* fichier);
 
 ptree ast_transform(ptree t);
-
+ptree b4_tc (ptree t);
 #endif

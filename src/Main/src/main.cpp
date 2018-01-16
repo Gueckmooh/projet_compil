@@ -1,3 +1,10 @@
+/**
+ * \file      main.cpp
+ * \author    The C Team - Florian MARCO
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Main function of program : dedicated to handling parameters 
+ */
 #include "optionparser.h"
 #include "param.h"
 #include "call_func.h"
@@ -30,11 +37,9 @@ const option::Descriptor usage[]=
     {ASML,ENABLE,"a","asml",option::Arg::None,"-a, --asml \t Perform only ASML generation"},
     {ASML2,ENABLE,"asml","asmlgen",option::Arg::None,""},
     {ASMLI,ENABLE,"i","asmlinput",option::Arg::None,"-i, --asmlinput \t Take ASML input and generate ARM output"},
-    {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck Analysis because sometimes it crashs"},
+    {NOTYPECHECK,DISABLE,"n","notypecheck",option::Arg::None,"-n, --notypecheck \t Dont do Typecheck analysis"},
     {DEBUG,ENABLE,"d","debug",option::Arg::None,"-d, --debug \t Print output for debug mode"},
     {0,0,0,0,0,0}
-    // Option supplementaires :
-    // ASML Parsing to ARM ?
   };
 
 int main(int argc, char *argv[]) { 
@@ -47,7 +52,6 @@ int main(int argc, char *argv[]) {
   if ( argv[0][0] != '-' && argc != 0){
     inputfilename = argv[0];
     argc-=(argc>0); argv+=(argc>0); // input name argv[0] if present
-    //std::cout << "test : " << filename;
     is_inputfile = true;
   }
   // cas ou le nom du fichier n'est pas au debut.
@@ -56,7 +60,6 @@ int main(int argc, char *argv[]) {
       if(strstr(argv[i], ".ml") ){
          inputfilename = argv[i];
          is_inputfile = true;
-         //std::cout << "ZBOOB \n";
          for (int j = i; j < argc; j++){
           argv[j]=argv[j+1];         }
          argc -=(argc>0); 
@@ -126,7 +129,6 @@ int main(int argc, char *argv[]) {
       return 1;
     }
   }
-  //TODO : Si fichier d'output : TEST
   // Check si on peut créer ou effacer ce fichier. 
   // Si pas de O : fichier par defaut ? 
   if (options[OUTPUT]){
@@ -145,12 +147,11 @@ int main(int argc, char *argv[]) {
   }
 
   if (options[VERSION]){
-    std::cout << "Version du logiciel : 0.0.1 \n";
+    std::cout << "Version du logiciel : 1.0.0 \n";
     return 0;
   }
 
   if (options[OUTPUT]){
-    //std::cout << "On prends un fichier output : TODO \n";
     enable(traitement_param,PARAM_OUTPUT);
     if (!options[TYPECHECK] && !options[PARSER] && !options[ASML] && !options[ASMLI]){
       enable(traitement_param,TOTAL_ARM);}
@@ -162,25 +163,21 @@ int main(int argc, char *argv[]) {
   }
 
   if (options[TYPECHECK]){
-    //std::cout << "On fait le Typecheck : TODO \n";
     enable(traitement_param,TOTAL_TYPECHECK);
     //return 0;
   }
 
   if (options[PARSER]){
-    //std::cout << "On fait le parsing : TODO \n";
     enable(traitement_param,TOTAL_PARSE);
     // return 0;
   }
 
   if (options[ASML] || options[ASML2]){
-    //std::cout << "On fait la generation ASML : TODO \n";
     enable(traitement_param,TOTAL_ASML);
     // return 0;
   }
 
 if (options[ASMLI]){
-  //std::cout <<"On fait le parsing ASML to ARM : TOOD \n";
   enable(traitement_param,PARAM_ASMLI);
 
 }

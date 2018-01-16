@@ -29,7 +29,7 @@ int mega_caller (int param, string input, string output){
 
 	 parsecall(&p,const_cast<char*>(input.c_str()));
     //std::cout << "PARSE OK \n";
-    if (!(is_enabled(param,PARAM_TYPECHECK)) && !(is_enabled(param,PARAM_ASMLI))){
+    if (!(is_enabled(param,PARAM_TYPECHECK)) && !(is_enabled(param,PARAM_ASMLI)) && !(is_enabled(param,PARAM_DEBUG))){
       std::cout << "Not Implemented : On ne genere pas de fichier, mais on print l'arbre \n";
       parseprint(p,const_cast<char*>(output.c_str()));
     }
@@ -37,10 +37,10 @@ int mega_caller (int param, string input, string output){
 
   if (is_enabled(param, PARAM_TYPECHECK)){
     if (is_enabled(param,PARAM_DEBUG)){
-      retour=init_tc_debug(p);
+      retour=init_tc_debug(b4_tc(p));
     }
     else {
-    retour= init_tc(p) ;}
+    retour= init_tc(b4_tc(p)) ;}
   }
 asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){

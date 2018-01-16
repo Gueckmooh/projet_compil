@@ -46,8 +46,8 @@ namespace arm {
     *output << prologue;
     *output << processed_params;
     for (vector<arm_instruction*>::iterator it = instructions.begin();
-	 it != instructions.end();
-	 it++) {
+         it != instructions.end();
+         it++) {
       *output << (*it)->get_instruction();
     }
     *output << epilogue;
@@ -59,7 +59,7 @@ namespace arm {
     vector<asml_variable*>* params = asml->get_params ();
     nb_params = params->size();
     for (vector<asml_variable*>::reverse_iterator it = params->rbegin();
-	 it != params->rend();
+         it != params->rend();
          it++) {
       var_offsets.insert(pair<string, string> ((*it)->get_name(), to_string(off)));
       off-=4;
@@ -73,15 +73,15 @@ namespace arm {
     while (it != asml->param_end() && nb < 4) {
       switch ((*it)->get_type()) {
       case asml_variable::INTEGER:
-	integer = dynamic_cast<asml_integer*>(*it);
-	processed_params += "\tstr r" + to_string(nb) + ", [fp, #" +
-	  var_offsets.find(integer->get_name())->second +
-	  "]\n";
-	it++;
-	nb++;
-	break;
+        integer = dynamic_cast<asml_integer*>(*it);
+        processed_params += "\tstr r" + to_string(nb) + ", [fp, #" +
+          var_offsets.find(integer->get_name())->second +
+          "]\n";
+        it++;
+        nb++;
+        break;
       default:
-	break;
+        break;
       }
     }
   }
@@ -91,8 +91,8 @@ namespace arm {
     vector<asml_variable*>* variables = asml->get_variables ();
     nb_variables = variables->size();
     for (vector<asml_variable*>::reverse_iterator it = variables->rbegin();
-	 it != variables->rend();
-	 it++) {
+         it != variables->rend();
+         it++) {
       var_offsets.insert(pair<string, string> ((*it)->get_name(), to_string(off)));
       off-=4;
     }
@@ -110,19 +110,35 @@ namespace arm {
   }
 
   void arm_function_generator::pre_process_conditions (void) {
-    string l;
-    arm_condition* cond;
+    function<void(vector<arm_instruction*>)> process = [&process](vector<arm_instruction*> v)->void{
+      string l;
+      arm_condition* cond;
+      for (auto& e: v) {
+        if (e->get_type() == arm_instruction::CONDITION) {
+          cond = dynamic_cast<arm_condition*>(e);
+          l = ".L" + to_string(lien++);
+          cond->set_lFalse (l);
+          l = ".L" + to_string(lien++);
+          cond->set_lFin (l);
+          process (*cond->get_list_then());
+          process (*cond->get_list_else());
+        }
+      }
+    };
+    /*
     for (vector<arm_instruction*>::iterator it = instructions.begin();
-	 it != instructions.end();
-	 it++) {
+         it != instructions.end();
+         it++) {
       if ((*it)->get_type() == arm_instruction::CONDITION) {
-	cond = dynamic_cast<arm_condition*>(*it);
-	l = ".L" + to_string(lien++);
-	cond->set_lFalse (l);
-	l = ".L" + to_string(lien++);
-	cond->set_lFin (l);
+        cond = dynamic_cast<arm_condition*>(*it);
+        l = ".L" + to_string(lien++);
+        cond->set_lFalse (l);
+        l = ".L" + to_string(lien++);
+        cond->set_lFin (l);
       }
     }
+    */
+    process (instructions);
   }
 
   void arm_function_generator::generate_prologue (void) {

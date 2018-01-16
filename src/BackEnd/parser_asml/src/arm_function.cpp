@@ -24,8 +24,8 @@ namespace arm {
     if (!ref_map->empty())
       ret += "\t.align 2\n";
     for (map<string, string>::iterator it = ref_map->begin();
-	 it != ref_map->end();
-	 it++) {
+         it != ref_map->end();
+         it++) {
       assert(it->second.compare("_") != 0);
       ret += it->first + ":\n";
       ret += "\t.word " + it->second.substr(1) + "\n";

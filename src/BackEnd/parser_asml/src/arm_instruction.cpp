@@ -17,10 +17,6 @@ namespace arm {
     params.push_back(param);
   }
 
-  void arm_instruction::set_callback (function<map<string, string>(void)> callback) {
-    this->callback = callback;
-  }
-
   vector<string> arm_instruction::get_used (void) {
     return params;
   }

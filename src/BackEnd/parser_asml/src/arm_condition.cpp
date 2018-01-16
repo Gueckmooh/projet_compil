@@ -28,6 +28,7 @@ namespace arm {
 
   void arm_condition::set_var_offset (map<string, string>* map) {
     this->offset = map;
+    this->boolean->offset = map;
     for (vector<arm_instruction*>::iterator it = list_then->begin();
 	 it != list_then->end();
 	 it++)

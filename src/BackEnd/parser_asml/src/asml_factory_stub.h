@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
  * \file      asml_addidition.h
  * \author    The C Team - Enzo Brignon
  * \version   1.0
@@ -10,15 +9,6 @@
 #ifndef __ASML_FACTORY_STUB_H__
 #define __ASML_FACTORY_STUB_H__
 
-=======
- * \file      asml_factory_stub.h
- * \author    The C Team - Enzo Brignon
- * \version   1.0
- * \date      17 Janvier 2018
- * \brief     Defines the asml_factory_stub class
- */
-
->>>>>>> cbfc206d6dadb50ee3269154fde6f2982bcd121f
 #ifdef __cplusplus
 #include <string>
 #include <vector>

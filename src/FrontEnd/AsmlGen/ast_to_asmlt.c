@@ -165,7 +165,7 @@ asml_exp_t *to_asml_exp(ptree t){
             args_list->head = l_node->next;
             args_list->logicalLength --;
             new_exp->op2 = string_list_to_asml_args_list(args_list);
-            return new_exp
+            return new_exp;
 
         case T_BOOL :
             fprintf(

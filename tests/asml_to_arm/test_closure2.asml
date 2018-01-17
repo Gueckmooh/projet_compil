@@ -1,0 +1,17 @@
+let _adder y =
+    let x = mem(%self + 4) in
+    add x y
+
+let _make_adder x =
+    let adder = new 8 in
+    let v0 = _adder in
+    let v1 = mem(adder + 0) <- v0 in
+    let v2 = mem(adder + 4) <- x in
+    adder
+
+let _ =
+    let v0 = 33 in
+    let adder = call _make_adder v0 in
+    let v1 = 9 in
+    let v2 = call_closure adder v1 in
+    call _min_caml_print_int v2

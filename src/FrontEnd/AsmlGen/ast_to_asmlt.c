@@ -95,7 +95,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
                 stderr,
                 "Error : trying to convert a T_BOOL or a T_NOT ast -> should "
                 "not happen(code %d)\n", t->code);
-            return NULL;
+            exit(1);
 
         case T_LETREC :
             fprintf(stderr, "Error, trying to convert a T_LETREC node "
@@ -184,7 +184,7 @@ asml_exp_t *to_asml_exp(ptree t){
                 "Error -> T_BOOL present in ast to asml_asmlt convert.\
                 This should not happen.\n"
             );
-            return NULL;
+            exit(1);
 
         case T_NEG :
             assert(t->params.t->code == T_VAR);

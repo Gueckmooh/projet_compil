@@ -3,6 +3,7 @@
 
 import subprocess
 import sys
+import os
 
 def arm_to_exec (outputf) :
 	try : 
@@ -19,6 +20,8 @@ def main() :
 	print(sys.argv[1])
 	outputf=sys.argv[1].split('.')[0]
 	print(outputf)
+	if not(os.path.exists('tmp')) :
+		os.makedirs('tmp')
 	arm_to_exec(outputf)
 
 if __name__ == "__main__":

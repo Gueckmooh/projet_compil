@@ -16,6 +16,16 @@ void ASML_PARSER (string i, string s){
 	fclose (asml_in);
 	delete generator;
 }
+/*
+int dirtypecheck (string input) {
+	pid = fork();
+	if (pid == -1){
+	std::cerr << "Erreur appel fork typecheck \n";;
+	return 1;	
+	}
+	else
+
+}*/
 
 
 int mega_caller (int param, string input, string output){
@@ -31,11 +41,12 @@ int mega_caller (int param, string input, string output){
   }
 
   if (is_enabled(param, PARAM_TYPECHECK)){
-    if (is_enabled(param,PARAM_DEBUG)){
+    /*if (is_enabled(param,PARAM_DEBUG)){
       retour=init_tc_debug(b4_tc(p));
     }
     else {
-    retour= init_tc(b4_tc(p)) ;}
+    retour= init_tc(b4_tc(p)) ;}*/
+std::cout<<"CACA \n";
   }
 asml::asml_factory::initialize();
   if (is_enabled(param, PARAM_ASML)){

@@ -11,7 +11,6 @@
 #include "param.h"
 #include "asml.h"
 #include "arm.h"
-#include "type_caller.h"
 extern "C" {
 #include "alpha_conv.h"
 #include "ast.h"

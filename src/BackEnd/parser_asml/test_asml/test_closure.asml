@@ -1,0 +1,16 @@
+let _f x y =
+    add x y
+
+let _g y =
+    let x = mem(%self + 4) in
+    call _f x y
+
+let _ =
+    let g = new 8 in
+    let v0 = _g in
+    let v1 = 9 in
+    let v2 = mem(g + 0) <- v0 in
+    let v3 = mem(g + 4) <- v1 in
+    let v4 = 33 in
+    let v5 = call_closure g v4 in
+    call _min_caml_print_int v5

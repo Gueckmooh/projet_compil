@@ -5,15 +5,17 @@
  * \date      17 Janvier 2018
  * \brief     Defines the asml_funcall class
  */
-#include <string>
-#include <vector>
 
 #include "asml_instruction.h"
+
+#include <string>
+#include <vector>
 
 #ifndef __ASML_FUNCALL_H__
 #define __ASML_FUNCALL_H__
 
 using namespace std;
+
 /*! \namespace asml
  *  \brief     Contains the classes that manages the asml
  */
@@ -37,17 +39,20 @@ namespace asml {
     virtual void add_param (string);
     virtual vector<string>::iterator begin (void);
     virtual vector<string>::iterator end (void);
+
     /**
-     * \brief    TODO
-     * \return   an int TODO
+     * \brief    This function returns the number of parameters
+     * \return   an int, the number of parameters
      */
     virtual int size (void);
+
     /**
-     * \brief    TODO
-     * \param    t an int TODO
-     * \return   a string containing the generated code
+     * \brief    This function returns the tth param
+     * \param    t an int the index that we want to access
+     * \return   a string the elemen at index t
      */
     virtual string operator[] (int);
+
     /**
      * \brief    This function generates the ASML code that correspond to this instruction
      * \details  This function is used to generate ASML code.
@@ -57,12 +62,13 @@ namespace asml {
      */
     virtual string generate (int);
   protected:
-    string funcname; /*! The name of the function */
-    string return_variable; /*! The returning variable */
-    bool do_return; /*! A boolean that checks if a variable is returning */
-    vector<string> params; /*! A vector of parameters */
+      string funcname;        /*! The name of the function               */
+      string return_variable; /*! The returning variable                 */
+      bool do_return;         /*! A boolean that checks if a variable is
+                                returning                                */
+      vector<string> params;  /*! A vector of parameters                 */
   };
 
-} // TODO
+}
 
 #endif //__ASML_FUNCALL_H__

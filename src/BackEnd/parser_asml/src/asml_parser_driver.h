@@ -107,6 +107,4 @@ asml_formal_arg_t* asml_parser_add_arg (char* op, asml_formal_arg_t* next);
 asml_function_t* asml_parser_package_function (char* name, asml_formal_arg_t* args, asml_asmt_t* asmt);
 #endif
 
-// TODO
-
 #endif //__ASML_PARSER_DRIVER_H__

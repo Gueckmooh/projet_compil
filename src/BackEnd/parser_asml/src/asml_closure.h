@@ -34,33 +34,23 @@ namespace asml {
     virtual void unset_return (void);
     virtual bool is_returning (void);
     virtual string get_retval (void);
-
-    /*!
-     *  \brief TODO
-     *	\param string param
-     */
     virtual void add_param (string);
-    /*!
-     *  \brief TODO
-     *	\return TODO
-     */
     virtual vector<string>::iterator begin (void);
-    /*!
-     *  \brief TODO
-     *	\return TODO
-     */
     virtual vector<string>::iterator end (void);
-    /*!
-     *  \brief size getter
-     *	\return int size
+
+    /**
+     * \brief    This function returns the number of parameters
+     * \return   an int, the number of parameters
      */
     virtual int size (void);
-    /*!
-     *  \brief TODO
-     *  \param int t 
-     *	\return element t of params array 
+
+    /**
+     * \brief    This function returns the tth param
+     * \param    t an int the index that we want to access
+     * \return   a string the elemen at index t
      */
     virtual string operator[] (int);
+
     /**
      * \brief    This function generates the ASML code that correspond to this instruction
      * \details  This function is used to generate ASML code.
@@ -70,10 +60,11 @@ namespace asml {
      */
     virtual string generate (int);
   protected:
-    string value; /*! Value of closure */
-    string return_variable; /*! Return Variable of closure */
-    bool do_return; /*! Boolean checking if there is something returned from closure */
-    vector<string> params; /*! Vector of different parameters */
+    string value;           /*! Value of closure                     */
+    string return_variable; /*! Return Variable of closure           */
+    bool do_return;         /*! Boolean checking if there is something
+                              returned from closure                   */
+    vector<string> params;  /*! Vector of different parameters        */
   };
 
 }

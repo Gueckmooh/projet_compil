@@ -251,20 +251,20 @@ namespace arm {
       cout << "Processes " << reg << endl;
       return reg;
     };
-    get_scope = [&](string var)->int{ //TODO
+    get_scope = [&](string var)->int{
       auto scopes = node->element->scope[index];
       int scope = scopes.find(var)->second;
       cout << "Scope " << scope << endl;
       return scope;
     };
-    get_max_scope = [&](vector<list<string>*>::iterator vars)->int{ //TODO
+    get_max_scope = [&](vector<list<string>*>::iterator vars)->int{
       int ret = 0;
       int idx = node->element->var_instr.begin() - vars;
       while ((int)(node->element->nb_regs[idx] - node->element->regs_maps[idx].size()) > 0) {
 	
 	cout << "node->element->nb_regs[idx] : " << node->element->nb_regs[idx] << endl;
 	cout << "node->element->regs_maps[idx].size() : " << node->element->regs_maps[idx].size() << endl;
-	cout << "node->element->nb_regs[idx] - node->element->regs_maps[idx].size() : " <<   //TODO
+	cout << "node->element->nb_regs[idx] - node->element->regs_maps[idx].size() : " <<
 	  node->element->nb_regs[idx] - node->element->regs_maps[idx].size() << endl;
         ret++;
         idx++;

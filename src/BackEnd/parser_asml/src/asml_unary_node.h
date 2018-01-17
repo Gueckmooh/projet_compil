@@ -4,7 +4,6 @@
  * \version   1.0
  * \date      17 Janvier 2018
  * \brief     Class that represents a unary node for the asml tree
- *
  * \details    This class inherits from asml_nodegg
  */
 
@@ -33,10 +32,11 @@ namespace asml {
     virtual void set_instruction (asml_instruction*);
     virtual void set_next (asml_node*);
   protected:
-    asml_node* next;
-    asml_instruction* instruction;
+    asml_node* next;               /*!< The next element of the tree */
+    asml_instruction* instruction; /*!< The instruction corresponding
+                                     to the node                     */
   };
 
-} // TODO
+}
 
 #endif // __ASML_UNARY_NODE_H__

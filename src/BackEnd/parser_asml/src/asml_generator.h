@@ -27,23 +27,22 @@ using namespace std;
  */
 namespace asml {
   /*! \class   asml_generator
-   *  \brief   class that generate ASML 
-   *  \details TODO
+   *  \brief   class that generate ASML
    */
   class asml_generator {
   public:
     asml_generator(vector<asml_function*>*);
     ~asml_generator(void);
     void set_name (string);
+
     /**
-     * \brief    TODO
-     * \details  TODO
+     * \brief    This function generates an asml file from the functions
+     *           given by the frontend
      */
     void generate (void);
   protected:
     /**
-     * \brief    TODO
-     * \details  TODO
+     * \brief    This function generates the asml functions
      */
     void generate_function (void);
     ofstream* output; /*! filestream of output */
@@ -57,9 +56,8 @@ namespace asml {
     string epilogue; /*! epilogue name */
     string processed_params; /*! processed parameters */
     string processed_variables; /*! processed variables */
-    string to_save; /*! TODO */
 
-    string name; /*! name of TODO */
+    string name; /*! name of the generated file */
     vector<asml_function*>* functions; /*!  vector of different functions */
     map<string, string> var_offsets;  /*! variables offset */
   };

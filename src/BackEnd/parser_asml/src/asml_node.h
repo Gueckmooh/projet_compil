@@ -16,7 +16,6 @@ using namespace std;
 namespace asml {
   /*! \class   asml_node
    *  \brief   class that represent an asml node
-   *  \details TODO
    */
   class asml_node {
   public:

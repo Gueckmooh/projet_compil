@@ -28,52 +28,51 @@
 #include "asml_closure.h"
 
 using namespace std;
+
 /*! \namespace asml
  *  \brief     Contains the classes that manages the asml
  */
 namespace asml {
+
   /*! \class   asml_factory
    *  \brief   factory class of asml objects
    */
   class asml_factory {
   public:
     static const int NORMAL = 0; /*! Normal instructions */
-    static const int THEN = 1; /*! Then Instructions */
-    static const int ELSE = 2; /*! Else Instructions */
-/**
-* \brief This function initialize factory 
-*/
-    static void initialize (void);
-/**
-* \brief TODO
-*/
-    static void validate_function (void);
-/**
-* \brief TODO
-*/
-    static void validate_condition (void);
+    static const int THEN = 1;   /*! Then Instructions */
+    static const int ELSE = 2;   /*! Else Instructions */
 
+    /**
+     * \brief This function initialize factory
+     */
+    static void initialize (void);
+
+    /**
+     * \brief This function adds a function to the list of functions
+     *        parsed
+     * \param fun the function to add to the function list
+     * \param tree the tree that contains the body of the function
+     */
     static void add_function (asml_function*, asml_node*);
+
+    /**
+     * \brief  This function returns the list of parsed functions
+     * \return the list of parsed functions
+     */
     static vector<asml_function*>* get_function (void);
+
+    /**
+     * \brief This function sets the function name
+     * \param name the name of the function
+     */
     static void set_function_name (string);
-    static void add_int_param (string);
-    static void add_int_variable (string);
-    static void add_affectation (string, string);
-    static void add_funcall (string, string, vector<string>*);
-    static void add_addition (string, string, string);
-    static void add_soustraction (string, string, string);
-    static void set_boolean (string, string, int);
-/**
-* \brief TODO
-* \param TODO
-*/
-    static void append (asml_instruction*);
-    static void set_next (int);
-/**
-* \brief TODO
-* \param TODO
-* \return TODO
-*/
+
+    /**
+     * \brief This function creates an instruction from a node of the
+     *        instruction tree
+     * \param node the node from which we create the instruction
+     */
     static asml_instruction* create_instruction (asml_node*);
   protected:
     static int next;  /*! Next element */

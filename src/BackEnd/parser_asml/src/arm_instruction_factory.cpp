@@ -93,14 +93,14 @@ namespace arm {
     return negation;
   }
 
-  arm_mem_create* arm_instruction_factory::create_mem_create (asml_mem_create* create) { //TODO
+  arm_mem_create* arm_instruction_factory::create_mem_create (asml_mem_create* create) {
     arm_mem_create* mem = new arm_mem_create ();
     mem->set_op(create->get_op());
     mem->set_size(create->get_size());
     return mem;
   }
 
-  arm_mem_read* arm_instruction_factory::create_mem_read (asml_mem_read* read) { //TODO
+  arm_mem_read* arm_instruction_factory::create_mem_read (asml_mem_read* read) {
     arm_mem_read* mem = new arm_mem_read();
     mem->set_op(read->get_op());
     mem->set_mem_offset(read->get_mem_offset());
@@ -108,7 +108,7 @@ namespace arm {
     return mem;
   }
 
-  arm_mem_write* arm_instruction_factory::create_mem_write (asml_mem_write* write) { //TODO
+  arm_mem_write* arm_instruction_factory::create_mem_write (asml_mem_write* write) {
     arm_mem_write* mem = new arm_mem_write();
     mem->set_mem_offset(write->get_mem_offset());
     mem->set_mem_addr(write->get_mem_addr());

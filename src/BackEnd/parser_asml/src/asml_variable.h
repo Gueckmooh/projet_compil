@@ -17,8 +17,7 @@ using namespace std;
  */
 namespace asml {
   /*! \class   asml_variable
-   *  \brief   TODO
-   *  \details TODO
+   *  \brief   a variable for asml generation
    */
   class asml_variable {
     friend class asml_factory;
@@ -36,6 +35,6 @@ namespace asml {
     string name; /*!< The name of the variable */
   };
 
-} // TODO
+}
 
 #endif //__ASML_VARIABLE_H__

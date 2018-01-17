@@ -1,0 +1,25 @@
+APP print_int a b  : int -> unit
+    IF : 
+      BOOL true : bool
+      IF : 
+        BOOL true : bool
+        INT 5 : int
+        IF : 
+          BOOL true : bool
+            INT 5 : int
+            INT 4 : int
+          TUPLE (5, 4) : int * int
+          IF : 
+            BOOL true : bool
+              INT 4 : int
+              INT 5 : int
+            TUPLE (4, 5) : int * int
+              INT 4 : int
+              INT 5 : int
+            TUPLE (4, 5) : int * int
+          END IF : int * int
+        END IF : int * int
+MISMATCH IF THEN ELSE
+TYPECHECKING FAILURE
+Nombre de noeuds détruits : 29
+Destruction de l'AST

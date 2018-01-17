@@ -1,3 +1,12 @@
+/**
+ * \file      AstVis.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of secondary Visitors to print and destruct the Ast
+ *
+ */
+
 #include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
 #include "AstNodeUnary.hpp"

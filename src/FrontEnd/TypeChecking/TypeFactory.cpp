@@ -1,3 +1,12 @@
+/**
+ * \file      Type.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Type Factory for TypeChecking
+ *
+ */
+
 #include "TypeFactory.hpp"
 #include "AstVisTypeChecking.hpp"
 #include "AstNodeUnary.hpp"

@@ -1,3 +1,15 @@
+/**
+ * \file      Ast.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Ast Builder for TypeChecking
+ * \details
+ * this file defines class for Ast
+ * this class builds an Ast from an min-ml file or a ptree
+ * then can apply an AstVisitor onto it
+ */
+ 
 #ifndef AST_H
 #define AST_H
 
@@ -8,6 +20,10 @@
 class AstNode ;
 class AstVisitor;
 class Strategy;
+
+/* !
+ * \class Ast
+ */
 
 class Ast {
 private :

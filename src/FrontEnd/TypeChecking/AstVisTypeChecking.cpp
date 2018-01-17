@@ -1,29 +1,9 @@
-/*
-type classe mere: simple -> classe fille ou complexe_fleche ou complexe_croix classes fille
-si simple : int, float , ...
-si complexe : *type1, *type2 (represente type1 -> type2)
-
-print_cplex(type T){
-    print"("
-    print_type(T->type1)
-    print") -> ("
-    print_type(t->type2)
-    print")"
-}
-f (type g) -> (type h)
-f x y z t
-X->(Y->(Z->T))
- 
- 
-mke_type(list args ){
-    if (len args == 1){
-	return type(args[1]) // constructeur Type(Type T)
-    }
-    type 1 = args[1]; // constructuer Type(Type T)
-    args -> eneleve 1er element
-    type2 = mke_type(args);
-    return type(type1, type2) // constructeur (Type t1, Type T2)
-}
+/**
+ * \file      AstVisTypeChecking.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Visitor Definition for TypeChecking
 */
 
 #include "AstNode.hpp"
@@ -131,12 +111,8 @@ inline void AstVisExplore::visit_node(AstNodeUnit* unit) {}
 void AstVisExplore::visit_node(AstNodeVar* var) {
     EnvironmentMap::iterator itC = Env->getCurrent().find(var->getVar_name()) ;
     EnvironmentMap::iterator itG = Env->getGlobal().find(var->getVar_name()) ;
-    if (itC != Env->getCurrent().end()) {
-        //getAstVis()->getOs() << string("la variable " + var->getVar_name() + " est présente dans l'environnement courant\n")  ;
-    }
-    else if (itG != Env->getGlobal().end()) {
-        //getAstVis()->getOs() << string("la variable " + var->getVar_name() + " est présente dans l'environnement global\n")  ;
-    }
+    if (itC != Env->getCurrent().end()) ;
+    else if (itG != Env->getGlobal().end()) ;
     else {
         getAstVis()->getOs() << "UNBOUND VALUE " << var->getVar_name() << std::endl ;
         throw false ;
@@ -399,51 +375,6 @@ void AstVisInfer::visit_node(AstNodeVar* var) {
 
 // Unary Nodes
 
-/*static TypeTuple* SubstituteTypeComposed(TypeTuple *t1, TypeTuple *t2) {
-    if (t1) {
-        TypeTuple * next = SubstituteTypeComposed((TypeTuple *)t1->getNext(),(TypeTuple *)t2->getNext());
-        if (t1->isPoly()) {
-            Type * tmp = TypeSimple::substitutePoly(t1->getSimple()->getPoly(), new Type(TypeSimple::copyTypeSimple(t2->getSimple()))) ;
-            TypeTuple * new_type = NULL ;
-            switch(tmp->GetType()) {
-                case Simple :
-                    new_type = new TypeTuple(tmp->GetTypeSimple(), next) ;
-                    break ;
-                case Tuple :
-                    new_type = new TypeTuple((TypeTuple*)tmp->GetTypeComposed(), next) ;
-                    break ;
-                case Application :
-                    new_type = new TypeTuple((TypeApp*)tmp->GetTypeComposed(), next) ;
-                    break ;
-            }
-            delete tmp ;
-            return new_type ;
-        }
-        t1->setNext(next) ;
-        return t1 ;      
-    }
-    
-    return NULL ;
-}*/
-
-/*static void SubstitutePoly (Type **fun, Type *args) {
-    if (args) {
-        if ((*fun)->GetType() == Simple) {
-            if ((*fun)->GetTypeSimple()->getType() == POLY)
-                *fun = TypeSimple::substitutePoly((*fun)->GetTypeSimple()->getPoly(), args) ;
-        }
-        else if((*fun)->GetType() != args->GetType() || (*fun)->GetTypeComposed()->size() != args->GetTypeComposed()->size()) {
-            std::cout << "MISMATCH TYPE :" << std::endl ;
-            throw false ;
-        }
-        else {
-            (*fun)->SetTypeComposed(SubstituteTypeComposed((TypeTuple *)(*fun)->GetTypeComposed(), (TypeTuple *)args->GetTypeComposed())) ;
-        }
-            
-        SubstitutePoly(fun, args->getNext()) ;
-    }
-}*/
-
 static Type * UpdateTypeFun(Type *fun) {
     if (fun) {
         Type * next = UpdateTypeFun(fun->getNext()) ;
@@ -460,8 +391,6 @@ static Type * UpdateTypeFun(Type *fun) {
 
 void AstVisInfer::visit_node(AstNodeApp* app) {
     Type * fun = Env->getVarType(app->getVar()->getVar_name()) ;
-    //SubstitutePoly(&fun, type) ;
-    //fun = UpdateTypeFun(fun) ;
     UnificationNode(app, Type::copyTypeRec(fun)) ;
 }
 
@@ -513,7 +442,6 @@ void AstVisInfer::visit_node(AstNodeAdd* add) {
 }
 
 void AstVisInfer::visit_node(AstNodeLe* le) {
-    getAstVis()->getOs() << "TYE LE : " << *type << std::endl ;
     Type * op1 = type->getNext() ;
     Type * op2 = type ;
     op1->setNext(NULL);
@@ -551,7 +479,6 @@ void AstVisInfer::visit_node(AstNodeLetTuple* lettuple) {
 }
 
 void AstVisInfer::visit_node(AstNodeSub* sub) {
-    getAstVis()->getOs() << "TYPESUB : " << *type << std::endl ;
     printIndent();
     TypeSimple::printPoly();
     UnificationNode(sub, Type::copyTypeRec(Env->getVarType("-"))) ;
@@ -565,7 +492,6 @@ void AstVisInfer::visit_node(AstNodeIf* ite) {
     ite->type = new_type ;
     Type::deleteTypeRec(type) ;
     type = NULL ;
-    getAstVis()->getOs() << "Type " << *ite->type << std::endl ;
     Type * ifthenelse = ite->type ;
     Type * IF = ifthenelse->getNext()->getNext() ;
     Type * THEN = ifthenelse->getNext() ;
@@ -573,7 +499,6 @@ void AstVisInfer::visit_node(AstNodeIf* ite) {
     IF->setNext(NULL) ;
     THEN->setNext(NULL) ;
     ELSE->setNext(NULL) ;
-    getAstVis()->getOs() << "if then else : " << *IF << " -> " << *THEN << " -> " << *ELSE << std::endl ;
     
     if (!IF->GetType() == Simple || !IF->GetTypeSimple()->getType() == BOOL) {
         getAstVis()->getOs() << "MISMATCH IF THEN ELSE" << std::endl ;

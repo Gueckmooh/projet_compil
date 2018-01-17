@@ -1,3 +1,12 @@
+/**
+ * \file      Type.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Typing Definition for TypeChecking
+ *
+ */
+ 
 #include "Type.hpp"
 #include "TypeFactory.hpp"
 #include "AstVisTypeChecking.hpp"
@@ -45,6 +54,12 @@ void TypeSimple::mapPoly(char poly, Type* type) {
         Type::deleteTypeRec(old_type);
     PM[poly] = Type::copyType(type) ;
 }
+
+/* !
+ * \details
+ * This function substitutes a polymorphic type by its true value if it exists in Polymorphic Table Map
+ * Otherwise, a new polymorphic type is added into the table, pending for instanciation
+ */
 
 void TypeSimple::substitutePoly(Type** subtituted, Type* subtitution) {
     char poly = (*subtituted)->GetTypeSimple()->getPoly() ;
@@ -393,6 +408,14 @@ bool Type::isCorrectlyTyped(Type* type) {
     return tc->isCorrectlyTyped(type->tc);
 }
 
+/* !
+ * \details
+ * The Unification function tries to match Application types with Argument types
+ * In case of mismatching, TypeChecking raises an exception to stop TypeChecking
+ * beacause the programm Typing is incorrect
+ * in case of Polymorphic types, they are substituted by their true value if it exists in the Polymorphic Types Map
+ * \return the resulted Type of the Application or an exception if the programm typing is wrong  
+ */
 
 Type* Type::Unification(Type *typeApp, Type *typeArgs) {
     if (typeArgs) {

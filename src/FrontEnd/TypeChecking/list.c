@@ -1,3 +1,12 @@
+/**
+ * \file      list.c
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     list constructor and destructor
+ *
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>

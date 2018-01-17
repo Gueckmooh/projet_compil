@@ -1,14 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   AstVisTypeChecking.hpp
- * Author: bap
- *
- * Created on 20 décembre 2017, 17:54
+/**
+ * \file      AstVisTypeChecking.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Visitor Definition for TypeChecking
+ * \details  
+ * This file defined an AstVisTypeChecker which is divided into three sub-visitors :
+ * AstVisExplore for the prefix treatment :
+ * - checks the identifiers nodes are known in the local or global Environment table
+   - Raises an exception otherwise
+ * AstVisRangeLet for the infix treatment :
+   - checks and computes indentifier type of the value introduced by the keyword "let"
+   - then maps the pair (identifier, type) in the local Environment table 
+   - Raises an exception if the type of the value is wrong
+ * AstVisInfer for the postfix treatment :
+    - computs and infers programm typing AstNodes Unification
+    - Raises an exception if Unification has failed
+ * When the "TypeChecker" visit the Ast
+    - if an exception has been caught,
+    - that means the TypeChecked programm has an incorrect typing 
+    - the routine returns TYPECHECKING_FAILURE (1)
  */
 
 #ifndef ASTVISTYPECHECKING_HPP
@@ -27,6 +38,11 @@ using std::string ;
 using std::pair ;
 
 typedef std::map<string, Type*> EnvironmentMap ;
+
+/* !
+ * \class Environment
+ * \brief store the local symbols and the global symbols
+ */
 
 class Environment {
 private:
@@ -59,6 +75,9 @@ public:
     virtual ~Environment();
 };
 
+/* !
+ * \class AstVisExplore
+ */
 
 class AstVisExplore : public AstVisPrint {
 protected:
@@ -104,6 +123,10 @@ public:
 
 typedef std::vector<std::string>::iterator VarIt ;
 
+/* !
+ * \class AstVisRangeLet
+ */
+
 class AstVisRangeLet : public AstVisExplore {
 private:
     void UnificationTuple (VarIt it, TypeComposed **typeMember);
@@ -148,6 +171,10 @@ public:
 };
 
 class AstNodeLeaf ;
+
+/* !
+ * \class AstVisInfer
+ */
 
 class AstVisInfer : public AstVisPrint {
 protected:

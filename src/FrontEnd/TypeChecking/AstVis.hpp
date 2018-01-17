@@ -1,3 +1,17 @@
+/*
+ * \file      AstVis.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of secondary Visitors to print and destruct the Ast
+ * \details
+ * This file defines secondary AstVisitor especially for printing and destruction Ast
+ * repectively named AstVisPrint and AstVisDestruct.
+ * A third visitor named AstVisGhost is a special visitor processing absolutely nothing
+ * This Visitor is used when a prefix,infix or postfix process must be null
+ */
+
+
 #ifndef ASTVIS_HPP
 #define ASTVIS_HPP
 
@@ -37,6 +51,10 @@ class AstNodeSub;
 
 class AstNodeIf;
 
+/* !
+ * \class AstVisAbstract
+ */
+
 class AstVisAbstract {
 private:
     AstVisitor *AstVis ;
@@ -44,6 +62,8 @@ public:
     AstVisAbstract();
     AstVisitor * getAstVis () const ;
     void setAstVis(AstVisitor * AstVis);
+    
+    // Visit methods
     
     // Node
     
@@ -79,6 +99,10 @@ public:
     
     virtual ~AstVisAbstract() = 0 ;
 };
+
+/* !
+ * \class AstVisGhost
+ */
 
 class AstVisGhost : public AstVisAbstract {
 public:
@@ -120,6 +144,10 @@ public:
     virtual ~AstVisGhost();
 };
 
+/* !
+ * \class AstVisDestruct
+ */
+
 class AstVisDestruct : public AstVisAbstract {
 public:
     AstVisDestruct();
@@ -158,6 +186,10 @@ public:
     
     virtual ~AstVisDestruct();
 };
+
+/* !
+ * \class AstVisPrint
+ */
 
 class AstVisPrint : public AstVisAbstract {
 private:

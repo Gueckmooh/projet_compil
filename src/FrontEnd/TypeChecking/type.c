@@ -1,3 +1,12 @@
+/**
+ * \file      type.c
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Type definition of a ptree
+ *
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

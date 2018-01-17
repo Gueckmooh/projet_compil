@@ -1,3 +1,12 @@
+/**
+ * \file      AstNodeLeaf.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of Ast leaf
+ *
+ */
+
 #include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
 #include <iomanip>

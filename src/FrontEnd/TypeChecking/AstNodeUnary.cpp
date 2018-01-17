@@ -1,3 +1,12 @@
+/**
+ * \file      AstNodeUnary.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of Ast unary node
+ *
+ */
+
 #include "AstNode.hpp"
 #include "AstNodeLeaf.hpp"
 #include "AstNodeUnary.hpp"

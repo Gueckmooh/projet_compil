@@ -1,3 +1,12 @@
+/**
+ * \file      ast.h
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of an ast
+ *
+ */
+
 #ifndef __AST_H
 #define __AST_H
 

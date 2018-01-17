@@ -1,3 +1,12 @@
+/**
+ * \file      AstNodeBinary.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of Ast binary node
+ *
+ */
+
 #include "AstNode.hpp"
 #include "AstNodeBinary.hpp"
 #include "AstVisitor.hpp"

@@ -1,9 +1,34 @@
+/**
+ * \file      Type.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Typing Definition for TypeChecking
+ * \details
+ * The definition of a basic type is the following :
+ * type TypeSimple = Bool | Int | Float | Unit | Poly of char
+ * The definition of a recursive Composed type is the following :
+ * type TypeComposed = Simple of TypeSimple | Tuple of TypeComposed | Application of TypeComposed | Next of TypeSimple * TypeComposed
+ * Finally, a type is defined recursively as follows :
+ * type Type = Simple of TypeSimple | Composed of typeComposed | Next of Type
+ * Also, basic types can be polymorphic when a function definition is introduced
+ * and its polymorphic type(s) is(are) mapped into the Polymorphic Types Map
+ * The Polymorphic Types Map enables to associate each introduced polymorphic type
+ * to a true basic type when unification of types is processed
+ */
+
 #ifndef TYPECOMPOSED_HPP
 #define	TYPECOMPOSED_HPP
 
 #include "print_ast.h"
 #include <ostream>
 #include <map>
+
+/* !
+ * \namespace Types
+ * \brief Enum types to define basic types : BOOL, INT, FLOAT, UNIT, POLY
+ *        Enum types to define composed types : Simple, Tuple, Application
+ */
 
 namespace Types {
     enum typeSimple {BOOL, INT, FLOAT, UNIT, POLY} ;
@@ -12,7 +37,12 @@ namespace Types {
 
 using namespace Types ;
 class Type;
-typedef std::map<char, Type*> PolyMap ;
+typedef std::map<char, Type*> PolyMap ; /* ! < Map of defined Polymorphic Types */
+
+/* !
+ * \class TypeSimple
+ * \brief basic type definition
+ */
 
 class TypeSimple {
 public:
@@ -46,6 +76,11 @@ class TypeTuple;
 class TypeApp;
 class AstVisInfer;
 
+/* !
+ * \class TypeComposed
+ * \brief composed type definition
+ */
+
 class TypeComposed {
 public:
     TypeComposed(TypeSimple *ts) ;
@@ -77,6 +112,11 @@ protected:
     bool areCorrectlyTyped (TypeComposed *typeComposed);
 };
 
+/* !
+ * \class TypeTuple
+ * \brief tuple type definition
+ */
+
 class TypeTuple : public TypeComposed {
 public:
     using TypeComposed::TypeComposed ;
@@ -86,6 +126,11 @@ public:
     ~TypeTuple() ;
 };
 
+/* !
+ * \class TypeApp
+ * \brief application type definition
+ */
+
 class TypeApp : public TypeComposed {
 public:
     using TypeComposed::TypeComposed ;
@@ -94,6 +139,11 @@ public:
     friend std::ostream& operator<<(std::ostream& os, TypeApp& typeApp) ;
     ~TypeApp();
 };
+
+/* !
+ * \class Type
+ * \brief Type definition
+ */
 
 class Type {
 public:

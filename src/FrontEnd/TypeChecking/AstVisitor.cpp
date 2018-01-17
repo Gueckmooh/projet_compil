@@ -1,3 +1,12 @@
+/**
+ * \file      AstVisitor.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Visitor Definition to run through the Ast
+ *
+ */
+
 #include "AstVisitor.hpp"
 #include "AstNode.hpp"
 #include <iostream>

@@ -1,3 +1,12 @@
+/**
+ * \file      type.h
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Type definition of a ptree
+ *
+ */
+
 #ifndef __TYPE_H
 #define __TYPE_H
 

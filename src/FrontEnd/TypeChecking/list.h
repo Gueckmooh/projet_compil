@@ -1,3 +1,12 @@
+/**
+ * \file      list.h
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     list constructor and destructor
+ *
+ */
+
 #ifndef __LIST_H
 #define __LIST_H
 
@@ -11,9 +20,9 @@ typedef struct _listNode {
 typedef struct {
   int logicalLength;
   listNode *head;
-} l_list;
+} list;
 
-typedef l_list *plist;
+typedef list *plist;
 
 plist empty();
 

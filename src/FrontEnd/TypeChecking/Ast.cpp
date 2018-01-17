@@ -1,3 +1,12 @@
+/**
+ * \file      Ast.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Ast Builder for TypeChecking
+ *
+ */
+
 #include "utils.h"
 #include <iostream>
 #include "Ast.hpp"

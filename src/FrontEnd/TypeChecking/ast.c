@@ -1,3 +1,12 @@
+/**
+ * \file      ast.c
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of an ast
+ *
+ */
+ 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>

@@ -1,3 +1,13 @@
+/**
+ * \file      AstNode.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of Ast node
+ *
+ */
+
+
 #include "AstNode.hpp"
 #include "AstVisitor.hpp"
 #include "AstVis.hpp"

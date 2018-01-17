@@ -1,3 +1,12 @@
+/**
+ * \file      Strategy.cpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Strategy Factory to choose iteration and process mode for Ast
+ *
+ */
+
 #include "Strategy.hpp"
 #include "AstVisitor.hpp"
 #include "AstVisTypeChecking.hpp"

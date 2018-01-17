@@ -1,3 +1,12 @@
+/**
+ * \file      AstNode.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Definition of Ast node
+ *
+ */
+
 #ifndef ASTNODE_HPP
 #define ASTNODE_HPP
 
@@ -40,17 +49,55 @@ class Type;
 
 using std::string ;
 
+/* ! 
+ * \class AstNode
+ * \brief Abstract Class for Ast nodes definition
+ */
+
 class AstNode {
 protected:
-    int class_code ;
+    int class_code ; /*!< class_code to identify Node Class */
+    /* !
+     *  \brief Node printing
+     *  \params ostream & os
+     *  \return ostream &
+     */
     virtual std::ostream & print(std::ostream& os) ;
 public:
+    /* !
+     * \brief Constructor
+     *  \params class code of Node
+     */
     AstNode(int class_code) ;
+    /* !
+     * \brief  pure virtual method accept for AstVisitor
+     *  \params AstVisitor
+     */
     virtual void accept (AstVisAbstract * vis) = 0 ;
+    /* !
+     * \brief  pure virtual method of iteration for AstVisitor run through
+     *  \params AstVisitor
+     */
     virtual void traversal(AstVisitor * vis) = 0 ;
+    /* !
+     * \brief  method for AstNode processing
+     *  \params AstVisitor
+     */
     void apply(AstVisitor * vis) ;
+    /* !
+     * \brief  Class Node printing
+     *  \return string of class code
+     */
     std::string class_code_to_string() ;
+    /* !
+     * \brief Constructor
+     *  \params class code of Node
+     */
     friend std::ostream& operator<<(std::ostream& os, AstNode& node) ;
+    /* !
+     * \brief pure virtual Node Destructor
+     * 
+     */
     virtual ~AstNode() = 0 ;
 };
 

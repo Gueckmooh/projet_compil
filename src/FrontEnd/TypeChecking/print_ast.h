@@ -1,8 +1,10 @@
-/* 
- * File:   print_ast.h
- * Author: bleuzeb
+/**
+ * \file      print_ast.h
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     ptree printing
  *
- * Created on 12 décembre 2017, 13:24
  */
 
 #ifndef PRINT_AST_H

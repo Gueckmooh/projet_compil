@@ -1,3 +1,13 @@
+/**
+ * \file      Type.hpp
+ * \author    The C Team - Baptiste
+ * \version   1.0
+ * \date      17 Janvier 2018
+ * \brief     Type Factory for TypeChecking
+ * \details   This defile defines classes for each kind of type(Simple, Polymorphic, Composed...) in order to abstract their construction
+ *
+ */
+
 #ifndef TYPEFACTORY_HPP
 #define TYPEFACTORY_HPP
 
@@ -8,6 +18,10 @@
 using std::vector;
 
 class Environment;
+
+/* !
+ * \class InitTypeComposed
+ */
 
 class InitTypeComposed {
 public:
@@ -28,6 +42,10 @@ private:
     } ;
 };
 
+/* !
+ * \class TypeComposedFactory
+ */
+
 class TypeComposedFactory {
 public:
     TypeComposedFactory(std::initializer_list<InitTypeComposed>);
@@ -37,6 +55,10 @@ public:
 protected:
     vector<InitTypeComposed> types ;
 };
+
+/* !
+ * \class TypeTupleFactory
+ */
 
 class TypeTupleFactory : public TypeComposedFactory {
 public:
@@ -51,6 +73,10 @@ private:
 
 class FunDef;
 class Environment;
+
+/* !
+ * \class TypeAppFactory
+ */
 
 class TypeAppFactory : public TypeComposedFactory {
 public:
@@ -71,6 +97,10 @@ protected:
     typeSimple ts ;
     char poly = 'a' ;
 };
+
+/* !
+ * \class TypeFactory
+ */
 
 class TypeFactory {
 public:

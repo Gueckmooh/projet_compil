@@ -395,8 +395,9 @@ ptree knorm(ptree t){
         case T_APP_CLOS :
             return apply_vis(t, knorm);
         default :
-            printf("Error : knorm, node code not recognized (%d)\n", t->code);
-            return NULL;
+            fprintf(stderr, "Error : knorm, node code not recognized"
+                " (%d)\n", t->code);
+            exit(1);
     }
 }
 

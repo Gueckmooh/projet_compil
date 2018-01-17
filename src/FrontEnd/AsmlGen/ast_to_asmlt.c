@@ -95,7 +95,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
                 stderr,
                 "Error : trying to convert a T_BOOL or a T_NOT ast -> should "
                 "not happen(code %d)\n", t->code);
-            return NULL;
+            exit(1);
 
         case T_LETREC :
             fprintf(stderr, "Error, trying to convert a T_LETREC node "
@@ -131,9 +131,9 @@ asml_exp_t *to_asml_exp(ptree t){
     assert(t);
     switch(t->code){
         case T_LET :
-            printf("Error : trying to convert let node in asml exp(nested let)"
-            "in to_asml_exp\n");
-            return NULL;
+            fprintf(stderr, "Error : trying to convert let node in asml "
+                "exp (nested let) in to_asml_exp\n");
+            exit(1);;
         case T_ADD :
         case T_SUB :
             new_exp->type = (t->code == T_ADD ? ASML_EXP_ADD : ASML_EXP_SUB);
@@ -184,7 +184,7 @@ asml_exp_t *to_asml_exp(ptree t){
                 "Error -> T_BOOL present in ast to asml_asmlt convert.\
                 This should not happen.\n"
             );
-            return NULL;
+            exit(1);
 
         case T_NEG :
             assert(t->params.t->code == T_VAR);
@@ -219,13 +219,13 @@ asml_exp_t *to_asml_exp(ptree t){
             return new_exp;
 
         case T_TUPLE :
-            printf("Error : trying to convert a T_TUPLE ast in asml_exp\n"
+            fprintf(stderr, "Error : trying to convert a T_TUPLE ast in asml_exp\n"
             "this souhld never happen\n");
             // print_term(t);
             exit(1);
 
         case T_ARRAY :
-            printf("Error : trying to convert a T_ARRAY in to_asml_exp.\n"
+            fprintf(stderr, "Error : trying to convert a T_ARRAY in to_asml_exp.\n"
             "This should never happen\n");
             exit(1);
 

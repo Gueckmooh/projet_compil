@@ -266,7 +266,7 @@ ptree apply_vis(ptree t, ptree (*vis)(ptree)){
             return t;
 
         default :
-            printf("Error in apply_vis ; t->code = %d\n", t->code);
+            fprintf(stderr, "Error in apply_vis ; t->code = %d\n", t->code);
             exit(1);
     }
 }

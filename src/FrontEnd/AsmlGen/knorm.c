@@ -341,6 +341,10 @@ ptree knorm(ptree t){
         case T_GET :
             new_var1 = gen_varname();
             new_var2 = gen_varname();
+            if ((t->params.tbinary.t1->code == T_VAR) &&
+                (strcmp(t->params.tbinary.t1->params.v, "\%self") == 0)){
+                return t;
+            }
             return ast_let(
                 new_var1,
                 knorm(t->params.tbinary.t1),

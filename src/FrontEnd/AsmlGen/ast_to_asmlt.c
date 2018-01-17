@@ -121,7 +121,7 @@ asml_asmt_t *to_asml_asmt(ptree t){
         case T_FMUL :
         case T_FDIV :
         default :
-            printf("TBI. ast to asmlt, t->code = %d\n", t->code);
+            fprintf(stderr, "TBI. ast to asmlt, t->code = %d\n", t->code);
             exit(1);
     }
 }
@@ -221,7 +221,7 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_TUPLE :
             printf("Error : trying to convert a T_TUPLE ast in asml_exp\n"
             "this souhld never happen\n");
-            print_term(t);
+            // print_term(t);
             exit(1);
 
         case T_ARRAY :
@@ -383,7 +383,7 @@ asml_asmt_t *lettuple_to_asmlt(ptree t){
         l_node = l_node->next;
     }
     current->next = to_asml_asmt(t->params.lettuple.t2);
-    print_asml_asmt(first);
+    // print_asml_asmt(first);
     return first;
 }
 

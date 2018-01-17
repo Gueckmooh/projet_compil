@@ -134,6 +134,12 @@ ptree ast_transform(ptree t){
         ptree t9 = apply_inline_expansion(t8);
         ptree t10 = apply_closure_conversion(t9);
         ptree t11 = reduce_nested_let(t10);
+        listNode *l_node = fd_list->head;
+        while(l_node != NULL){
+            pfundef fd = (pfundef)l_node->data;
+            fd->body = reduce_nested_let(knorm(fd->body));
+            l_node = l_node->next;
+        }
         return t11;
     }
 }

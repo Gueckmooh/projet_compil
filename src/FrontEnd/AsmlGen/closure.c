@@ -8,7 +8,6 @@
 #include "env.h"
 #include "closure.h"
 #include "utils.h"
-#include "beta_red.h"
 #include "reduce_nested_let.h"
 #include "knorm.h"
 #include "duplicate.h"
@@ -30,11 +29,10 @@ ptree apply_closure_conversion(ptree t){
         // and now apply closure for real
         fd->body = apply_clos(fd->body);
         if (fd->free_vars != NULL){
-            fd->body = add_free_vars_refs(fd, fd->free_vars->head, WORD_SIZE);
-            // fd->body = beta_red(fd->body, NULL);
+            fd->body = add_free_vars_refs(fd, fd->free_vars->head, 1);
 
         // finally apply some basic transformations to it
-        fd->body = beta_red(reduce_nested_let(knorm(fd->body)), NULL);
+        fd->body = reduce_nested_let(knorm(fd->body));
         }
     }
     // now apply closure conversion to the program itself;
@@ -227,7 +225,7 @@ ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset){
         return ast_let(
             (char *)current_var->data,
             ast_get(ast_var("\%self"), ast_integ(offset)),
-            add_free_vars_refs(fd, current_var->next, offset +WORD_SIZE)
+            add_free_vars_refs(fd, current_var->next, offset + 1)
         );
     }
 }

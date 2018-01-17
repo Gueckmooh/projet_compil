@@ -61,6 +61,7 @@ int parseprint(ptree p, char* fichier){
 ptree ast_transform(ptree t){
     varname_counter = 0;
     funcname_counter = 0;
+    fd_list = empty();
     if (PRINT_AST_STEP_BY_STEP){
         printf("\nAST transformation\nOriginal ast :\n");
         print_term(t);
@@ -86,7 +87,6 @@ ptree ast_transform(ptree t){
         print_term(t6);
         print_delim_line();
         printf("\n\nAfter functions definitions mapping and extraction\n\n");
-        fd_list = empty();
         ptree t7 = map_functions(t6, NULL);
         print_all_fd_descriptions();
         printf("\nProgram :\n");

@@ -6,12 +6,13 @@ import sys
 
 def arm_to_exec (outputf) :
 	try : 
+		
 		output = subprocess.check_output(['arm-none-eabi-as', 'src/lib_arm/libmincaml.S', '-o', 'tmp/libmincaml.o'])
 		output = subprocess.check_output(['arm-none-eabi-as', outputf+'.s' , '-o', 'tmp/'+outputf+'.o'])
 		output = subprocess.check_output(['arm-none-eabi-ld', 'tmp/'+outputf+'.o', 'tmp/libmincaml.o', '-o', outputf])
 	except subprocess.CalledProcessError as e :
 		output = e.output
-		print(bcolors.FAIL + "--- Echec generation executable" + bcolors.ENDC)
+		print( "--- Echec generation executable")
 	return 0
 
 def main() :

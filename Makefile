@@ -90,6 +90,10 @@ oldtest:
 test:
 	./scripts/test.py
 
+trucdebaptiste:
+	cd src/FrontEnd/TypeChecking/ && $(MAKE)
+	cp src/FrontEnd/TypeChecking/min-ml scripts/.
+
 run: all
 	./scripts/$(EXEC)
 

@@ -8,7 +8,10 @@
 #include "env.h"
 #include "closure.h"
 #include "utils.h"
-#include "beta_red.h"
+#include "reduce_nested_let.h"
+#include "knorm.h"
+#include "duplicate.h"
+#include "ast_to_asmlt.h"
 
 extern plist fd_list;
 
@@ -27,7 +30,9 @@ ptree apply_closure_conversion(ptree t){
         fd->body = apply_clos(fd->body);
         if (fd->free_vars != NULL){
             fd->body = add_free_vars_refs(fd, fd->free_vars->head, 1);
-            // fd->body = beta_red(fd->body, NULL);
+
+        // finally apply some basic transformations to it
+        fd->body = reduce_nested_let(knorm(fd->body));
         }
     }
     // now apply closure conversion to the program itself;
@@ -42,8 +47,61 @@ ptree apply_clos(ptree t){
         if (is_a_label(t->params.tapp.t->params.v)){
             // find the fd in fd_list
             pfundef fd = get_fd(t->params.tapp.t->params.v);
+            // case -> call to external function -> do nothing
             if(!fd){
                 return t;
+            }
+            // case -> call with not enough args
+            if (t->params.tapp.l->logicalLength < fd->args->logicalLength){
+                // create a new function
+                pfundef new_fd = alloc_fd();
+                new_fd->var = gen_funcname();
+                new_fd->args = empty();
+                new_fd->free_vars = empty();
+                // separate args in free_vars then args
+                listNode *l_node = fd->args->head;
+                int i = 0;
+                while (i < t->params.tapp.l->logicalLength){
+                    new_fd->free_vars = (
+                        new_fd->free_vars->head == NULL ?
+                        cons(l_node->data, empty()) :
+                        append(new_fd->free_vars, cons(l_node->data, empty()))
+                    );
+                    l_node = l_node->next;
+                    i ++;
+                }
+                while (l_node != NULL){
+                    new_fd->args = (
+                        new_fd->args->head == NULL ?
+                        cons(l_node->data, empty()) :
+                        append(new_fd->args, cons(l_node->data, empty()))
+                    );
+                    l_node = l_node->next;
+                }
+                // duplicate the body from fd
+                new_fd->body = duplicate_tree(fd->body);
+                // add the free vars refs
+                new_fd->body = add_free_vars_refs(new_fd, new_fd->free_vars->head, WORD_SIZE);
+                // add the new fd to fd_list
+                fd_list = cons((void *)new_fd, fd_list);
+                // prepare the make closure and return it
+                char *new_var = gen_varname();
+                plist mk_clos_args = cons(new_fd->var, empty());
+                l_node = t->params.tapp.l->head;
+                while (l_node != NULL){
+                    ptree tmp = (ptree)l_node->data;
+                    assert(tmp->code == T_VAR);
+                    mk_clos_args = append(
+                        mk_clos_args,
+                        cons((char *)tmp->params.v, empty())
+                    );
+                    l_node = l_node->next;
+                }
+                return ast_let(
+                    new_var,
+                    ast_mkclos(mk_clos_args),
+                    ast_var(new_var)
+                );
             }
             // case -> function has no free vars -> leave it as is
             if (fd->free_vars->head == NULL){
@@ -167,7 +225,7 @@ ptree add_free_vars_refs(pfundef fd, listNode *current_var, int offset){
         return ast_let(
             (char *)current_var->data,
             ast_get(ast_var("\%self"), ast_integ(offset)),
-            add_free_vars_refs(fd, current_var->next, offset +1)
+            add_free_vars_refs(fd, current_var->next, offset + 1)
         );
     }
 }
@@ -244,13 +302,14 @@ ptree replace_label_by_var(ptree t){
     assert(t->code == T_VAR);
     assert(is_a_label(t->params.v));
     pfundef fd = get_fd(t->params.v);
-    if ((fd->free_vars != NULL) || (fd->free_vars->head != NULL)){
+    if ((fd->free_vars == NULL) || (fd->free_vars->head == NULL)){
+        char *new_var = gen_varname();
+        return ast_let(
+            new_var,
+            ast_var(t->params.v),
+            ast_var(new_var)
+        );
+    } else {
         return t;
     }
-    char *new_var = gen_varname();
-    return ast_let(
-        new_var,
-        ast_var(t->params.v),
-        ast_var(new_var)
-    );
 }

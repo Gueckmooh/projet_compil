@@ -8,6 +8,8 @@
 #include "list.h"
 #include "env.h"
 #include "constant_folding.h"
+#include "knorm.h"
+#include "beta_red.h"
 
 bool folded_a_const;
 
@@ -16,7 +18,7 @@ ptree apply_constant_folding(ptree t){
         folded_a_const = false;
         t = constant_folding(t, NULL);
     } while (folded_a_const);
-    return t;
+    return beta_red(knorm(t), NULL);
 }
 
 ptree constant_folding(ptree t, env_node *env){

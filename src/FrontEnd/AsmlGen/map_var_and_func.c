@@ -8,6 +8,7 @@
 #include "list.h"
 #include "map_var_and_func.h"
 #include "utils.h"
+#include "reduce_nested_let.h"
 
 extern plist used_vars, created_vars, fd_list;
 plist vars_to_remove;
@@ -19,9 +20,18 @@ bool removed_a_var;
 ptree eliminate_unnecessary_defs(ptree t){
     do {
         used_vars = get_list_of_vars_used(t);
+        // add free vars used in functions
+        listNode *l_node = fd_list->head;
+        while(l_node != NULL){
+            used_vars = append(
+                used_vars,
+                ((pfundef)l_node->data)->free_vars
+            );
+            l_node = l_node->next;
+        }
         created_vars = get_list_of_vars_created(t);
         vars_to_remove = empty();
-        listNode *l_node = created_vars->head;
+        l_node = created_vars->head;
         while(l_node != NULL){
             if(!is_in_str_list(used_vars, (char *)l_node->data)){
                 vars_to_remove = cons(l_node->data, vars_to_remove);
@@ -29,7 +39,7 @@ ptree eliminate_unnecessary_defs(ptree t){
             l_node = l_node->next;
         }
         removed_a_var = false;
-        t = remove_unused_vars(t);
+        t = remove_unused_vars(reduce_nested_let(t));
     } while (removed_a_var);
     return t;
 }
@@ -401,6 +411,7 @@ ptree map_functions(ptree t, env_node *env){
             plist func_args = t->params.tletrec.fd->args;
             plist vars_in_body =
                 get_list_of_vars_used(t->params.tletrec.fd->body);
+            vars_in_body = eliminate_doubles_in_str_list(vars_in_body);
             plist vars_created_in_body =
                 get_list_of_vars_created(t->params.tletrec.fd->body);
             l_node = vars_in_body->head;

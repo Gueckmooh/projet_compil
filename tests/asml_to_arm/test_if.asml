@@ -1,0 +1,10 @@
+let _ =
+    let v0 = 42 in
+    let v1 = if v0 >= 30 then (
+      9
+    ) else (
+      18
+    ) in
+    let v2 = 33 in
+    let v3 = add v1 v2 in
+    call _min_caml_print_int v3

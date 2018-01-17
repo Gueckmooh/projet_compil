@@ -79,7 +79,10 @@ namespace asml {
     }
     for (int i = 0; i < indent; i++)
       ret += "\t";
-    ret += ")\n";
+    ret += ")";
+    if (var.compare("0") != 0)
+      ret += " in";
+    ret += "\n";
     return ret;
   }
 

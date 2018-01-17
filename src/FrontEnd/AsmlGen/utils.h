@@ -80,4 +80,12 @@ pfundef get_fd(char *label);
  * \return    the pointer to the allocated memory
  */
 pfundef alloc_fd();
+
+/**
+ * \brief     eliminates doubles in a string list
+ * \details
+ * \param     l : the list
+ * \return    the list with each element apperaing once only
+ */
+plist eliminate_doubles_in_str_list(plist l);
 #endif

@@ -40,8 +40,19 @@ asml_asmt_t *to_asml_asmt(ptree t){
     switch(t->code){
         case T_LET :
             assert(t->params.tlet.t1->code != T_LET);
-            // case : let tup = (M1, ...,, Mn) in N -> special care :)
-            if (t->params.tlet.t1->code == T_TUPLE){
+        if (t->params.tlet.t2->code == T_TUPLE){
+            char *new_var = gen_varname();
+            return to_asml_asmt(ast_let(
+                t->params.v,
+                t->params.tlet.t1,
+                ast_let(
+                    new_var,
+                    t->params.tlet.t2,
+                    ast_var(new_var)
+                )
+            ));
+            // case : let tup = (M1, ...,, Mn) in N -> special care
+        } else if (t->params.tlet.t1->code == T_TUPLE){
                 return tuple_to_asml_asmt(t);
             } else if (t->params.tlet.t1->code == T_ARRAY){
                 fprintf(stderr, "Error : Trying to convert a T_ARRAY in to_asml_asmt.\n"
@@ -197,8 +208,8 @@ asml_exp_t *to_asml_exp(ptree t){
             new_exp->type = (t->code == T_EQ ? ASML_COND_EQUAL : ASML_COND_LE);
             new_exp->op1 = t->params.tbinary.t1->params.v;
             new_exp->op2 = (t->params.tbinary.t2->code == T_VAR ?
-                            t->params.tbinary.t1->params.v :
-                            int_to_str(t->params.tbinary.t1->params.i)
+                            t->params.tbinary.t2->params.v :
+                            int_to_str(t->params.tbinary.t2->params.i)
                            );
             return new_exp;
 
@@ -210,7 +221,8 @@ asml_exp_t *to_asml_exp(ptree t){
         case T_TUPLE :
             printf("Error : trying to convert a T_TUPLE ast in asml_exp\n"
             "this souhld never happen\n");
-            return NULL;
+            print_term(t);
+            exit(1);
 
         case T_ARRAY :
             printf("Error : trying to convert a T_ARRAY in to_asml_exp.\n"
@@ -258,6 +270,7 @@ asml_exp_t *to_asml_exp(ptree t){
             exit(1);
 
         case T_UNIT :
+            return to_asml_exp(ast_var("nop"));
             fprintf(stderr, "Encountered unit node in ast_to_asml_exp.\n"
                 "Exiting.\n");
             exit(1);

@@ -31,4 +31,5 @@ void print_asml_fun_args(asml_formal_arg_t *t);
 
 void print_str_list(plist l);
 
+void print_delim_line();
 #endif

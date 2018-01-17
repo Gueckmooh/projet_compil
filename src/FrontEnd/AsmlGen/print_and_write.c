@@ -296,3 +296,8 @@ void print_str_list(plist l){
         if (l_node) printf(", ");
     }
 }
+
+void print_delim_line(){
+    printf("\n________________________________________________________"
+        "__________________________\n");
+}

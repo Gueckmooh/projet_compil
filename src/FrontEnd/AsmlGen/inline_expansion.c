@@ -122,6 +122,13 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
                 env = init_env();
                 l_node_call = t->params.tapp.l->head;
                 l_node_fd = fd->args->head;
+                // case -> encountered a call of function with missing args
+                // like in let rec f x y = x + y in
+                //         let z = f 4
+                if (t->params.tapp.l->logicalLength < fd->args->logicalLength){
+                    fd_list = cons(fd, fd_list);
+                    return t;
+                }
                 while(l_node_fd != NULL){
                     assert(((ptree)l_node_call->data)->code == T_VAR);
                     env = gen_env_node(
@@ -221,8 +228,8 @@ ptree replace_funcall_by_body(pfundef fd, ptree t){
         case T_LETTUPLE :
             t->params.lettuple.t1 =
                 replace_funcall_by_body(fd, t->params.lettuple.t1);
-            t->params.lettuple.t1 =
-                replace_funcall_by_body(fd, t->params.lettuple.t1);
+            t->params.lettuple.t2 =
+                replace_funcall_by_body(fd, t->params.lettuple.t2);
             return t;
 
         // TBI
@@ -269,6 +276,10 @@ bool is_used_as_var(pfundef fd, ptree t){
     switch(t->code){
         // function  call -> check if var_name is one of the arguments
         case T_APP :
+            if ((t->params.tapp.t->code == T_VAR) &&
+                (strcmp(fd->var,t->params.tapp.t->params.v) == 0)){
+                return true;
+            }
             l_node = t->params.tapp.l->head;
             while(l_node != NULL){
                 assert(((ptree)l_node->data)->code == T_VAR);

@@ -221,6 +221,14 @@ ptree knorm(ptree t){
                     )
                 );
             }
+            // case -> the condition starts with not -> swap both parts
+            if (t->params.tternary.t1->code == T_NOT){
+                return knorm(ast_if(
+                    t->params.tternary.t1->params.t,
+                    t->params.tternary.t3,
+                    t->params.tternary.t2
+                ));
+            }
             // case -> the condition is neither a bool, nor a comparison
             new_var1 = gen_varname();
             return ast_let(
@@ -379,6 +387,8 @@ ptree knorm(ptree t){
         case T_EQ :
         case T_LE :
         case T_LETREC :
+        case T_MK_CLOS :
+        case T_APP_CLOS :
             return apply_vis(t, knorm);
         default :
             printf("Error : knorm, node code not recognized (%d)\n", t->code);

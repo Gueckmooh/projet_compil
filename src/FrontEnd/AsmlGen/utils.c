@@ -69,3 +69,19 @@ pfundef alloc_fd(){
     pfundef res = malloc(sizeof(struct fundef));
     return res;
 }
+
+plist eliminate_doubles_in_str_list(plist l){
+    listNode *l_node = l->head;
+    plist result = empty();
+    while(l_node != NULL){
+        if (!is_in_str_list(result, (char *)l_node->data)){
+            result = (
+                result->head == NULL ?
+                cons(l_node->data, empty()) :
+                append(result, cons(l_node->data, empty()))
+            );
+        }
+        l_node = l_node->next;
+    }
+    return result;
+}

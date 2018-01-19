@@ -81,7 +81,7 @@ ptree apply_clos(ptree t){
                 // duplicate the body from fd
                 new_fd->body = duplicate_tree(fd->body);
                 // add the free vars refs
-                new_fd->body = add_free_vars_refs(new_fd, new_fd->free_vars->head, WORD_SIZE);
+                new_fd->body = add_free_vars_refs(new_fd, new_fd->free_vars->head, 1);
                 // add the new fd to fd_list
                 fd_list = cons((void *)new_fd, fd_list);
                 // prepare the make closure and return it

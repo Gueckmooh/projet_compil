@@ -115,14 +115,16 @@ ptree ast_transform(ptree t){
         listNode *l_node = fd_list->head;
         while(l_node != NULL){
             pfundef fd = (pfundef)l_node->data;
-            fd->body = reduce_nested_let(knorm(fd->body));
+            fd->body = reduce_nested_let(apply_constant_folding(
+                            reduce_nested_let(knorm(fd->body))
+                        ));
             l_node = l_node->next;
         }
         print_all_fd_descriptions();
         printf("\nProgram :\n");
         print_term(t11);
         printf("\n\nAST transformation done\n");
-        return t11;
+        return reduce_nested_let(apply_constant_folding(t11));
     } else {
         ptree t2 = knorm(t);
         ptree t3 = alpha_convert(t2, init_env());
@@ -137,10 +139,12 @@ ptree ast_transform(ptree t){
         listNode *l_node = fd_list->head;
         while(l_node != NULL){
             pfundef fd = (pfundef)l_node->data;
-            fd->body = reduce_nested_let(knorm(fd->body));
+            fd->body = reduce_nested_let(apply_constant_folding(
+                            reduce_nested_let(knorm(fd->body))
+                        ));
             l_node = l_node->next;
         }
-        return t11;
+        return reduce_nested_let(apply_constant_folding(t11));
     }
 }
 

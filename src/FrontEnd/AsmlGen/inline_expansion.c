@@ -277,7 +277,8 @@ bool is_used_as_var(pfundef fd, ptree t){
         // function  call -> check if var_name is one of the arguments
         case T_APP :
             if ((t->params.tapp.t->code == T_VAR) &&
-                (strcmp(fd->var,t->params.tapp.t->params.v) == 0)){
+                (strcmp(fd->var,t->params.tapp.t->params.v) == 0) &&
+                (fd->args->logicalLength != t->params.tapp.l->logicalLength)){
                 return true;
             }
             l_node = t->params.tapp.l->head;

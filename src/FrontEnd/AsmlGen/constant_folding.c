@@ -195,10 +195,10 @@ ptree constant_folding(ptree t, env_node *env){
             return t;
 
         case T_APP :
-            return t;
-
         case T_MK_CLOS :
         case T_APP_CLOS :
+            return t;
+
         case T_FNEG :
         case T_FADD :
         case T_FSUB :
@@ -305,6 +305,15 @@ bool can_fold(char *var_name, ptree t){
 
         case T_MK_CLOS :
         case T_APP_CLOS :
+            l_node = t->params.tclosure.l->head;
+            while(l_node != NULL){
+                if(strcmp(var_name, (char *)l_node->data) == 0){
+                    return false;
+                }
+                l_node = l_node->next;
+            }
+            return true;
+
         default :
             fprintf(stderr, "TBI : in can_fold, code %d not yet implemented.\n"
             "Exiting.\n", t->code);

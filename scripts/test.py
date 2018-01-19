@@ -43,7 +43,7 @@ def arm_to_exec (outputf) :
 		output = subprocess.check_output(['arm-none-eabi-ld', '../../tmp/'+outputf+'.o', '../../tmp/libmincaml.o', '-o', '../../tmp/'+outputf+'.out'])
 	except subprocess.CalledProcessError as e :
 		output = e.output
-		printf(bcolors.FAIL + "--- Echec generation executable" + bcolors.ENDC)
+		print(bcolors.FAIL + "--- Echec generation executable" + bcolors.ENDC)
 	return 0
 
 
